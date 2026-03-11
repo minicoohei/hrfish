@@ -1175,9 +1175,9 @@ Simulation requirement: {simulation_requirement}
 ## Task
 Generate activity config for each entity, note:
 - **Follow Chinese daily routine**: almost no activity 0-5 AM, most active 19-22 PM
-- **Officials**（University/GovernmentAgency）：low activity(0.1-0.3)，work hours(9-17), slow response(60-240minutes)，high influence(2.5-3.0)
-- **Media**（MediaOutlet）：medium activity(0.4-0.6)，all-day activity(8-23)，fast response(5-30minutes)，high influence(2.0-2.5)
-- **Individuals**（Student/Person/Alumni）：high activity(0.6-0.9)，mainly evening activity(18-23)，fast response(1-15minutes)，low influence(0.8-1.2)
+- **Officials**（University/GovernmentAgency）：low activity(0.1-0.3),work hours(9-17), slow response(60-240minutes),high influence(2.5-3.0)
+- **Media**（MediaOutlet）：medium activity(0.4-0.6),all-day activity(8-23),fast response(5-30minutes),high influence(2.0-2.5)
+- **Individuals**（Student/Person/Alumni）：high activity(0.6-0.9),mainly evening activity(18-23),fast response(1-15minutes),low influence(0.8-1.2)
 - **Public figures/experts**: medium activity(0.4-0.6), medium-high influence(1.5-2.0)
 
 Return JSON format (no markdown)：

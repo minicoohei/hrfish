@@ -103,6 +103,38 @@ class PersonaRenderer:
 
         logger.debug(f"Updated persona for {identity.name} (round {state.current_round})")
 
+    def apply_to_agent_with_text(
+        self,
+        agent,
+        identity: BaseIdentity,
+        state: CareerState,
+        persona_text: str,
+    ) -> None:
+        """
+        Apply a pre-rendered persona text to the agent.
+        Avoids re-calling render_system_message.
+        """
+        from camel.messages import BaseMessage
+        sys_msg = BaseMessage.make_assistant_message(
+            role_name=identity.name,
+            content=persona_text,
+        )
+        agent.update_system_message(sys_msg)
+
+        if hasattr(agent, 'user_info') and agent.user_info is not None:
+            agent.user_info.description = persona_text
+            agent.user_info.profile = {
+                "name": identity.name,
+                "age": state.current_age,
+                "role": state.role,
+                "employer": state.employer,
+                "industry": state.industry,
+                "salary": state.salary_annual,
+                "round": state.current_round,
+            }
+
+        logger.debug(f"Updated persona (pre-rendered) for {identity.name} (round {state.current_round})")
+
     # ---- Private rendering methods ----
 
     def _render_identity(self, identity: BaseIdentity) -> str:

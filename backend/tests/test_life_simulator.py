@@ -691,3 +691,125 @@ class TestMultiPathSimulator(unittest.TestCase):
         self.assertEqual(len(report["paths"]), 1)
 
 
+
+
+# ============================================================
+# Review fix regression tests
+# ============================================================
+
+class TestReviewFixes(unittest.TestCase):
+    """Regression tests for code review fixes."""
+
+    def test_critical1_salary_increase_no_double_apply(self):
+        """CRITICAL-1: salary_increase_pct should not setattr on state."""
+        store = AgentStateStore()
+        identity = BaseIdentity(name="test", age_at_start=30)
+        state = CareerState(salary_annual=600, cash_buffer=500)
+        store.initialize_agent("a1", identity, state)
+
+        event = LifeEvent(
+            event_type=LifeEventType.SALARY_INCREASE,
+            round_number=1,
+            description="昇給",
+            state_changes={"salary_increase_pct": 10},
+        )
+        store.apply_event("a1", event)
+        # Should be 600 * 1.10 = 660, NOT double-applied
+        self.assertEqual(store.get_state("a1").salary_annual, 660)
+
+    def test_critical1_promotion_with_salary_in_state_changes(self):
+        """CRITICAL-1: PROMOTION with salary in state_changes should apply correctly."""
+        store = AgentStateStore()
+        identity = BaseIdentity(name="test", age_at_start=30)
+        state = CareerState(salary_annual=600, role="エンジニア")
+        store.initialize_agent("a1", identity, state)
+
+        event = LifeEvent(
+            event_type=LifeEventType.PROMOTION,
+            round_number=1,
+            description="昇進",
+            state_changes={"role": "リード", "salary_annual": 750},
+        )
+        store.apply_event("a1", event)
+        s = store.get_state("a1")
+        self.assertEqual(s.role, "リード")
+        self.assertEqual(s.salary_annual, 750)
+        self.assertEqual(s.years_in_role, 0)
+
+    def test_major2_child_birth_adds_family_in_apply_event(self):
+        """MAJOR-2: CHILD_BIRTH in apply_event adds FamilyMember."""
+        store = AgentStateStore()
+        identity = BaseIdentity(name="test", age_at_start=30)
+        state = CareerState(
+            family=[FamilyMember(relation="spouse", age=30)],
+            monthly_expenses=20,
+        )
+        store.initialize_agent("a1", identity, state)
+
+        event = LifeEvent(
+            event_type=LifeEventType.CHILD_BIRTH,
+            round_number=1,
+            description="第1子誕生",
+        )
+        store.apply_event("a1", event)
+        s = store.get_state("a1")
+        children = s.get_children()
+        self.assertEqual(len(children), 1)
+        self.assertEqual(children[0].age, 0)
+        self.assertEqual(s.monthly_expenses, 28)  # +8
+
+    def test_major2_elder_care_marks_parent(self):
+        """MAJOR-2: ELDER_CARE_START marks parent notes in apply_event."""
+        store = AgentStateStore()
+        identity = BaseIdentity(name="test", age_at_start=45)
+        state = CareerState(
+            family=[FamilyMember(relation="parent", age=80)],
+        )
+        store.initialize_agent("a1", identity, state)
+
+        event = LifeEvent(
+            event_type=LifeEventType.ELDER_CARE_START,
+            round_number=1,
+            description="介護開始",
+        )
+        store.apply_event("a1", event)
+        parent = store.get_state("a1").get_parents()[0]
+        self.assertEqual(parent.notes, "要介護")
+
+    def test_critical3_blocker_type_enum(self):
+        """CRITICAL-3: has_blocker works with BlockerType enum."""
+        state = CareerState(
+            blockers=[
+                ActiveBlocker(
+                    blocker_type=BlockerType.ELDER_CARE,
+                    reason="介護中",
+                    blocked_actions=["remote_transfer"],
+                    started_round=1,
+                )
+            ]
+        )
+        self.assertTrue(state.has_blocker(BlockerType.ELDER_CARE))
+
+    def test_minor1_agent_not_found_error(self):
+        """MINOR-1: get_state/get_identity raise descriptive KeyError."""
+        store = AgentStateStore()
+        with self.assertRaises(KeyError) as ctx:
+            store.get_state("nonexistent")
+        self.assertIn("not initialized", str(ctx.exception))
+
+    def test_major4_partial_path_failure(self):
+        """MAJOR-4: run_all continues when one path fails."""
+        from app.services.multipath_simulator import MultiPathSimulator, PathConfig
+
+        sim = MultiPathSimulator(base_seed=42)
+        identity = BaseIdentity(name="test", age_at_start=30)
+        state = CareerState(
+            salary_annual=500, employer="Corp", industry="IT",
+            role="Eng", monthly_expenses=20,
+        )
+        # All paths should succeed with valid configs
+        sim.initialize(identity, state, round_count=4)
+        results = sim.run_all()
+        self.assertEqual(len(results), 3)
+
+

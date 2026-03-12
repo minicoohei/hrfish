@@ -12,7 +12,7 @@ from dataclasses import dataclass, field
 
 from ..models.life_simulator import (
     BaseIdentity, CareerState, LifeEvent, LifeEventType,
-    AgentSnapshot, SimulationPath, FamilyMember,
+    AgentSnapshot, SimulationPath,
 )
 from .agent_state_store import AgentStateStore
 from .persona_renderer import PersonaRenderer
@@ -209,13 +209,6 @@ class MultiPathSimulator:
             events = event_engine.evaluate(agent_id, state)
             for event in events:
                 state_store.apply_event(agent_id, event)
-                if event.event_type == LifeEventType.CHILD_BIRTH:
-                    state.family.append(FamilyMember(relation="child", age=0))
-                elif event.event_type == LifeEventType.ELDER_CARE_START:
-                    for parent in state.get_parents():
-                        if parent.age >= 75:
-                            parent.notes = "要介護"
-                            break
 
             state.blockers = blocker_engine.evaluate(state)
             snapshot = state_store.snapshot(agent_id)
@@ -233,7 +226,12 @@ class MultiPathSimulator:
         return path
 
     def run_all(self) -> Dict[str, SimulationPath]:
-        """Run all paths in parallel using ThreadPoolExecutor."""
+        """Run all paths in parallel using ThreadPoolExecutor.
+
+        If a path fails, its error is logged and remaining paths continue.
+        Failed paths are excluded from results.
+        """
+        errors: Dict[str, str] = {}
         with ThreadPoolExecutor(max_workers=3) as executor:
             futures = {
                 executor.submit(self._run_single_path, config): config.path_id
@@ -246,7 +244,10 @@ class MultiPathSimulator:
                     self.paths[path_id] = result
                 except Exception as e:
                     logger.error(f"Path {path_id} failed: {e}", exc_info=True)
-                    raise
+                    errors[path_id] = str(e)
+
+        if errors and not any(p.final_state for p in self.paths.values()):
+            raise RuntimeError(f"All simulation paths failed: {errors}")
 
         return self.paths
 

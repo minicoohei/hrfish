@@ -17,8 +17,7 @@ from dataclasses import dataclass
 
 from ..models.life_simulator import (
     BaseIdentity, CareerState, LifeEvent, LifeEventType,
-    ActiveBlocker, FamilyMember, AgentSnapshot, SimulationPath,
-    ActionTypeMiroFish,
+    FamilyMember, AgentSnapshot, SimulationPath, ActionTypeMiroFish,
 )
 from .agent_state_store import AgentStateStore
 from .persona_renderer import PersonaRenderer
@@ -148,15 +147,6 @@ class LifeSimulationOrchestrator:
         events = self.event_engine.evaluate(agent_id, state)
         for event in events:
             self.state_store.apply_event(agent_id, event)
-            # Handle child birth: add new family member
-            if event.event_type == LifeEventType.CHILD_BIRTH:
-                state.family.append(FamilyMember(relation="child", age=0))
-            # Handle elder care: update parent notes
-            elif event.event_type == LifeEventType.ELDER_CARE_START:
-                for parent in state.get_parents():
-                    if parent.age >= 75:
-                        parent.notes = "要介護"
-                        break
 
         # 1c. Evaluate blockers
         state.blockers = self.blocker_engine.evaluate(state)
@@ -165,9 +155,13 @@ class LifeSimulationOrchestrator:
         identity = self.state_store.get_identity(agent_id)
         round_context = self._build_round_context(state, events)
 
+        persona_text = self.persona_renderer.render_system_message(
+            identity, state, round_context
+        )
+
         if agent is not None:
-            self.persona_renderer.apply_to_agent(
-                agent, identity, state, round_context
+            self.persona_renderer.apply_to_agent_with_text(
+                agent, identity, state, persona_text
             )
 
         return {
@@ -175,9 +169,7 @@ class LifeSimulationOrchestrator:
             "age": state.current_age,
             "events": [e.description for e in events],
             "blockers": [b.reason for b in state.blockers],
-            "persona_text": self.persona_renderer.render_system_message(
-                identity, state, round_context
-            ),
+            "persona_text": persona_text,
         }
 
     def post_round_hook(

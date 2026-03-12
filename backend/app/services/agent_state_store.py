@@ -42,24 +42,32 @@ class AgentStateStore:
         logger.info(f"Initialized agent {agent_id}: {identity.name}, age={identity.age_at_start}")
 
     def get_identity(self, agent_id: str) -> BaseIdentity:
+        if agent_id not in self._identities:
+            raise KeyError(f"Agent '{agent_id}' not initialized. Call initialize_agent() first.")
         return self._identities[agent_id]
 
     def get_state(self, agent_id: str) -> CareerState:
+        if agent_id not in self._states:
+            raise KeyError(f"Agent '{agent_id}' not initialized. Call initialize_agent() first.")
         return self._states[agent_id]
 
     def apply_event(self, agent_id: str, event: LifeEvent) -> CareerState:
         """
         Apply a life event to an agent's CareerState.
         Returns the updated state.
+
+        Processing order:
+        1. Type-specific logic (handles computed changes like salary_increase_pct)
+        2. state_changes dict (direct overwrites, excluding type-specific keys)
+        3. CHILD_BIRTH auto-adds FamilyMember
+        4. ELDER_CARE_START marks parent as 要介護
         """
         state = self._states[agent_id]
 
-        # Apply state_changes dict directly
-        for key, value in event.state_changes.items():
-            if hasattr(state, key):
-                setattr(state, key, value)
+        # Keys handled by type-specific logic — excluded from generic setattr
+        _handled_keys: set = set()
 
-        # Type-specific logic
+        # Type-specific logic first
         if event.event_type == LifeEventType.PROMOTION:
             state.years_in_role = 0
             state.job_satisfaction = min(1.0, state.job_satisfaction + 0.2)
@@ -68,7 +76,7 @@ class AgentStateStore:
         elif event.event_type == LifeEventType.JOB_CHANGE:
             state.years_in_role = 0
             state.stress_level = min(1.0, state.stress_level + 0.15)
-            state.job_satisfaction = 0.6  # Reset to moderate
+            state.job_satisfaction = 0.6
 
         elif event.event_type == LifeEventType.LAYOFF:
             state.employer = ""
@@ -76,21 +84,34 @@ class AgentStateStore:
             state.salary_annual = 0
             state.stress_level = min(1.0, state.stress_level + 0.4)
             state.job_satisfaction = 0.1
+            _handled_keys.update({"employer", "role", "salary_annual"})
 
         elif event.event_type == LifeEventType.CHILD_BIRTH:
-            state.monthly_expenses += 8  # ~8万/月 increase
+            state.monthly_expenses += 8
             state.work_life_balance = max(0.0, state.work_life_balance - 0.2)
+            state.family.append(FamilyMember(relation="child", age=0))
 
         elif event.event_type == LifeEventType.ELDER_CARE_START:
             state.stress_level = min(1.0, state.stress_level + 0.3)
             state.work_life_balance = max(0.0, state.work_life_balance - 0.3)
+            for parent in state.get_parents():
+                if parent.age >= 75 and "介護" not in parent.notes:
+                    parent.notes = "要介護"
+                    break
 
         elif event.event_type == LifeEventType.SALARY_INCREASE:
             increase = event.state_changes.get("salary_increase_pct", 10)
             state.salary_annual = int(state.salary_annual * (1 + increase / 100))
+            _handled_keys.update({"salary_annual", "salary_increase_pct"})
 
         elif event.event_type == LifeEventType.MARKET_CRASH:
-            state.cash_buffer = int(state.cash_buffer * 0.7)  # 30% loss
+            state.cash_buffer = int(state.cash_buffer * 0.7)
+            _handled_keys.add("cash_buffer")
+
+        # Apply remaining state_changes (excluding type-specific handled keys)
+        for key, value in event.state_changes.items():
+            if key not in _handled_keys and hasattr(state, key):
+                setattr(state, key, value)
 
         state.events_this_round.append(event.description)
         logger.info(f"Applied event to {agent_id}: {event.event_type.value} - {event.description}")

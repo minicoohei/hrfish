@@ -10,7 +10,7 @@ import random
 from typing import List, Optional
 
 from ..models.life_simulator import (
-    CareerState, LifeEvent, LifeEventType, FamilyMember,
+    CareerState, LifeEvent, LifeEventType, FamilyMember, BlockerType,
 )
 from ..utils.logger import get_logger
 
@@ -58,7 +58,7 @@ class LifeEventEngine:
 
         # Elder care: parents 75+ → 5% per round
         for parent in state.get_parents():
-            if parent.age >= 75 and not state.has_blocker("elder_care"):
+            if parent.age >= 75 and not state.has_blocker(BlockerType.ELDER_CARE):
                 if self._rng.random() < 0.05:
                     events.append(LifeEvent(
                         event_type=LifeEventType.ELDER_CARE_START,

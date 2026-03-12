@@ -12,6 +12,9 @@ from ..models.life_simulator import FamilyMember, LifeEvent, LifeEventType
 from ..services.life_simulation_loop import (
     LifeSimulationOrchestrator, FormInput,
 )
+from ..services.multipath_simulator import (
+    MultiPathSimulator, PathConfig, build_default_paths,
+)
 from ..utils.logger import get_logger
 
 logger = get_logger('mirofish.api.life_simulation')
@@ -20,6 +23,7 @@ life_sim_bp = Blueprint('life_simulation', __name__)
 
 # In-memory orchestrators per simulation
 _orchestrators = {}
+_multipath_sims = {}
 
 
 @life_sim_bp.route('/initialize', methods=['POST'])
@@ -176,3 +180,130 @@ def get_life_simulation_summary(simulation_id):
     except Exception as e:
         logger.error(f"Get summary failed: {e}", exc_info=True)
         return jsonify({"success": False, "error": str(e)}), 500
+
+@life_sim_bp.route('/multipath/run', methods=['POST'])
+def run_multipath_simulation():
+    """
+    Run 3 career paths in parallel from the same starting state.
+
+    Request body:
+    {
+        "simulation_id": "sim_123",
+        "profile": { ... },
+        "life_context": { ... },
+        "round_count": 40,
+        "paths": [  // optional custom paths
+            {"path_id": "path_a", "path_label": "...", "events": [...]}
+        ]
+    }
+    """
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({"success": False, "error": "No request body"}), 400
+
+        simulation_id = data.get("simulation_id")
+        profile = data.get("profile", {})
+        life_ctx = data.get("life_context", {})
+        round_count = data.get("round_count", 40)
+
+        if not simulation_id:
+            return jsonify({"success": False, "error": "simulation_id required"}), 400
+
+        # Build identity
+        from ..models.life_simulator import BaseIdentity, CareerState
+        identity = BaseIdentity(
+            name=profile.get("name", "Unknown"),
+            age_at_start=profile.get("age", 30),
+            gender=profile.get("gender", ""),
+            education=profile.get("education", ""),
+            mbti=profile.get("mbti", ""),
+            stable_traits=profile.get("traits", []),
+            certifications=profile.get("certifications", []),
+            career_history_summary=profile.get("career_summary", ""),
+        )
+
+        # Build family members
+        family_members = []
+        for child in life_ctx.get("children", []):
+            family_members.append(FamilyMember(
+                relation="child", age=child.get("age", 0),
+            ))
+        for parent in life_ctx.get("parents", []):
+            family_members.append(FamilyMember(
+                relation="parent", age=parent.get("age", 65),
+            ))
+        if life_ctx.get("marital_status") == "married":
+            family_members.append(FamilyMember(relation="spouse", age=profile.get("age", 30)))
+
+        from ..services.life_simulation_loop import cash_range_to_value
+        initial_state = CareerState(
+            current_round=0,
+            current_age=identity.age_at_start,
+            role=profile.get("current_role", ""),
+            employer=profile.get("current_employer", ""),
+            industry=profile.get("industry", ""),
+            years_in_role=profile.get("years_in_role", 0),
+            salary_annual=profile.get("salary", 0),
+            skills=profile.get("skills", []),
+            family=family_members,
+            marital_status=life_ctx.get("marital_status", "single"),
+            cash_buffer=cash_range_to_value(life_ctx.get("cash_buffer_range", "500未満")),
+            mortgage_remaining=life_ctx.get("mortgage_remaining", 0),
+            monthly_expenses=life_ctx.get("monthly_expenses", 25),
+        )
+
+        simulator = MultiPathSimulator(base_seed=42)
+        simulator.initialize(identity, initial_state, round_count=round_count)
+        simulator.run_all()
+
+        _multipath_sims[simulation_id] = simulator
+
+        report = simulator.generate_comparison_report()
+
+        return jsonify({
+            "success": True,
+            "data": report,
+        })
+
+    except Exception as e:
+        logger.error(f"Multi-path simulation failed: {e}", exc_info=True)
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@life_sim_bp.route('/multipath/timeline/<simulation_id>/<path_id>', methods=['GET'])
+def get_multipath_timeline(simulation_id, path_id):
+    """Get detailed timeline for a specific path."""
+    try:
+        if simulation_id not in _multipath_sims:
+            return jsonify({"success": False, "error": "Simulation not found"}), 404
+
+        simulator = _multipath_sims[simulation_id]
+        timeline = simulator.get_path_timeline(path_id)
+
+        if not timeline:
+            return jsonify({"success": False, "error": f"Path {path_id} not found"}), 404
+
+        return jsonify({"success": True, "data": {"path_id": path_id, "timeline": timeline}})
+
+    except Exception as e:
+        logger.error(f"Get timeline failed: {e}", exc_info=True)
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@life_sim_bp.route('/multipath/report/<simulation_id>', methods=['GET'])
+def get_multipath_report(simulation_id):
+    """Get comparison report for a completed multi-path simulation."""
+    try:
+        if simulation_id not in _multipath_sims:
+            return jsonify({"success": False, "error": "Simulation not found"}), 404
+
+        simulator = _multipath_sims[simulation_id]
+        report = simulator.generate_comparison_report()
+
+        return jsonify({"success": True, "data": report})
+
+    except Exception as e:
+        logger.error(f"Get report failed: {e}", exc_info=True)
+        return jsonify({"success": False, "error": str(e)}), 500
+

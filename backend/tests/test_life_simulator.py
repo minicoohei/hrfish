@@ -516,3 +516,178 @@ class TestLifeSimulationOrchestrator:
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
+
+
+# ============================================================
+# P10: Multi-Path Simulator Tests
+# ============================================================
+
+class TestMultiPathSimulator(unittest.TestCase):
+    """Tests for P10: Multi-Path Parallel Simulator"""
+
+    def setUp(self):
+        self.identity = BaseIdentity(
+            name="テスト太郎",
+            age_at_start=32,
+            gender="male",
+            education="大学卒",
+            mbti="INTJ",
+            stable_traits=["分析的", "計画的"],
+            certifications=["TOEIC 800"],
+            career_history_summary="IT企業で10年",
+        )
+        self.initial_state = CareerState(
+            current_round=0,
+            current_age=32,
+            role="マネージャー",
+            employer="テック株式会社",
+            industry="IT",
+            years_in_role=3,
+            salary_annual=700,
+            skills=["Python", "マネジメント"],
+            family=[
+                FamilyMember(relation="spouse", age=30),
+                FamilyMember(relation="child", age=2),
+                FamilyMember(relation="parent", age=62),
+            ],
+            marital_status="married",
+            cash_buffer=1000,
+            mortgage_remaining=3000,
+            monthly_expenses=30,
+        )
+
+    def test_initialize_default_paths(self):
+        """Default 3 paths are created when no custom config given."""
+        from app.services.multipath_simulator import MultiPathSimulator
+        sim = MultiPathSimulator(base_seed=42)
+        path_ids = sim.initialize(self.identity, self.initial_state)
+        self.assertEqual(len(path_ids), 3)
+        self.assertIn("path_a", path_ids)
+        self.assertIn("path_b", path_ids)
+        self.assertIn("path_c", path_ids)
+
+    def test_build_default_paths_labels(self):
+        """Default paths have correct labels based on state."""
+        from app.services.multipath_simulator import build_default_paths
+        paths = build_default_paths(self.initial_state, 40)
+        labels = {p.path_id: p.path_label for p in paths}
+        self.assertEqual(labels["path_a"], "現職継続")
+        self.assertEqual(labels["path_b"], "同業転職")
+        # path_c depends on blocker status
+        self.assertIn(labels["path_c"], ["起業挑戦", "異業種転職"])
+
+    def test_build_default_paths_startup_blocked(self):
+        """When startup is blocked, path_c becomes industry change."""
+        from app.services.multipath_simulator import build_default_paths
+        # Add mortgage blocker that blocks startup
+        self.initial_state.blockers = [
+            ActiveBlocker(
+                blocker_type=BlockerType.MORTGAGE,
+                reason="住宅ローン残額が年収の3倍超",
+                blocked_actions=["startup"],
+                started_round=0,
+            )
+        ]
+        paths = build_default_paths(self.initial_state, 40)
+        path_c = next(p for p in paths if p.path_id == "path_c")
+        self.assertEqual(path_c.path_label, "異業種転職")
+
+    def test_run_all_completes(self):
+        """All 3 paths run to completion."""
+        from app.services.multipath_simulator import MultiPathSimulator
+        sim = MultiPathSimulator(base_seed=42)
+        sim.initialize(self.identity, self.initial_state, round_count=20)
+        results = sim.run_all()
+        self.assertEqual(len(results), 3)
+        for path_id, path in results.items():
+            self.assertIsNotNone(path.final_state)
+            self.assertEqual(len(path.snapshots), 20)
+
+    def test_paths_diverge(self):
+        """Different paths produce different final states."""
+        from app.services.multipath_simulator import MultiPathSimulator
+        sim = MultiPathSimulator(base_seed=42)
+        sim.initialize(self.identity, self.initial_state, round_count=20)
+        results = sim.run_all()
+        salaries = {pid: p.final_state.salary_annual for pid, p in results.items()}
+        # At least 2 paths should have different salaries
+        unique_salaries = set(salaries.values())
+        self.assertGreater(len(unique_salaries), 1,
+                          f"All paths have same salary: {salaries}")
+
+    def test_comparison_report_structure(self):
+        """Comparison report has required fields."""
+        from app.services.multipath_simulator import MultiPathSimulator
+        sim = MultiPathSimulator(base_seed=42)
+        sim.initialize(self.identity, self.initial_state, round_count=8)
+        sim.run_all()
+        report = sim.generate_comparison_report()
+        self.assertIn("paths", report)
+        self.assertIn("rankings", report)
+        self.assertIn("simulation_years", report)
+        self.assertEqual(len(report["paths"]), 3)
+        # Each path summary has metrics
+        for ps in report["paths"]:
+            self.assertIn("final_salary", ps)
+            self.assertIn("final_cash_buffer", ps)
+            self.assertIn("peak_salary", ps)
+            self.assertIn("avg_stress", ps)
+
+    def test_comparison_rankings(self):
+        """Rankings identify best path per dimension."""
+        from app.services.multipath_simulator import MultiPathSimulator
+        sim = MultiPathSimulator(base_seed=42)
+        sim.initialize(self.identity, self.initial_state, round_count=12)
+        sim.run_all()
+        report = sim.generate_comparison_report()
+        rankings = report["rankings"]
+        self.assertIn("highest_salary", rankings)
+        self.assertIn("most_cash", rankings)
+        self.assertIn("lowest_stress", rankings)
+        self.assertIn("best_wlb", rankings)
+
+    def test_get_path_timeline(self):
+        """Can retrieve detailed timeline for specific path."""
+        from app.services.multipath_simulator import MultiPathSimulator
+        sim = MultiPathSimulator(base_seed=42)
+        sim.initialize(self.identity, self.initial_state, round_count=8)
+        sim.run_all()
+        timeline = sim.get_path_timeline("path_a")
+        self.assertEqual(len(timeline), 8)
+        self.assertIn("round_number", timeline[0])
+        self.assertIn("salary_annual", timeline[0])
+
+    def test_path_isolation(self):
+        """Events in one path don't affect other paths."""
+        from app.services.multipath_simulator import MultiPathSimulator
+        sim = MultiPathSimulator(base_seed=42)
+        sim.initialize(self.identity, self.initial_state, round_count=20)
+        results = sim.run_all()
+        # Path A stays at same employer, Path B changes
+        path_a = results["path_a"]
+        path_b = results["path_b"]
+        self.assertEqual(path_a.final_state.employer, self.initial_state.employer)
+        self.assertNotEqual(path_b.final_state.employer, self.initial_state.employer)
+
+    def test_custom_path_configs(self):
+        """Can provide custom path configurations."""
+        from app.services.multipath_simulator import MultiPathSimulator, PathConfig
+        custom = [
+            PathConfig(
+                path_id="custom_1",
+                path_label="カスタムパス",
+                scheduled_events=[],
+                seed_offset=0,
+            ),
+        ]
+        sim = MultiPathSimulator(base_seed=42)
+        path_ids = sim.initialize(
+            self.identity, self.initial_state,
+            path_configs=custom, round_count=8,
+        )
+        self.assertEqual(path_ids, ["custom_1"])
+        sim.run_all()
+        report = sim.generate_comparison_report()
+        self.assertEqual(len(report["paths"]), 1)
+
+

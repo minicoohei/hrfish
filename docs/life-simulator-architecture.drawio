@@ -1,0 +1,492 @@
+<mxfile host="app.diagrams.net" modified="2026-03-12T00:00:00.000Z" agent="Claude" version="24.0.0" type="device">
+  <diagram id="life-sim-arch" name="LifeSimulator v7 Architecture">
+    <mxGraphModel dx="1422" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="3400" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- ============================== -->
+        <!-- Layer 1: インプットレイヤー -->
+        <!-- ============================== -->
+        <mxCell id="layer1_bg" value="" style="rounded=1;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;opacity=30;arcSize=5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="20" width="1200" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="layer1_label" value="1. インプットレイヤー" style="text;html=1;fontSize=16;fontStyle=1;align=left;verticalAlign=top;fillColor=none;strokeColor=none;fontColor=#1a3a5c;" vertex="1" parent="1">
+          <mxGeometry x="60" y="30" width="300" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- 履歴書 PDF/MD/TXT（既存） -->
+        <mxCell id="input_resume" value="履歴書&#xa;PDF / MD / TXT" style="shape=document;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;rounded=1;" vertex="1" parent="1">
+          <mxGeometry x="200" y="70" width="160" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="input_resume_tag" value="既存" style="text;html=1;fontSize=10;fontColor=#2060a0;align=center;fillColor=none;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="250" y="60" width="60" height="16" as="geometry" />
+        </mxCell>
+
+        <!-- 簡易質問フォーム（5問） -->
+        <mxCell id="input_form" value="簡易質問フォーム（5問）&#xa;家族構成 / ローン / 金融資産&#xa;価値観 / 転職意欲" style="shape=card;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;rounded=1;size=18;" vertex="1" parent="1">
+          <mxGeometry x="800" y="65" width="220" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="input_form_tag" value="&#x2605; 新規" style="text;html=1;fontSize=10;fontColor=#d45500;fontStyle=1;align=center;fillColor=none;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="875" y="55" width="60" height="16" as="geometry" />
+        </mxCell>
+
+        <!-- ============================== -->
+        <!-- Layer 2: プロファイル生成レイヤー -->
+        <!-- ============================== -->
+        <mxCell id="layer2_bg" value="" style="rounded=1;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;opacity=30;arcSize=5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="210" width="1200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="layer2_label" value="2. プロファイル生成レイヤー" style="text;html=1;fontSize=16;fontStyle=1;align=left;verticalAlign=top;fillColor=none;strokeColor=none;fontColor=#1a3a5c;" vertex="1" parent="1">
+          <mxGeometry x="60" y="220" width="350" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="prof_llm" value="履歴書解析&#xa;（LLM構造化）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="270" width="150" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="prof_ontology" value="Ontology生成" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="260" y="270" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="prof_zep" value="Zep Graph構築&#xa;テキスト→Episode&#xa;→Entity/Edge自動抽出" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="430" y="260" width="190" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="prof_curator" value="Knowledge Curator&#xa;Tavily Web検索&#xa;→Markdown→LLM注入" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="650" y="260" width="190" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="prof_oasis" value="OasisProfile&#xa;Generator" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="870" y="270" width="150" height="60" as="geometry" />
+        </mxCell>
+
+        <!-- Profile flow arrows -->
+        <mxCell id="pf1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#6c8ebf;" edge="1" source="prof_llm" target="prof_ontology" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pf2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#6c8ebf;" edge="1" source="prof_ontology" target="prof_zep" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pf3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#6c8ebf;" edge="1" source="prof_zep" target="prof_curator" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="pf4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#6c8ebf;" edge="1" source="prof_curator" target="prof_oasis" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Layer 1 → Layer 2 arrows -->
+        <mxCell id="a_resume_llm" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#333333;strokeWidth=2;" edge="1" source="input_resume" target="prof_llm" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ============================== -->
+        <!-- Layer 3: 状態管理レイヤー（★新規） -->
+        <!-- ============================== -->
+        <mxCell id="layer3_bg" value="" style="rounded=1;whiteSpace=wrap;fillColor=#fce5cd;strokeColor=#d79b00;opacity=30;arcSize=5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="440" width="1200" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="layer3_label" value="3. 状態管理レイヤー &#x2605; 新規" style="text;html=1;fontSize=16;fontStyle=1;align=left;verticalAlign=top;fillColor=none;strokeColor=none;fontColor=#b45f06;" vertex="1" parent="1">
+          <mxGeometry x="60" y="450" width="400" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="state_base" value="BaseIdentity（不変）&#xa;name / MBTI / 学歴&#xa;stable_traits" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="500" width="200" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="state_career" value="CareerState（可変）&#xa;role / salary / employer&#xa;family / blockers&#xa;stress / cash_buffer" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="320" y="490" width="220" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="state_store" value="AgentStateStore&#xa;get()&#xa;apply_event()&#xa;snapshot()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="590" y="490" width="200" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="state_persona" value="PersonaRenderer&#xa;render_system_message&#xa;(base, state, round_ctx)&#xa;→ agent.update_system_message()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="840" y="490" width="240" height="100" as="geometry" />
+        </mxCell>
+
+        <!-- State flow arrows -->
+        <mxCell id="sf1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#d79b00;" edge="1" source="state_base" target="state_persona" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="180" y="620" />
+              <mxPoint x="960" y="620" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sf2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#d79b00;" edge="1" source="state_career" target="state_store" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="sf3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#d79b00;" edge="1" source="state_store" target="state_persona" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Layer 2 → Layer 3 arrows -->
+        <mxCell id="a_oasis_base" value="Profile→BaseIdentity" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#333333;strokeWidth=2;fontSize=10;" edge="1" source="prof_oasis" target="state_base" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="945" y="370" />
+              <mxPoint x="180" y="370" />
+              <mxPoint x="180" y="500" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a_form_career" value="質問→CareerState初期化" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#333333;strokeWidth=2;fontSize=10;" edge="1" source="input_form" target="state_career" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1100" y="115" />
+              <mxPoint x="1100" y="430" />
+              <mxPoint x="430" y="430" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ============================== -->
+        <!-- Layer 4: イベントエンジン（★新規） -->
+        <!-- ============================== -->
+        <mxCell id="layer4_bg" value="" style="rounded=1;whiteSpace=wrap;fillColor=#fce5cd;strokeColor=#d79b00;opacity=30;arcSize=5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="730" width="1200" height="380" as="geometry" />
+        </mxCell>
+        <mxCell id="layer4_label" value="4. イベントエンジン &#x2605; 新規" style="text;html=1;fontSize=16;fontStyle=1;align=left;verticalAlign=top;fillColor=none;strokeColor=none;fontColor=#b45f06;" vertex="1" parent="1">
+          <mxGeometry x="60" y="740" width="400" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- LifeEventEngine -->
+        <mxCell id="event_engine_bg" value="" style="rounded=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;opacity=50;" vertex="1" parent="1">
+          <mxGeometry x="80" y="780" width="500" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="event_engine_label" value="LifeEventEngine" style="text;html=1;fontSize=14;fontStyle=1;align=left;fillColor=none;strokeColor=none;fontColor=#b45f06;" vertex="1" parent="1">
+          <mxGeometry x="100" y="785" width="200" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="event_scheduled" value="スケジュール済みイベント&#xa;（CareerPhase拡張）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="820" width="210" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="event_random" value="確率的イベント&#xa;介護: 親75歳+で毎ラウンド5%&#xa;市場変動" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="340" y="815" width="220" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- ブロッカーエンジン -->
+        <mxCell id="blocker_engine_bg" value="" style="rounded=1;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;opacity=50;" vertex="1" parent="1">
+          <mxGeometry x="620" y="780" width="580" height="310" as="geometry" />
+        </mxCell>
+        <mxCell id="blocker_engine_label" value="ブロッカーエンジン" style="text;html=1;fontSize=14;fontStyle=1;align=left;fillColor=none;strokeColor=none;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="640" y="785" width="200" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="blocker1" value="育児（子0-6歳）&#xa;→ 海外赴任/起業ブロック" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="640" y="820" width="250" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="blocker2" value="受験期（中3/高3）&#xa;→ 引越し転職ブロック" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="640" y="870" width="250" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="blocker3" value="教育費ピーク（大学）&#xa;→ 年収ダウン転職ブロック" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="640" y="920" width="250" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="blocker4" value="ローン（残額&gt;年収x3）&#xa;→ 起業ブロック" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="910" y="820" width="250" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="blocker5" value="介護&#xa;→ 遠方転勤ブロック" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="910" y="870" width="250" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="blocker6" value="年齢の壁（35/45歳）&#xa;→ 未経験転職成功率低下" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="910" y="920" width="250" height="40" as="geometry" />
+        </mxCell>
+
+        <!-- Event Engine → State arrows -->
+        <mxCell id="a_event_state" value="apply_event()" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#b45f06;strokeWidth=2;fontSize=10;dashed=1;" edge="1" source="event_engine_bg" target="state_store" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="60" y="860" />
+              <mxPoint x="60" y="670" />
+              <mxPoint x="690" y="670" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="a_blocker_career" value="ブロッカー適用" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#b85450;strokeWidth=2;fontSize=10;dashed=1;" edge="1" source="blocker_engine_bg" target="state_career" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1210" y="935" />
+              <mxPoint x="1210" y="660" />
+              <mxPoint x="430" y="660" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ============================== -->
+        <!-- Layer 5: シミュレーションエンジン（v7更新） -->
+        <!-- ============================== -->
+        <mxCell id="layer5_bg" value="" style="rounded=1;whiteSpace=wrap;fillColor=#e1d5e7;strokeColor=#9673a6;opacity=30;arcSize=5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1140" width="1200" height="420" as="geometry" />
+        </mxCell>
+        <mxCell id="layer5_label" value="5. シミュレーションエンジン — OASIS活用 + 最小限拡張" style="text;html=1;fontSize=16;fontStyle=1;align=left;verticalAlign=top;fillColor=none;strokeColor=none;fontColor=#5c2d82;" vertex="1" parent="1">
+          <mxGeometry x="60" y="1150" width="600" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- OASIS Core（既存） -->
+        <mxCell id="sim_oasis_core_bg" value="" style="rounded=1;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;opacity=50;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1195" width="740" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="sim_oasis_core_label" value="OASIS Multi-Agent Simulation（既存アクション活用）" style="text;html=1;fontSize=13;fontStyle=1;align=left;fillColor=none;strokeColor=none;fontColor=#1a3a5c;" vertex="1" parent="1">
+          <mxGeometry x="100" y="1200" width="450" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="sim_oasis_tag" value="既存" style="text;html=1;fontSize=10;fontColor=#2060a0;align=center;fillColor=none;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="540" y="1200" width="40" height="16" as="geometry" />
+        </mxCell>
+
+        <!-- 既存アクション一覧 -->
+        <mxCell id="action_post" value="CREATE_POST" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="100" y="1235" width="110" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="action_comment" value="CREATE_COMMENT" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="220" y="1235" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="action_like" value="LIKE_POST" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="360" y="1235" width="100" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="action_follow" value="FOLLOW" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="470" y="1235" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="action_search" value="SEARCH_POSTS" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="560" y="1235" width="110" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="action_nothing" value="DO_NOTHING" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="680" y="1235" width="100" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="action_interview" value="INTERVIEW" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="100" y="1275" width="100" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="action_group" value="SEND_TO_GROUP" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="210" y="1275" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="action_purchase" value="PURCHASE_PRODUCT" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="340" y="1275" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="action_etc" value="... 他20+アクション" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;fontStyle=2;" vertex="1" parent="1">
+          <mxGeometry x="490" y="1275" width="130" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- env.step -->
+        <mxCell id="sim_env_step" value="env.step()&#xa;（全アクションを統一実行）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="1320" width="220" height="45" as="geometry" />
+        </mxCell>
+
+        <!-- SocialAgent + update_system_message -->
+        <mxCell id="sim_social_agent" value="SocialAgent&#xa;(ChatAgent.update_system_message()&#xa;で毎ラウンドペルソナ更新)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="370" y="1315" width="260" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- UserInfo (mutable) -->
+        <mxCell id="sim_userinfo" value="UserInfo&#xa;profile: dict (mutable)&#xa;description: str (mutable)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="650" y="1315" width="160" height="55" as="geometry" />
+        </mxCell>
+
+        <!-- ============================== -->
+        <!-- 3つの新規 ActionType（★新規） -->
+        <!-- ============================== -->
+        <mxCell id="new_actions_bg" value="" style="rounded=1;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;opacity=50;" vertex="1" parent="1">
+          <mxGeometry x="850" y="1195" width="370" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="new_actions_label" value="&#x2605; 新規 ActionType（3つ追加）" style="text;html=1;fontSize=13;fontStyle=1;align=left;fillColor=none;strokeColor=none;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="870" y="1200" width="300" height="25" as="geometry" />
+        </mxCell>
+
+        <mxCell id="action_monologue" value="INTERNAL_MONOLOGUE&#xa;内的独白&#xa;「子供の受験を考えると...」" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="870" y="1235" width="170" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="action_consult" value="CONSULT&#xa;双方向相談&#xa;「上司に転職相談」" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="1235" width="150" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="action_decide" value="DECIDE&#xa;状態変更決断&#xa;「転職する / 起業する」&#xa;→ CareerState更新トリガー" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="870" y="1300" width="210" height="65" as="geometry" />
+        </mxCell>
+
+        <!-- Roles -->
+        <mxCell id="sim_roles" value="3+1ロール&#xa;gatekeeper / agent&#xa;researcher / candidate_mirror" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1400" width="250" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="sim_rounds" value="50ラウンド&#xa;（10年、1ラウンド&#x2248;3ヶ月）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="370" y="1400" width="200" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="sim_multipath" value="マルチパス&#xa;候補者ミラー&#xa;（3パス並行）" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="610" y="1395" width="180" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="sim_multipath_tag" value="&#x2605; 新規" style="text;html=1;fontSize=10;fontColor=#d45500;fontStyle=1;align=center;fillColor=none;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="665" y="1383" width="60" height="16" as="geometry" />
+        </mxCell>
+
+        <!-- PersonaRenderer → SocialAgent -->
+        <mxCell id="a_persona_agent" value="system_message更新" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#333333;strokeWidth=2;fontSize=10;" edge="1" source="state_persona" target="sim_social_agent" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="960" y="640" />
+              <mxPoint x="1230" y="640" />
+              <mxPoint x="1230" y="1130" />
+              <mxPoint x="500" y="1130" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- DECIDE → State feedback loop -->
+        <mxCell id="a_decide_state" value="DECIDE結果&#xa;→ apply_event()" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#b85450;strokeWidth=2;fontSize=9;dashed=1;" edge="1" source="action_decide" target="state_store" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1240" y="1332" />
+              <mxPoint x="1240" y="1480" />
+              <mxPoint x="30" y="1480" />
+              <mxPoint x="30" y="540" />
+              <mxPoint x="590" y="540" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ============================== -->
+        <!-- Layer 6: 記憶・データレイヤー -->
+        <!-- ============================== -->
+        <mxCell id="layer6_bg" value="" style="rounded=1;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;opacity=30;arcSize=5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1590" width="1200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="layer6_label" value="6. 記憶・データレイヤー" style="text;html=1;fontSize=16;fontStyle=1;align=left;verticalAlign=top;fillColor=none;strokeColor=none;fontColor=#2d6a1e;" vertex="1" parent="1">
+          <mxGeometry x="60" y="1600" width="400" height="30" as="geometry" />
+        </mxCell>
+
+        <mxCell id="data_zep" value="Zep Graph&#xa;関係性・定性情報&#xa;リアルタイム書き戻し" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;fontStyle=1;boundedLbl=1;backgroundOutline=1;size=12;" vertex="1" parent="1">
+          <mxGeometry x="180" y="1640" width="220" height="110" as="geometry" />
+        </mxCell>
+
+        <mxCell id="data_local" value="ローカルDB&#xa;AgentStateスナップショット&#xa;career_metrics&#xa;asset_snapshot&#xa;blocker_log" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;boundedLbl=1;backgroundOutline=1;size=12;" vertex="1" parent="1">
+          <mxGeometry x="540" y="1630" width="220" height="130" as="geometry" />
+        </mxCell>
+
+        <!-- Sim → Data arrows -->
+        <mxCell id="a_sim_zep" value="ZepGraphMemory&#xa;Updater" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#82b366;strokeWidth=2;fontSize=9;" edge="1" source="sim_env_step" target="data_zep" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a_store_local" value="snapshot()" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#82b366;strokeWidth=2;fontSize=9;" edge="1" source="state_store" target="data_local" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="690" y="650" />
+              <mxPoint x="690" y="1580" />
+              <mxPoint x="650" y="1580" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Zep Graph ← → Profile (双方向) -->
+        <mxCell id="a_zep_prof" value="Entity読み取り" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#82b366;strokeWidth=2;fontSize=9;dashed=1;" edge="1" source="data_zep" target="prof_zep" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="160" y="1695" />
+              <mxPoint x="160" y="1580" />
+              <mxPoint x="20" y="1580" />
+              <mxPoint x="20" y="300" />
+              <mxPoint x="430" y="300" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ============================== -->
+        <!-- Layer 7: アウトプットレイヤー -->
+        <!-- ============================== -->
+        <mxCell id="layer7_bg" value="" style="rounded=1;whiteSpace=wrap;fillColor=#e6d0de;strokeColor=#a0527a;opacity=30;arcSize=5;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1820" width="1200" height="300" as="geometry" />
+        </mxCell>
+        <mxCell id="layer7_label" value="7. アウトプットレイヤー" style="text;html=1;fontSize=16;fontStyle=1;align=left;verticalAlign=top;fillColor=none;strokeColor=none;fontColor=#7a2e56;" vertex="1" parent="1">
+          <mxGeometry x="60" y="1830" width="400" height="30" as="geometry" />
+        </mxCell>
+
+        <!-- 神の視点レポート -->
+        <mxCell id="report_bg" value="" style="rounded=1;whiteSpace=wrap;fillColor=#e6d0de;strokeColor=#a0527a;opacity=50;" vertex="1" parent="1">
+          <mxGeometry x="80" y="1870" width="520" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="report_label" value="神の視点レポート（ReportAgent）" style="text;html=1;fontSize=14;fontStyle=1;align=left;fillColor=none;strokeColor=none;fontColor=#7a2e56;" vertex="1" parent="1">
+          <mxGeometry x="100" y="1875" width="350" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="report1" value="キャリア指標比較" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6d0de;strokeColor=#a0527a;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="100" y="1910" width="150" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="report2" value="資産推移比較" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6d0de;strokeColor=#a0527a;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="270" y="1910" width="150" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="report3" value="ブロッカータイムライン" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6d0de;strokeColor=#a0527a;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="440" y="1910" width="150" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="report4" value="機会損失分析" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6d0de;strokeColor=#a0527a;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="100" y="1960" width="150" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="report5" value="最適タイミング提案" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6d0de;strokeColor=#a0527a;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="270" y="1960" width="150" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- フロントエンド -->
+        <mxCell id="frontend_bg" value="" style="rounded=1;whiteSpace=wrap;fillColor=#e6d0de;strokeColor=#a0527a;opacity=50;" vertex="1" parent="1">
+          <mxGeometry x="650" y="1870" width="530" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="frontend_label" value="フロントエンド" style="text;html=1;fontSize=14;fontStyle=1;align=left;fillColor=none;strokeColor=none;fontColor=#7a2e56;" vertex="1" parent="1">
+          <mxGeometry x="670" y="1875" width="200" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="fe1" value="年収推移チャート" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6d0de;strokeColor=#a0527a;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="670" y="1910" width="150" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="fe2" value="資産推移チャート" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6d0de;strokeColor=#a0527a;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="670" y="1960" width="150" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="fe3" value="パス比較マトリクス" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6d0de;strokeColor=#a0527a;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="670" y="2010" width="150" height="35" as="geometry" />
+        </mxCell>
+
+        <!-- Data → Output arrows -->
+        <mxCell id="a_data_report" value="シミュレーション完了→レポート生成" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#7a2e56;strokeWidth=2;fontSize=9;" edge="1" source="data_local" target="report_bg" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="a_report_fe" style="edgeStyle=orthogonalEdgeStyle;rounded=1;strokeColor=#7a2e56;strokeWidth=2;" edge="1" source="report_bg" target="frontend_bg" parent="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ============================== -->
+        <!-- ラウンドループ 注釈（v7更新） -->
+        <!-- ============================== -->
+        <mxCell id="loop_note" value="v7 ラウンドループ（×50回）&#xa;&#xa;Phase 1: 環境変化&#xa;  tick_round() → 年齢加算、ブロッカー解消チェック&#xa;  LifeEventEngine.evaluate() → イベント判定&#xa;  apply_event() → CareerState更新&#xa;&#xa;Phase 2: ペルソナ同期&#xa;  PersonaRenderer → system_message再生成&#xa;  agent.update_system_message() ← camel-ai既存API&#xa;  user_info.profile / description も同時更新&#xa;&#xa;Phase 3: OASIS env.step()&#xa;  既存: POST / COMMENT / LIKE / FOLLOW / INTERVIEW&#xa;          GROUP / SEARCH / DO_NOTHING&#xa;  新規: INTERNAL_MONOLOGUE / CONSULT / DECIDE&#xa;&#xa;Phase 4: 資産計算&#xa;  salary → cash_buffer 更新、ローン返済&#xa;&#xa;Phase 5: スナップショット&#xa;  AgentState → ローカルDB&#xa;  ZepGraphMemoryUpdater → Zep書き戻し" style="shape=note;whiteSpace=wrap;html=1;fillColor=#ffffcc;strokeColor=#cccc00;fontSize=10;align=left;spacingLeft=10;backgroundOutline=1;size=18;" vertex="1" parent="1">
+          <mxGeometry x="830" y="1590" width="380" height="360" as="geometry" />
+        </mxCell>
+
+        <!-- ============================== -->
+        <!-- 設計哲学 注釈 -->
+        <!-- ============================== -->
+        <mxCell id="philosophy_note" value="設計哲学: OASIS活用 + 最小限拡張&#xa;&#xa;- OASISのSNSインタラクション（28アクション）をそのまま活用&#xa;- フォークせず、3つのActionTypeのみ追加&#xa;- ChatAgent.update_system_message() で毎ラウンド&#xa;  エージェントペルソナを動的更新（既存API）&#xa;- BaseIdentity（不変）と CareerState（可変）の分離&#xa;- ブロッカーエンジンで現実的な制約をシミュレート" style="shape=note;whiteSpace=wrap;html=1;fillColor=#e6ffcc;strokeColor=#82b366;fontSize=10;align=left;spacingLeft=10;backgroundOutline=1;size=18;" vertex="1" parent="1">
+          <mxGeometry x="80" y="2130" width="420" height="170" as="geometry" />
+        </mxCell>
+
+        <!-- ============================== -->
+        <!-- 凡例 -->
+        <!-- ============================== -->
+        <mxCell id="legend_bg" value="" style="rounded=1;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=#cccccc;" vertex="1" parent="1">
+          <mxGeometry x="560" y="2130" width="500" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_title" value="凡例" style="text;html=1;fontSize=14;fontStyle=1;fillColor=none;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="580" y="2135" width="60" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_existing" value="" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="580" y="2170" width="30" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_existing_t" value="既存コンポーネント（青系）" style="text;html=1;fontSize=11;fillColor=none;strokeColor=none;align=left;" vertex="1" parent="1">
+          <mxGeometry x="615" y="2167" width="200" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_new" value="" style="rounded=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="580" y="2198" width="30" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_new_t" value="新規コンポーネント（赤系）" style="text;html=1;fontSize=11;fillColor=none;strokeColor=none;align=left;" vertex="1" parent="1">
+          <mxGeometry x="615" y="2195" width="200" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_data" value="" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="840" y="2170" width="30" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_data_t" value="データストア（緑系）" style="text;html=1;fontSize=11;fillColor=none;strokeColor=none;align=left;" vertex="1" parent="1">
+          <mxGeometry x="875" y="2167" width="160" height="24" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_new2" value="" style="rounded=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="840" y="2198" width="30" height="18" as="geometry" />
+        </mxCell>
+        <mxCell id="legend_new2_t" value="新規ドメインモデル（黄系）" style="text;html=1;fontSize=11;fillColor=none;strokeColor=none;align=left;" vertex="1" parent="1">
+          <mxGeometry x="875" y="2195" width="200" height="24" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

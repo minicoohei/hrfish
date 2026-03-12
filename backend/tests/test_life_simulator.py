@@ -1,0 +1,518 @@
+"""
+Tests for life simulator components (P1-P7).
+Standalone tests — imports models/services directly to avoid Flask/OpenAI deps.
+"""
+
+import sys
+import os
+import importlib
+import types
+import unittest.mock
+
+# Create a minimal mock for the entire app package chain
+# so we can import just our new modules without pulling in Flask/OpenAI
+_backend_dir = os.path.join(os.path.dirname(__file__), '..')
+sys.path.insert(0, _backend_dir)
+
+# Mock heavy deps
+for mod_name in [
+    'flask', 'flask_cors', 'openai', 'zep_cloud', 'zep_cloud.client',
+    'dotenv', 'camel', 'camel.messages', 'camel.agents', 'camel.agents.chat_agent',
+]:
+    if mod_name not in sys.modules:
+        sys.modules[mod_name] = unittest.mock.MagicMock()
+
+# Mock app.config and app.utils.logger so our modules can import
+app_pkg = types.ModuleType('app')
+app_pkg.__path__ = [os.path.join(_backend_dir, 'app')]
+sys.modules['app'] = app_pkg
+
+config_mod = types.ModuleType('app.config')
+
+
+class _FakeConfig:
+    ZEP_API_KEY = "fake"
+    LLM_API_KEY = "fake"
+    LLM_BASE_URL = ""
+    LLM_MODEL_NAME = ""
+
+
+config_mod.Config = _FakeConfig
+sys.modules['app.config'] = config_mod
+
+utils_mod = types.ModuleType('app.utils')
+utils_mod.__path__ = [os.path.join(_backend_dir, 'app', 'utils')]
+sys.modules['app.utils'] = utils_mod
+
+import logging
+
+logger_mod = types.ModuleType('app.utils.logger')
+
+
+def _get_logger(name):
+    return logging.getLogger(name)
+
+
+logger_mod.get_logger = _get_logger
+logger_mod.setup_logger = lambda: None
+sys.modules['app.utils.logger'] = logger_mod
+
+# Mock other utils
+for sub in ['llm_client', 'zep_paging']:
+    sys.modules[f'app.utils.{sub}'] = unittest.mock.MagicMock()
+
+# Now set up app.models and app.services
+models_mod = types.ModuleType('app.models')
+models_mod.__path__ = [os.path.join(_backend_dir, 'app', 'models')]
+sys.modules['app.models'] = models_mod
+
+services_mod = types.ModuleType('app.services')
+services_mod.__path__ = [os.path.join(_backend_dir, 'app', 'services')]
+sys.modules['app.services'] = services_mod
+
+# Import the actual modules we're testing
+from app.models.life_simulator import (
+    BaseIdentity, CareerState, LifeEvent, LifeEventType,
+    ActiveBlocker, BlockerType, FamilyMember, AgentSnapshot,
+    SimulationPath, ActionTypeMiroFish,
+)
+from app.services.agent_state_store import AgentStateStore
+from app.services.persona_renderer import PersonaRenderer
+from app.services.life_event_engine import LifeEventEngine
+from app.services.blocker_engine import BlockerEngine
+from app.services.life_simulation_loop import (
+    LifeSimulationOrchestrator, FormInput, cash_range_to_value,
+)
+
+import pytest
+
+
+# ============================================================
+# P1: Domain models
+# ============================================================
+
+class TestDomainModels:
+    def test_base_identity_to_dict(self):
+        identity = BaseIdentity(
+            name="田中太郎", age_at_start=32, education="東大工学部",
+            mbti="INTJ", stable_traits=["分析的", "慎重"],
+        )
+        d = identity.to_dict()
+        assert d["name"] == "田中太郎"
+        assert d["age_at_start"] == 32
+
+    def test_career_state_children(self):
+        state = CareerState(
+            family=[
+                FamilyMember(relation="child", age=3),
+                FamilyMember(relation="child", age=7),
+                FamilyMember(relation="parent", age=72),
+            ]
+        )
+        assert len(state.get_children()) == 2
+        assert len(state.get_parents()) == 1
+
+    def test_career_state_blocker_check(self):
+        state = CareerState(
+            blockers=[
+                ActiveBlocker(
+                    blocker_type=BlockerType.CHILDCARE,
+                    reason="育児中",
+                    blocked_actions=["startup", "overseas_assignment"],
+                    started_round=5,
+                )
+            ]
+        )
+        assert state.is_action_blocked("startup")
+        assert not state.is_action_blocked("job_change")
+        assert state.has_blocker(BlockerType.CHILDCARE)
+
+    def test_life_event_to_dict(self):
+        event = LifeEvent(
+            event_type=LifeEventType.PROMOTION,
+            round_number=10,
+            description="マネージャーに昇進",
+        )
+        d = event.to_dict()
+        assert d["event_type"] == "promotion"
+
+    def test_action_type_mirofish(self):
+        assert ActionTypeMiroFish.INTERNAL_MONOLOGUE.value == "internal_monologue"
+        assert ActionTypeMiroFish.CONSULT.value == "consult"
+        assert ActionTypeMiroFish.DECIDE.value == "decide"
+
+
+# ============================================================
+# P2: AgentStateStore
+# ============================================================
+
+class TestAgentStateStore:
+    def _make_store(self):
+        store = AgentStateStore()
+        identity = BaseIdentity(name="鈴木花子", age_at_start=30)
+        state = CareerState(
+            current_age=30, role="エンジニア", employer="TechCorp",
+            salary_annual=600, cash_buffer=500,
+            family=[FamilyMember(relation="parent", age=65)],
+        )
+        store.initialize_agent("agent1", identity, state)
+        return store
+
+    def test_initialize_and_get(self):
+        store = self._make_store()
+        assert store.get_identity("agent1").name == "鈴木花子"
+        assert store.get_state("agent1").salary_annual == 600
+
+    def test_tick_round_ages_quarterly(self):
+        store = self._make_store()
+        for _ in range(4):
+            store.tick_round("agent1")
+        state = store.get_state("agent1")
+        assert state.current_age == 31
+        assert state.current_round == 4
+        assert state.get_parents()[0].age == 66
+
+    def test_tick_round_financial(self):
+        store = self._make_store()
+        state = store.get_state("agent1")
+        state.monthly_expenses = 20
+        initial_cash = state.cash_buffer
+        store.tick_round("agent1")
+        # quarterly_salary = 600/4 = 150, quarterly_expenses = 20*3 = 60
+        assert store.get_state("agent1").cash_buffer == initial_cash + 90
+
+    def test_apply_event_promotion(self):
+        store = self._make_store()
+        event = LifeEvent(
+            event_type=LifeEventType.PROMOTION,
+            round_number=1,
+            description="シニアエンジニアに昇進",
+            state_changes={"role": "シニアエンジニア", "salary_annual": 750},
+        )
+        store.apply_event("agent1", event)
+        state = store.get_state("agent1")
+        assert state.role == "シニアエンジニア"
+        assert state.salary_annual == 750
+        assert state.years_in_role == 0
+
+    def test_apply_event_layoff(self):
+        store = self._make_store()
+        event = LifeEvent(
+            event_type=LifeEventType.LAYOFF,
+            round_number=1,
+            description="リストラ",
+        )
+        store.apply_event("agent1", event)
+        state = store.get_state("agent1")
+        assert state.role == "求職中"
+        assert state.salary_annual == 0
+
+    def test_snapshot(self):
+        store = self._make_store()
+        snap = store.snapshot("agent1")
+        assert snap.role == "エンジニア"
+        assert snap.salary_annual == 600
+        assert len(store.get_history("agent1")) == 1
+
+    def test_clone_state(self):
+        store = self._make_store()
+        cloned = store.clone_state("agent1")
+        cloned.salary_annual = 999
+        assert store.get_state("agent1").salary_annual == 600
+
+
+# ============================================================
+# P3: PersonaRenderer
+# ============================================================
+
+class TestPersonaRenderer:
+    def test_render_basic(self):
+        renderer = PersonaRenderer()
+        identity = BaseIdentity(
+            name="佐藤一郎", age_at_start=35,
+            education="慶應義塾大学", mbti="ENFP",
+        )
+        state = CareerState(
+            current_age=37, role="マネージャー", employer="BigCorp",
+            salary_annual=800, cash_buffer=1500,
+            family=[FamilyMember(relation="child", age=5)],
+            marital_status="married",
+        )
+        msg = renderer.render_system_message(identity, state)
+        assert "佐藤一郎" in msg
+        assert "37歳" in msg
+        assert "マネージャー" in msg
+        assert "800万円" in msg
+
+    def test_render_with_blockers(self):
+        renderer = PersonaRenderer()
+        identity = BaseIdentity(name="テスト", age_at_start=30)
+        state = CareerState(
+            current_age=30,
+            blockers=[
+                ActiveBlocker(
+                    blocker_type=BlockerType.CHILDCARE,
+                    reason="育児中（子供: 2歳）",
+                    blocked_actions=["startup"],
+                    started_round=1,
+                )
+            ],
+        )
+        msg = renderer.render_system_message(identity, state)
+        assert "制約条件" in msg
+        assert "育児中" in msg
+
+    def test_render_with_round_context(self):
+        renderer = PersonaRenderer()
+        identity = BaseIdentity(name="テスト", age_at_start=30)
+        state = CareerState(current_age=30)
+        msg = renderer.render_system_message(
+            identity, state, round_context="今期のイベント:\n- 昇進"
+        )
+        assert "今期の状況" in msg
+        assert "昇進" in msg
+
+
+# ============================================================
+# P4: LifeEventEngine
+# ============================================================
+
+class TestLifeEventEngine:
+    def test_scheduled_event_fires(self):
+        engine = LifeEventEngine(seed=42)
+        event = LifeEvent(
+            event_type=LifeEventType.CAREER_PHASE_CHANGE,
+            round_number=10,
+            description="フェーズ2: 転職検討期",
+        )
+        engine.add_scheduled_event(event)
+
+        state = CareerState(current_round=10, current_age=32)
+        fired = engine.evaluate("agent1", state)
+        assert any(e.event_type == LifeEventType.CAREER_PHASE_CHANGE for e in fired)
+
+    def test_scheduled_event_does_not_fire_wrong_round(self):
+        engine = LifeEventEngine(seed=42)
+        event = LifeEvent(
+            event_type=LifeEventType.CAREER_PHASE_CHANGE,
+            round_number=10,
+            description="フェーズ2",
+        )
+        engine.add_scheduled_event(event)
+
+        state = CareerState(current_round=5, current_age=32)
+        fired = engine.evaluate("agent1", state)
+        assert not any(e.event_type == LifeEventType.CAREER_PHASE_CHANGE for e in fired)
+
+    def test_elder_care_probabilistic(self):
+        engine = LifeEventEngine(seed=1)
+        state = CareerState(
+            current_round=20, current_age=45,
+            family=[FamilyMember(relation="parent", age=80)],
+        )
+        fired_any = False
+        for i in range(50):
+            state.current_round = 20 + i
+            events = engine.evaluate("agent1", state)
+            if any(e.event_type == LifeEventType.ELDER_CARE_START for e in events):
+                fired_any = True
+                break
+        assert fired_any
+
+
+# ============================================================
+# P5: BlockerEngine
+# ============================================================
+
+class TestBlockerEngine:
+    def test_childcare_blocker(self):
+        engine = BlockerEngine()
+        state = CareerState(
+            current_age=32,
+            family=[FamilyMember(relation="child", age=2)],
+        )
+        blockers = engine.evaluate(state)
+        childcare = [b for b in blockers if b.blocker_type == BlockerType.CHILDCARE]
+        assert len(childcare) == 1
+        assert "startup" in childcare[0].blocked_actions
+
+    def test_no_childcare_blocker_older_child(self):
+        engine = BlockerEngine()
+        state = CareerState(
+            current_age=40,
+            family=[FamilyMember(relation="child", age=10)],
+        )
+        blockers = engine.evaluate(state)
+        childcare = [b for b in blockers if b.blocker_type == BlockerType.CHILDCARE]
+        assert len(childcare) == 0
+
+    def test_exam_period_blocker(self):
+        engine = BlockerEngine()
+        state = CareerState(
+            current_age=45,
+            family=[FamilyMember(relation="child", age=15)],
+        )
+        blockers = engine.evaluate(state)
+        exam = [b for b in blockers if b.blocker_type == BlockerType.EXAM_PERIOD]
+        assert len(exam) == 1
+
+    def test_mortgage_blocker(self):
+        engine = BlockerEngine()
+        state = CareerState(
+            current_age=35, salary_annual=500,
+            mortgage_remaining=2000,
+        )
+        blockers = engine.evaluate(state)
+        mortgage = [b for b in blockers if b.blocker_type == BlockerType.MORTGAGE]
+        assert len(mortgage) == 1
+
+    def test_no_mortgage_blocker_manageable(self):
+        engine = BlockerEngine()
+        state = CareerState(
+            current_age=35, salary_annual=800,
+            mortgage_remaining=2000,
+        )
+        blockers = engine.evaluate(state)
+        mortgage = [b for b in blockers if b.blocker_type == BlockerType.MORTGAGE]
+        assert len(mortgage) == 0
+
+    def test_age_wall_35(self):
+        engine = BlockerEngine()
+        state = CareerState(current_age=37)
+        blockers = engine.evaluate(state)
+        age = [b for b in blockers if b.blocker_type == BlockerType.AGE_WALL]
+        assert len(age) == 1
+        assert "35歳超" in age[0].reason
+
+    def test_age_wall_45(self):
+        engine = BlockerEngine()
+        state = CareerState(current_age=47)
+        blockers = engine.evaluate(state)
+        age = [b for b in blockers if b.blocker_type == BlockerType.AGE_WALL]
+        assert len(age) == 1
+        assert "45歳超" in age[0].reason
+
+    def test_elder_care_blocker(self):
+        engine = BlockerEngine()
+        state = CareerState(
+            current_age=50,
+            family=[FamilyMember(relation="parent", age=78, notes="要介護2")],
+        )
+        blockers = engine.evaluate(state)
+        care = [b for b in blockers if b.blocker_type == BlockerType.ELDER_CARE]
+        assert len(care) == 1
+
+
+# ============================================================
+# P6+P7: LifeSimulationOrchestrator
+# ============================================================
+
+class TestLifeSimulationOrchestrator:
+    def _make_orchestrator(self):
+        orchestrator = LifeSimulationOrchestrator(seed=42)
+        profile = {
+            "name": "山田太郎",
+            "age": 32,
+            "current_role": "ソフトウェアエンジニア",
+            "current_employer": "TechStartup Inc",
+            "industry": "IT",
+            "salary": 650,
+            "skills": ["Python", "AWS"],
+        }
+        form_input = FormInput(
+            family_members=[
+                FamilyMember(relation="spouse", age=30),
+                FamilyMember(relation="child", age=2),
+                FamilyMember(relation="parent", age=65),
+            ],
+            marital_status="married",
+            mortgage_remaining=3000,
+            cash_buffer_range="500-2000",
+            monthly_expenses=30,
+        )
+        orchestrator.initialize_from_profile("agent1", profile, form_input)
+        return orchestrator
+
+    def test_initialize(self):
+        orch = self._make_orchestrator()
+        identity = orch.state_store.get_identity("agent1")
+        assert identity.name == "山田太郎"
+        state = orch.state_store.get_state("agent1")
+        assert state.salary_annual == 650
+        assert state.cash_buffer == 1000
+        assert len(state.family) == 3
+
+    def test_pre_round_hook(self):
+        orch = self._make_orchestrator()
+        result = orch.pre_round_hook("agent1", 1)
+        assert "round" in result
+        assert "age" in result
+        assert "persona_text" in result
+        assert "山田太郎" in result["persona_text"]
+
+    def test_post_round_hook(self):
+        orch = self._make_orchestrator()
+        orch.pre_round_hook("agent1", 1)
+        snap = orch.post_round_hook("agent1", 1)
+        assert isinstance(snap, AgentSnapshot)
+        assert snap.round_number == 1
+
+    def test_full_10_rounds(self):
+        orch = self._make_orchestrator()
+        for r in range(1, 11):
+            orch.pre_round_hook("agent1", r)
+            orch.post_round_hook("agent1", r)
+
+        state = orch.state_store.get_state("agent1")
+        assert state.current_round == 10
+        assert len(orch.state_store.get_history("agent1")) == 10
+
+    def test_blockers_activate_for_young_child(self):
+        orch = self._make_orchestrator()
+        orch.pre_round_hook("agent1", 1)
+        state = orch.state_store.get_state("agent1")
+        assert state.has_blocker(BlockerType.CHILDCARE)
+
+    def test_cash_range_conversion(self):
+        assert cash_range_to_value("500未満") == 250
+        assert cash_range_to_value("500-2000") == 1000
+        assert cash_range_to_value("2000+") == 3000
+
+    def test_simulation_summary(self):
+        orch = self._make_orchestrator()
+        for r in range(1, 5):
+            orch.pre_round_hook("agent1", r)
+            orch.post_round_hook("agent1", r)
+        summary = orch.get_simulation_summary("agent1")
+        assert summary["identity"]["name"] == "山田太郎"
+        assert summary["total_rounds"] == 4
+        assert len(summary["history"]) == 4
+
+    def test_decide_action_job_change(self):
+        orch = self._make_orchestrator()
+        orch.pre_round_hook("agent1", 1)
+        orch.post_round_hook("agent1", 1, agent_action_result={
+            "decision": {
+                "type": "job_change",
+                "new_employer": "BigCorp",
+                "new_role": "テックリード",
+                "new_salary": 900,
+            }
+        })
+        state = orch.state_store.get_state("agent1")
+        assert state.employer == "BigCorp"
+        assert state.salary_annual == 900
+
+    def test_decide_action_startup_blocked(self):
+        orch = self._make_orchestrator()
+        orch.pre_round_hook("agent1", 1)
+        state = orch.state_store.get_state("agent1")
+        assert state.is_action_blocked("startup")
+        orch.post_round_hook("agent1", 1, agent_action_result={
+            "decision": {"type": "startup"}
+        })
+        assert state.employer != "自営業"
+
+
+if __name__ == "__main__":
+    pytest.main([__file__, "-v"])

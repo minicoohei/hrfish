@@ -24,7 +24,9 @@ from ..services.life_simulation_loop import (
 from ..services.multipath_simulator import (
     MultiPathSimulator, PathConfig, build_default_paths,
 )
+from ..utils.error_handler import error_response
 from ..utils.logger import get_logger
+from ..utils.validators import validate_safe_id
 
 logger = get_logger('mirofish.api.life_simulation')
 
@@ -150,7 +152,7 @@ def initialize_life_simulation():
 
     except Exception as e:
         logger.error(f"Life simulation init failed: {e}", exc_info=True)
-        return jsonify({"success": False, "error": str(e)}), 500
+        return error_response("Life simulation initialization failed")
 
 
 @life_sim_bp.route('/chat', methods=['POST'])
@@ -220,13 +222,14 @@ def life_simulation_chat():
 
     except Exception as e:
         logger.error(f"Life simulation chat failed: {e}", exc_info=True)
-        return jsonify({"success": False, "error": str(e)}), 500
+        return error_response("Life simulation chat failed")
 
 
 @life_sim_bp.route('/summary/<simulation_id>', methods=['GET'])
 def get_life_simulation_summary(simulation_id):
     """Get full simulation path summary with history."""
     try:
+        validate_safe_id(simulation_id, "simulation_id")
         entry = _orchestrators.get(simulation_id)
         if entry is None:
             return jsonify({"success": False, "error": "Simulation not found"}), 404
@@ -239,7 +242,7 @@ def get_life_simulation_summary(simulation_id):
 
     except Exception as e:
         logger.error(f"Get summary failed: {e}", exc_info=True)
-        return jsonify({"success": False, "error": str(e)}), 500
+        return error_response("Failed to get simulation summary")
 
 
 @life_sim_bp.route('/multipath/run', methods=['POST'])
@@ -252,7 +255,9 @@ def run_multipath_simulation():
 
         profile = data.get("profile", {})
         life_ctx = data.get("life_context", {})
-        round_count = data.get("round_count", 40)
+        round_count = min(int(data.get("round_count", 40)), 200)
+        if round_count < 1:
+            return jsonify({"success": False, "error": "round_count must be between 1 and 200"}), 400
         seed = data.get("seed")  # None → random seed for non-deterministic simulation
 
         simulation_id = _generate_sim_id()
@@ -302,13 +307,15 @@ def run_multipath_simulation():
 
     except Exception as e:
         logger.error(f"Multi-path simulation failed: {e}", exc_info=True)
-        return jsonify({"success": False, "error": str(e)}), 500
+        return error_response("Multi-path simulation failed")
 
 
 @life_sim_bp.route('/multipath/timeline/<simulation_id>/<path_id>', methods=['GET'])
 def get_multipath_timeline(simulation_id, path_id):
     """Get detailed timeline for a specific path."""
     try:
+        validate_safe_id(simulation_id, "simulation_id")
+        validate_safe_id(path_id, "path_id")
         simulator = _multipath_sims.get(simulation_id)
         if simulator is None:
             return jsonify({"success": False, "error": "Simulation not found"}), 404
@@ -322,13 +329,14 @@ def get_multipath_timeline(simulation_id, path_id):
 
     except Exception as e:
         logger.error(f"Get timeline failed: {e}", exc_info=True)
-        return jsonify({"success": False, "error": str(e)}), 500
+        return error_response("Failed to get path timeline")
 
 
 @life_sim_bp.route('/multipath/report/<simulation_id>', methods=['GET'])
 def get_multipath_report(simulation_id):
     """Get comparison report for a completed multi-path simulation."""
     try:
+        validate_safe_id(simulation_id, "simulation_id")
         simulator = _multipath_sims.get(simulation_id)
         if simulator is None:
             return jsonify({"success": False, "error": "Simulation not found"}), 404
@@ -339,4 +347,4 @@ def get_multipath_report(simulation_id):
 
     except Exception as e:
         logger.error(f"Get report failed: {e}", exc_info=True)
-        return jsonify({"success": False, "error": str(e)}), 500
+        return error_response("Failed to get comparison report")

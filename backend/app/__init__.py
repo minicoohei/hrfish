@@ -2,6 +2,7 @@
 MiroFish Backend - Flask application factory
 """
 
+import hmac
 import os
 import warnings
 
@@ -9,7 +10,7 @@ import warnings
 # Must be set before all other imports
 warnings.filterwarnings("ignore", message=".*resource_tracker.*")
 
-from flask import Flask, request
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 
 from .config import Config
@@ -40,7 +41,24 @@ def create_app(config_class=Config):
         logger.info("=" * 50)
     
     # Enable CORS
-    CORS(app, resources={r"/api/*": {"origins": "*"}})
+    CORS(app, resources={r"/api/*": {"origins": app.config.get('CORS_ORIGINS', ['http://localhost:3000'])}})
+
+    # Rate limiting
+    try:
+        from flask_limiter import Limiter
+        from flask_limiter.util import get_remote_address
+        limiter = Limiter(
+            get_remote_address,
+            app=app,
+            default_limits=["200 per hour", "50 per minute"],
+            storage_uri="memory://",
+        )
+        app.limiter = limiter
+        if should_log_startup:
+            logger.info("Rate limiting enabled")
+    except ImportError:
+        if should_log_startup:
+            logger.warning("flask-limiter not installed, rate limiting disabled")
     
     # Register simulation process cleanup (ensure termination on server shutdown)
     from .services.simulation_runner import SimulationRunner
@@ -48,13 +66,30 @@ def create_app(config_class=Config):
     if should_log_startup:
         logger.info("Simulation process cleanup registered")
     
+    # API key authentication middleware
+    @app.before_request
+    def check_api_key():
+        if request.path == '/health' or request.method == 'OPTIONS':
+            return None
+        if not request.path.startswith('/api/'):
+            return None
+        api_key = app.config.get('API_KEY')
+        if not api_key:
+            return None  # Auth disabled in dev mode
+        provided = request.headers.get('X-API-Key')
+        if not provided or not hmac.compare_digest(provided, api_key):
+            return jsonify({"success": False, "error": "Invalid or missing API key"}), 401
+
     # Request logging middleware
     @app.before_request
     def log_request():
         logger = get_logger('mirofish.request')
         logger.debug(f"Request: {request.method} {request.path}")
         if request.content_type and 'json' in request.content_type:
-            logger.debug(f"Request body: {request.get_json(silent=True)}")
+            body = request.get_json(silent=True)
+            if body:
+                safe_keys = list(body.keys())
+                logger.debug(f"Request body keys: {safe_keys}")
     
     @app.after_request
     def log_response(response):
@@ -75,8 +110,22 @@ def create_app(config_class=Config):
     def health():
         return {'status': 'ok', 'service': 'MiroFish Backend'}
     
+    # Global error handlers
+    @app.errorhandler(500)
+    def internal_error(e):
+        from .utils.error_handler import error_response
+        return error_response("Internal server error")
+
+    @app.errorhandler(404)
+    def not_found(e):
+        return jsonify({"success": False, "error": "Not found"}), 404
+
+    @app.errorhandler(400)
+    def bad_request(e):
+        return jsonify({"success": False, "error": "Bad request"}), 400
+
     if should_log_startup:
         logger.info("MiroFish Backend started")
-    
+
     return app
 

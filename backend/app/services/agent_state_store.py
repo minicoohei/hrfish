@@ -109,6 +109,15 @@ class AgentStateStore:
             state.salary_annual = int(state.salary_annual * (1 + increase / 100))
             _handled_keys.update({"salary_annual", "salary_increase_pct"})
 
+        elif event.event_type == LifeEventType.ELDER_CARE_END:
+            state.stress_level = max(0.0, state.stress_level - 0.2)
+            state.work_life_balance = min(1.0, state.work_life_balance + 0.2)
+            for parent in state.get_parents():
+                if "介護" in parent.notes:
+                    parent.notes = ""
+                    break
+
+
         elif event.event_type == LifeEventType.MARKET_CRASH:
             state.cash_buffer = int(state.cash_buffer * 0.7)
             _handled_keys.add("cash_buffer")

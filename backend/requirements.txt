@@ -9,6 +9,9 @@
 flask>=3.0.0
 flask-cors>=6.0.0
 
+# Rate limiting
+Flask-Limiter>=3.0.0
+
 # ============= LLM 相关 =============
 # OpenAI SDK（统一使用 OpenAI 格式调用 LLM）
 openai>=1.0.0

@@ -28,7 +28,7 @@ export function getPendingUpload() {
 }
 
 export function clearPendingUpload() {
-  state.files = []
+  state.files = []  // releases File object references for GC
   state.simulationRequirement = ''
   state.lifeContext = null
   state.isPending = false

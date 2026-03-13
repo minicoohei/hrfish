@@ -83,6 +83,9 @@ from app.services.blocker_engine import BlockerEngine
 from app.services.life_simulation_loop import (
     LifeSimulationOrchestrator, FormInput, cash_range_to_value,
 )
+from app.services.multipath_simulator import (
+    MultiPathSimulator, PathConfig, build_default_paths,
+)
 
 import pytest
 
@@ -558,7 +561,6 @@ class TestMultiPathSimulator(unittest.TestCase):
 
     def test_initialize_default_paths(self):
         """Default 3 paths are created when no custom config given."""
-        from app.services.multipath_simulator import MultiPathSimulator
         sim = MultiPathSimulator(base_seed=42)
         path_ids = sim.initialize(self.identity, self.initial_state)
         self.assertEqual(len(path_ids), 3)
@@ -568,7 +570,6 @@ class TestMultiPathSimulator(unittest.TestCase):
 
     def test_build_default_paths_labels(self):
         """Default paths have correct labels based on state."""
-        from app.services.multipath_simulator import build_default_paths
         paths = build_default_paths(self.initial_state, 40)
         labels = {p.path_id: p.path_label for p in paths}
         self.assertEqual(labels["path_a"], "現職継続")
@@ -578,7 +579,6 @@ class TestMultiPathSimulator(unittest.TestCase):
 
     def test_build_default_paths_startup_blocked(self):
         """When startup is blocked, path_c becomes industry change."""
-        from app.services.multipath_simulator import build_default_paths
         # Add mortgage blocker that blocks startup
         self.initial_state.blockers = [
             ActiveBlocker(
@@ -594,7 +594,6 @@ class TestMultiPathSimulator(unittest.TestCase):
 
     def test_run_all_completes(self):
         """All 3 paths run to completion."""
-        from app.services.multipath_simulator import MultiPathSimulator
         sim = MultiPathSimulator(base_seed=42)
         sim.initialize(self.identity, self.initial_state, round_count=20)
         results = sim.run_all()
@@ -605,7 +604,6 @@ class TestMultiPathSimulator(unittest.TestCase):
 
     def test_paths_diverge(self):
         """Different paths produce different final states."""
-        from app.services.multipath_simulator import MultiPathSimulator
         sim = MultiPathSimulator(base_seed=42)
         sim.initialize(self.identity, self.initial_state, round_count=20)
         results = sim.run_all()
@@ -617,7 +615,6 @@ class TestMultiPathSimulator(unittest.TestCase):
 
     def test_comparison_report_structure(self):
         """Comparison report has required fields."""
-        from app.services.multipath_simulator import MultiPathSimulator
         sim = MultiPathSimulator(base_seed=42)
         sim.initialize(self.identity, self.initial_state, round_count=8)
         sim.run_all()
@@ -635,7 +632,6 @@ class TestMultiPathSimulator(unittest.TestCase):
 
     def test_comparison_rankings(self):
         """Rankings identify best path per dimension."""
-        from app.services.multipath_simulator import MultiPathSimulator
         sim = MultiPathSimulator(base_seed=42)
         sim.initialize(self.identity, self.initial_state, round_count=12)
         sim.run_all()
@@ -648,7 +644,6 @@ class TestMultiPathSimulator(unittest.TestCase):
 
     def test_get_path_timeline(self):
         """Can retrieve detailed timeline for specific path."""
-        from app.services.multipath_simulator import MultiPathSimulator
         sim = MultiPathSimulator(base_seed=42)
         sim.initialize(self.identity, self.initial_state, round_count=8)
         sim.run_all()
@@ -659,7 +654,6 @@ class TestMultiPathSimulator(unittest.TestCase):
 
     def test_path_isolation(self):
         """Events in one path don't affect other paths."""
-        from app.services.multipath_simulator import MultiPathSimulator
         sim = MultiPathSimulator(base_seed=42)
         sim.initialize(self.identity, self.initial_state, round_count=20)
         results = sim.run_all()
@@ -671,7 +665,6 @@ class TestMultiPathSimulator(unittest.TestCase):
 
     def test_custom_path_configs(self):
         """Can provide custom path configurations."""
-        from app.services.multipath_simulator import MultiPathSimulator, PathConfig
         custom = [
             PathConfig(
                 path_id="custom_1",
@@ -799,7 +792,6 @@ class TestReviewFixes(unittest.TestCase):
 
     def test_major4_partial_path_failure(self):
         """MAJOR-4: run_all continues when one path fails."""
-        from app.services.multipath_simulator import MultiPathSimulator, PathConfig
 
         sim = MultiPathSimulator(base_seed=42)
         identity = BaseIdentity(name="test", age_at_start=30)

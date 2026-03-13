@@ -45,7 +45,11 @@ def cash_range_to_value(range_str: str) -> int:
         "500-2000": 1000,
         "2000+": 3000,
     }
-    return mapping.get(range_str, 250)
+    value = mapping.get(range_str)
+    if value is None:
+        logger.warning(f"Unknown cash_buffer_range '{range_str}', defaulting to 250")
+        return 250
+    return value
 
 
 class LifeSimulationOrchestrator:

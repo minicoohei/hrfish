@@ -33,6 +33,10 @@ class LifeEventEngine:
     def add_scheduled_events(self, events: List[LifeEvent]) -> None:
         self._scheduled_events.extend(events)
 
+    def clear_scheduled_events(self) -> None:
+        """Clear all scheduled events (use before re-initializing for a new agent)."""
+        self._scheduled_events.clear()
+
     def evaluate(self, agent_id: str, state: CareerState) -> List[LifeEvent]:
         """
         Evaluate all possible events for this round.
@@ -56,10 +60,10 @@ class LifeEventEngine:
         """Check probability-based events against current state."""
         events: List[LifeEvent] = []
 
-        # Elder care: parents 75+ → 5% per round
+        # Elder care: parents 75+ → 5% per round to start
         for parent in state.get_parents():
             if parent.age >= 75 and not state.has_blocker(BlockerType.ELDER_CARE):
-                if self._rng.random() < 0.05:
+                if "介護" not in parent.notes and self._rng.random() < 0.05:
                     events.append(LifeEvent(
                         event_type=LifeEventType.ELDER_CARE_START,
                         round_number=state.current_round,
@@ -67,7 +71,19 @@ class LifeEventEngine:
                         state_changes={},
                     ))
 
-        # Market crash: 2% per round (roughly once every 12.5 years)
+        # Elder care end: 10% per round if caring (avg ~2.5 years)
+        for parent in state.get_parents():
+            if parent.notes and "介護" in parent.notes:
+                if self._rng.random() < 0.10:
+                    parent.notes = ""
+                    events.append(LifeEvent(
+                        event_type=LifeEventType.ELDER_CARE_END,
+                        round_number=state.current_round,
+                        description=f"{parent.relation}（{parent.age}歳）の介護が終了した",
+                        state_changes={},
+                    ))
+
+        # Market crash: 2% per round (expected ~once every 50 rounds / 12.5 years)
         if state.cash_buffer > 500 and self._rng.random() < 0.02:
             events.append(LifeEvent(
                 event_type=LifeEventType.MARKET_CRASH,

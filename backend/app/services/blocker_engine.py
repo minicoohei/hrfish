@@ -55,9 +55,10 @@ class BlockerEngine:
         exam_children = [c for c in state.get_children() if c.age in (15, 18)]
         if not exam_children:
             return []
+        ages = ", ".join(f"{c.age}歳" for c in exam_children)
         return [ActiveBlocker(
             blocker_type=BlockerType.EXAM_PERIOD,
-            reason=f"子供の受験期（{exam_children[0].age}歳）",
+            reason=f"子供の受験期（{ages}）",
             blocked_actions=["relocation_transfer", "overseas_assignment"],
             started_round=state.current_round,
             expires_round=state.current_round + 4,  # 1 year
@@ -70,7 +71,7 @@ class BlockerEngine:
             return []
         return [ActiveBlocker(
             blocker_type=BlockerType.EDUCATION_COST,
-            reason=f"教育費ピーク（大学生の子供あり）",
+            reason="教育費ピーク（大学生の子供あり）",
             blocked_actions=["salary_decrease_job_change", "startup"],
             started_round=state.current_round,
         )]
@@ -96,7 +97,7 @@ class BlockerEngine:
             return []
         return [ActiveBlocker(
             blocker_type=BlockerType.ELDER_CARE,
-            reason=f"親の介護中",
+            reason="親の介護中",
             blocked_actions=["relocation_transfer", "overseas_assignment", "long_business_trip"],
             started_round=state.current_round,
         )]
@@ -109,14 +110,14 @@ class BlockerEngine:
         if state.current_age >= 45:
             return [ActiveBlocker(
                 blocker_type=BlockerType.AGE_WALL,
-                reason=f"45歳超：未経験分野への転職は極めて困難",
+                reason="45歳超：未経験分野への転職は極めて困難",
                 blocked_actions=["career_change_to_new_field"],
                 started_round=state.current_round,
             )]
         else:
             return [ActiveBlocker(
                 blocker_type=BlockerType.AGE_WALL,
-                reason=f"35歳超：未経験転職の成功率が低下",
+                reason="35歳超：未経験転職の成功率が低下",
                 blocked_actions=["career_change_to_new_field_easy"],
                 started_round=state.current_round,
             )]

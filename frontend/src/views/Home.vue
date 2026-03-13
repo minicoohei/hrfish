@@ -347,10 +347,16 @@ const handleDrop = (e) => {
 }
 
 // Add files
+const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
 const addFiles = (newFiles) => {
   const validFiles = newFiles.filter(file => {
     const ext = file.name.split('.').pop().toLowerCase()
-    return ['pdf', 'md', 'txt'].includes(ext)
+    if (!['pdf', 'md', 'txt'].includes(ext)) return false
+    if (file.size > MAX_FILE_SIZE) {
+      error.value = `${file.name} is too large (max 10MB)`
+      return false
+    }
+    return true
   })
   files.value.push(...validFiles)
 }
@@ -392,6 +398,9 @@ const startSimulation = () => {
       name: 'Process',
       params: { projectId: 'new' }
     })
+  }).catch(err => {
+    console.error('Failed to load upload store:', err)
+    error.value = 'Failed to start simulation. Please try again.'
   })
 }
 </script>

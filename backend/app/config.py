@@ -4,6 +4,7 @@ Loads from project root .env file
 """
 
 import os
+import warnings
 from dotenv import load_dotenv
 
 # Load .env file from project root
@@ -21,11 +22,25 @@ class Config:
     """Flask configuration class"""
     
     # Flask config
-    SECRET_KEY = os.environ.get('SECRET_KEY', 'mirofish-secret-key')
-    DEBUG = os.environ.get('FLASK_DEBUG', 'True').lower() == 'true'
+    # WARNING: In multi-worker deployments (gunicorn), set SECRET_KEY in .env
+    # to ensure all workers share the same key for session consistency.
+    SECRET_KEY = os.environ.get('SECRET_KEY') or os.urandom(24).hex()
+    if not os.environ.get('SECRET_KEY'):
+        warnings.warn(
+            "SECRET_KEY not set in environment. Using auto-generated key. "
+            "Set SECRET_KEY in .env for production deployments.",
+            stacklevel=1,
+        )
+    DEBUG = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
     
     # JSON config - disable ASCII escaping for proper Unicode display
     JSON_AS_ASCII = False
+
+    # CORS config
+    CORS_ORIGINS = os.environ.get('CORS_ORIGINS', 'http://localhost:3000').split(',')
+
+    # API authentication (None = auth disabled for development)
+    API_KEY = os.environ.get('MIROFISH_API_KEY')
     
     # LLM config (unified OpenAI format)
     LLM_API_KEY = os.environ.get('LLM_API_KEY')

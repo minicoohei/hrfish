@@ -48,7 +48,7 @@
               
               <div class="section-body" v-show="!collapsedSections.has(idx)">
                 <!-- Completed Content -->
-                <div v-if="generatedSections[idx + 1]" class="generated-content" v-html="renderMarkdown(generatedSections[idx + 1])"></div>
+                <div v-if="generatedSections[idx + 1]" class="generated-content" v-html="renderMarkdownSafe(generatedSections[idx + 1])"></div>
                 
                 <!-- Loading State -->
                 <div v-else-if="currentSectionIndex === idx + 1" class="loading-state">
@@ -391,6 +391,7 @@
 
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted, nextTick, h, reactive } from 'vue'
+import DOMPurify from 'dompurify'
 import { useRouter } from 'vue-router'
 import { getAgentLog, getConsoleLog } from '../api/report'
 
@@ -1554,7 +1555,7 @@ const InterviewDisplay = {
               return h('blockquote', { 
                 key: qi, 
                 class: 'quote-item',
-                innerHTML: renderMarkdown(displayQuote)
+                innerHTML: renderMarkdownSafe(displayQuote)
               })
             })
           )
@@ -1566,7 +1567,7 @@ const InterviewDisplay = {
         h('div', { class: 'summary-header' }, 'Interview Summary'),
         h('div', { 
           class: 'summary-content',
-          innerHTML: renderMarkdown(props.result.summary.length > 500 ? props.result.summary.substring(0, 500) + '...' : props.result.summary)
+          innerHTML: renderMarkdownSafe(props.result.summary.length > 500 ? props.result.summary.substring(0, 500) + '...' : props.result.summary)
         })
       ])
     ])
@@ -1969,6 +1970,10 @@ const renderMarkdown = (content) => {
   html = tokens.join('')
 
   return html
+}
+
+const renderMarkdownSafe = (content) => {
+  return DOMPurify.sanitize(renderMarkdown(content))
 }
 
 const getTimelineItemClass = (log, idx, total) => {

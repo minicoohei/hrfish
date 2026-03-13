@@ -4,9 +4,9 @@
 
 <a href="https://trendshift.io/repositories/16144" target="_blank"><img src="https://trendshift.io/api/badge/repositories/16144" alt="666ghj%2FMiroFish | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 
-简洁通用的群体智能引擎，预测万物
+AI-Powered Career & Life Path Simulator
 </br>
-<em>A Simple and Universal Swarm Intelligence Engine, Predicting Anything</em>
+<em>Multi-Agent Career Simulator - Predict Your Future Career Paths</em>
 
 <a href="https://www.shanda.com/" target="_blank"><img src="./static/image/shanda_logo.png" alt="666ghj%2MiroFish | Shanda" height="40"/></a>
 
@@ -20,9 +20,37 @@
 [![X](https://img.shields.io/badge/X-Follow-000000?style=flat-square&logo=x&logoColor=white)](https://x.com/mirofish_ai)
 [![Instagram](https://img.shields.io/badge/Instagram-Follow-E4405F?style=flat-square&logo=instagram&logoColor=white)](https://www.instagram.com/mirofish_ai/)
 
-[English](./README-EN.md) | [中文文档](./README.md)
+[English](./README-EN.md) | [中文文档](./README.md) | [日本語](./README-JA.md)
 
 </div>
+
+## ⚡ Career Simulator
+
+MiroFish Career Simulator uses multi-agent technology to simulate realistic career and life paths. Input your profile, and the engine generates multiple parallel career trajectories with life events, blockers, and outcomes.
+
+### Key Features
+
+- **Multi-Path Simulation**: Run 3 career paths in parallel and compare outcomes
+- **Life Event Engine**: Realistic life events (childcare, education, aging) that impact career decisions
+- **Blocker Analysis**: 6 categories of career blockers evaluated at each stage
+- **Interactive Chat**: Explore simulation results through conversational AI
+- **Comparison Reports**: Side-by-side career path analysis with actionable insights
+
+### Architecture (P1-P10)
+
+| Phase | Component | Description |
+|-------|-----------|-------------|
+| P1 | Domain Models | BaseIdentity (immutable) + CareerState (mutable) |
+| P2 | AgentStateStore | Agent lifecycle state management |
+| P3 | PersonaRenderer | Dynamic system message generation |
+| P4 | LifeEventEngine | Scheduled & probabilistic life events |
+| P5 | BlockerEngine | 6-category career blocker evaluation |
+| P6-P7 | SimulationLoop | Round-based simulation orchestration |
+| P8 | OASIS Integration | Social simulation platform bridge |
+| P9 | Single Path | Complete single-path simulation |
+| P10 | MultiPath | Parallel 3-path comparison simulator |
+
+---
 
 ## ⚡ 项目概述
 
@@ -160,6 +188,22 @@ npm run dev
 ```bash
 npm run backend   # 仅启动后端
 npm run frontend  # 仅启动前端
+```
+
+#### 4. Security Configuration (Production)
+
+```env
+# API authentication (recommended for production)
+MIROFISH_API_KEY=your_strong_random_key
+
+# Restrict CORS origins
+CORS_ORIGINS=https://yourdomain.com
+
+# Ensure debug is off
+FLASK_DEBUG=False
+
+# Set a strong secret key
+SECRET_KEY=your_strong_secret_key
 ```
 
 ### 二、Docker 部署

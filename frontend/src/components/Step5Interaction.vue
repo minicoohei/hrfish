@@ -48,7 +48,7 @@
               
               <div class="section-body" v-show="!collapsedSections.has(idx)">
                 <!-- Completed Content -->
-                <div v-if="generatedSections[idx + 1]" class="generated-content" v-html="renderMarkdown(generatedSections[idx + 1])"></div>
+                <div v-if="generatedSections[idx + 1]" class="generated-content" v-html="renderMarkdownSafe(generatedSections[idx + 1])"></div>
                 
                 <!-- Loading State -->
                 <div v-else-if="currentSectionIndex === idx + 1" class="loading-state">
@@ -270,7 +270,7 @@
                   </span>
                   <span class="message-time">{{ formatTime(msg.timestamp) }}</span>
                 </div>
-                <div class="message-text" v-html="renderMarkdown(msg.content)"></div>
+                <div class="message-text" v-html="renderMarkdownSafe(msg.content)"></div>
               </div>
             </div>
             <div v-if="isSending" class="chat-message assistant">
@@ -400,7 +400,7 @@
                   </svg>
                   <span>{{ result.question }}</span>
                 </div>
-                <div class="result-answer" v-html="renderMarkdown(result.answer)"></div>
+                <div class="result-answer" v-html="renderMarkdownSafe(result.answer)"></div>
               </div>
             </div>
           </div>
@@ -412,6 +412,7 @@
 
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
+import DOMPurify from 'dompurify'
 import { chatWithReport, getReport, getAgentLog } from '../api/report'
 import { interviewAgents, getSimulationProfilesRealtime } from '../api/simulation'
 
@@ -636,6 +637,10 @@ const renderMarkdown = (content) => {
   html = tokens.join('')
 
   return html
+}
+
+const renderMarkdownSafe = (content) => {
+  return DOMPurify.sanitize(renderMarkdown(content))
 }
 
 // Chat Methods

@@ -137,6 +137,8 @@ class SimulationManager:
     
     def _get_simulation_dir(self, simulation_id: str) -> str:
         """Get simulation data directory"""
+        from ..utils.validators import validate_safe_id
+        validate_safe_id(simulation_id, "simulation_id")
         sim_dir = os.path.join(self.SIMULATION_DATA_DIR, simulation_id)
         os.makedirs(sim_dir, exist_ok=True)
         return sim_dir

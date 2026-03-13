@@ -7,12 +7,14 @@ import { reactive } from 'vue'
 const state = reactive({
   files: [],
   simulationRequirement: '',
+  lifeContext: null,  // ライフシミュレーション用フォームデータ
   isPending: false
 })
 
-export function setPendingUpload(files, requirement) {
+export function setPendingUpload(files, requirement, lifeContext = null) {
   state.files = files
   state.simulationRequirement = requirement
+  state.lifeContext = lifeContext
   state.isPending = true
 }
 
@@ -20,13 +22,15 @@ export function getPendingUpload() {
   return {
     files: state.files,
     simulationRequirement: state.simulationRequirement,
+    lifeContext: state.lifeContext,
     isPending: state.isPending
   }
 }
 
 export function clearPendingUpload() {
-  state.files = []
+  state.files = []  // releases File object references for GC
   state.simulationRequirement = ''
+  state.lifeContext = null
   state.isPending = false
 }
 

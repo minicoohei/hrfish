@@ -13,4 +13,5 @@ from . import graph  # noqa: E402, F401
 from . import simulation  # noqa: E402, F401
 from . import report  # noqa: E402, F401
 from . import knowledge  # noqa: E402, F401
+from .life_simulation import life_sim_bp  # noqa: E402, F401
 

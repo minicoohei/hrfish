@@ -184,6 +184,68 @@
               </div>
             </div>
 
+            <!-- Life context form -->
+            <div class="console-divider">
+              <span>ライフコンテキスト（任意）</span>
+            </div>
+
+            <div class="console-section">
+              <div class="console-header">
+                <span class="console-label">>_ 03 / 家族・資産情報</span>
+                <span class="console-meta">ライフシミュレーション用</span>
+              </div>
+              
+              <div class="life-context-form">
+                <div class="form-row">
+                  <label class="form-label">婚姻状況</label>
+                  <select v-model="lifeContext.maritalStatus" class="form-select" :disabled="loading">
+                    <option value="single">未婚</option>
+                    <option value="married">既婚</option>
+                    <option value="divorced">離婚</option>
+                  </select>
+                </div>
+                
+                <div class="form-row">
+                  <label class="form-label">子供</label>
+                  <div class="children-inputs">
+                    <div v-for="(child, idx) in lifeContext.children" :key="idx" class="child-entry">
+                      <input type="number" v-model.number="child.age" min="0" max="30" 
+                        class="form-input-small" placeholder="年齢" :disabled="loading" />
+                      <span class="form-unit">歳</span>
+                      <button @click="removeChild(idx)" class="remove-btn-small" :disabled="loading">×</button>
+                    </div>
+                    <button @click="addChild" class="add-btn-small" :disabled="loading">+ 子供を追加</button>
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <label class="form-label">親の年齢</label>
+                  <div class="parent-inputs">
+                    <input type="number" v-model.number="lifeContext.parentAge1" min="40" max="100"
+                      class="form-input-small" placeholder="父" :disabled="loading" />
+                    <input type="number" v-model.number="lifeContext.parentAge2" min="40" max="100"
+                      class="form-input-small" placeholder="母" :disabled="loading" />
+                  </div>
+                </div>
+                
+                <div class="form-row">
+                  <label class="form-label">住宅ローン残額</label>
+                  <input type="number" v-model.number="lifeContext.mortgageRemaining" min="0" step="100"
+                    class="form-input" placeholder="0" :disabled="loading" />
+                  <span class="form-unit">万円</span>
+                </div>
+                
+                <div class="form-row">
+                  <label class="form-label">金融資産</label>
+                  <select v-model="lifeContext.cashBufferRange" class="form-select" :disabled="loading">
+                    <option value="500未満">500万円未満</option>
+                    <option value="500-2000">500〜2000万円</option>
+                    <option value="2000+">2000万円以上</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
             <!-- Start button -->
             <div class="console-section btn-section">
               <button 
@@ -207,7 +269,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import HistoryDatabase from '../components/HistoryDatabase.vue'
 
@@ -217,6 +279,25 @@ const router = useRouter()
 const formData = ref({
   simulationRequirement: ''
 })
+
+// Life context form data
+const lifeContext = reactive({
+  maritalStatus: 'single',
+  children: [],
+  parentAge1: null,
+  parentAge2: null,
+  mortgageRemaining: 0,
+  cashBufferRange: '500未満',
+  monthlyExpenses: 25,
+})
+
+// Child management
+const addChild = () => {
+  lifeContext.children.push({ age: 0 })
+}
+const removeChild = (idx) => {
+  lifeContext.children.splice(idx, 1)
+}
 
 // File list
 const files = ref([])
@@ -267,10 +348,19 @@ const handleDrop = (e) => {
 }
 
 // Add files
+const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
 const addFiles = (newFiles) => {
   const validFiles = newFiles.filter(file => {
     const ext = file.name.split('.').pop().toLowerCase()
-    return ['pdf', 'md', 'txt'].includes(ext)
+    if (!['pdf', 'md', 'txt'].includes(ext)) {
+      error.value = `${file.name}: unsupported format (pdf/md/txt only)`
+      return false
+    }
+    if (file.size > MAX_FILE_SIZE) {
+      error.value = `${file.name} is too large (max 10MB)`
+      return false
+    }
+    return true
   })
   files.value.push(...validFiles)
 }
@@ -294,13 +384,28 @@ const startSimulation = () => {
   
   // Store pending upload data
   import('../store/pendingUpload.js').then(({ setPendingUpload }) => {
-    setPendingUpload(files.value, formData.value.simulationRequirement)
+    // Build lifeContext payload
+    const lifeCtx = {
+      marital_status: lifeContext.maritalStatus,
+      children: lifeContext.children.map(c => ({ relation: 'child', age: c.age })),
+      parents: [],
+      mortgage_remaining: lifeContext.mortgageRemaining || 0,
+      cash_buffer_range: lifeContext.cashBufferRange,
+      monthly_expenses: lifeContext.monthlyExpenses,
+    }
+    if (lifeContext.parentAge1) lifeCtx.parents.push({ relation: 'parent', age: lifeContext.parentAge1 })
+    if (lifeContext.parentAge2) lifeCtx.parents.push({ relation: 'parent', age: lifeContext.parentAge2 })
+    
+    setPendingUpload(files.value, formData.value.simulationRequirement, lifeCtx)
     
     // Navigate to Process page immediately (using special ID for new project)
     router.push({
       name: 'Process',
       params: { projectId: 'new' }
     })
+  }).catch(err => {
+    console.error('Failed to load upload store:', err)
+    error.value = 'Failed to start simulation. Please try again.'
   })
 }
 </script>
@@ -886,5 +991,106 @@ const startSimulation = () => {
     max-width: 200px;
     margin-bottom: 20px;
   }
+}
+
+/* Life context form */
+.life-context-form {
+  padding: 15px 20px;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.form-label {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: #888;
+  min-width: 100px;
+  flex-shrink: 0;
+}
+
+.form-select, .form-input {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #eee;
+  padding: 6px 10px;
+  border-radius: 4px;
+  flex: 1;
+  max-width: 200px;
+}
+
+.form-select:focus, .form-input:focus {
+  border-color: #ff6600;
+  outline: none;
+}
+
+.form-input-small {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  color: #eee;
+  padding: 6px 10px;
+  border-radius: 4px;
+  width: 70px;
+}
+
+.form-unit {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.children-inputs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.child-entry {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.parent-inputs {
+  display: flex;
+  gap: 10px;
+}
+
+.add-btn-small {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  background: transparent;
+  border: 1px dashed #555;
+  color: #888;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.add-btn-small:hover {
+  border-color: #ff6600;
+  color: #ff6600;
+}
+
+.remove-btn-small {
+  background: transparent;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0 4px;
+}
+
+.remove-btn-small:hover {
+  color: #ff4444;
 }
 </style>

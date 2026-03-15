@@ -1,247 +1,104 @@
-<div align="center">
+# MiroFish
 
-<img src="./static/image/MiroFish_logo_compressed.jpeg" alt="MiroFish Logo" width="75%"/>
+AI Career Simulator powered by Claude Code SubAgents.
 
-<a href="https://trendshift.io/repositories/16144" target="_blank"><img src="https://trendshift.io/api/badge/repositories/16144" alt="666ghj%2FMiroFish | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+Simulate 10-year career trajectories with multi-path analysis, social sentiment simulation, and detailed HTML reports.
 
-AI-Powered Career & Life Path Simulator
-</br>
-<em>Multi-Agent Career Simulator - Predict Your Future Career Paths</em>
+## Features
 
-<a href="https://www.shanda.com/" target="_blank"><img src="./static/image/shanda_logo.png" alt="666ghj%2MiroFish | Shanda" height="40"/></a>
+- **Multi-Path Career Simulation** - Generate 5 parallel career paths with best/likely/base/worst scenarios
+- **SNS Agent Swarm** - 50-character social simulation discussing career decisions
+- **Fact Checking** - Verify salary/market claims against real data (via Tavily)
+- **Macro Trend Analysis** - Incorporate industry trends and labor market data
+- **Interactive HTML Reports** - Rich visualizations with income charts, scenario comparisons, and agent discussions
 
-[![GitHub Stars](https://img.shields.io/github/stars/666ghj/MiroFish?style=flat-square&color=DAA520)](https://github.com/666ghj/MiroFish/stargazers)
-[![GitHub Watchers](https://img.shields.io/github/watchers/666ghj/MiroFish?style=flat-square)](https://github.com/666ghj/MiroFish/watchers)
-[![GitHub Forks](https://img.shields.io/github/forks/666ghj/MiroFish?style=flat-square)](https://github.com/666ghj/MiroFish/network)
-[![Docker](https://img.shields.io/badge/Docker-Build-2496ED?style=flat-square&logo=docker&logoColor=white)](https://hub.docker.com/)
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/666ghj/MiroFish)
+## Requirements
 
-[![Discord](https://img.shields.io/badge/Discord-Join-5865F2?style=flat-square&logo=discord&logoColor=white)](https://discord.com/channels/1469200078932545606/1469201282077163739)
-[![X](https://img.shields.io/badge/X-Follow-000000?style=flat-square&logo=x&logoColor=white)](https://x.com/mirofish_ai)
-[![Instagram](https://img.shields.io/badge/Instagram-Follow-E4405F?style=flat-square&logo=instagram&logoColor=white)](https://www.instagram.com/mirofish_ai/)
+- Python 3.11+
+- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) (for SubAgent orchestration)
 
-[English](./README-EN.md) | [中文文档](./README.md) | [日本語](./README-JA.md)
-
-</div>
-
-## ⚡ Career Simulator
-
-MiroFish Career Simulator uses multi-agent technology to simulate realistic career and life paths. Input your profile, and the engine generates multiple parallel career trajectories with life events, blockers, and outcomes.
-
-### Key Features
-
-- **Multi-Path Simulation**: Run 3 career paths in parallel and compare outcomes
-- **Life Event Engine**: Realistic life events (childcare, education, aging) that impact career decisions
-- **Blocker Analysis**: 6 categories of career blockers evaluated at each stage
-- **Interactive Chat**: Explore simulation results through conversational AI
-- **Comparison Reports**: Side-by-side career path analysis with actionable insights
-
-### Architecture (P1-P10)
-
-| Phase | Component | Description |
-|-------|-----------|-------------|
-| P1 | Domain Models | BaseIdentity (immutable) + CareerState (mutable) |
-| P2 | AgentStateStore | Agent lifecycle state management |
-| P3 | PersonaRenderer | Dynamic system message generation |
-| P4 | LifeEventEngine | Scheduled & probabilistic life events |
-| P5 | BlockerEngine | 6-category career blocker evaluation |
-| P6-P7 | SimulationLoop | Round-based simulation orchestration |
-| P8 | OASIS Integration | Social simulation platform bridge |
-| P9 | Single Path | Complete single-path simulation |
-| P10 | MultiPath | Parallel 3-path comparison simulator |
-
----
-
-## ⚡ 项目概述
-
-**MiroFish** 是一款基于多智能体技术的新一代 AI 预测引擎。通过提取现实世界的种子信息（如突发新闻、政策草案、金融信号），自动构建出高保真的平行数字世界。在此空间内，成千上万个具备独立人格、长期记忆与行为逻辑的智能体进行自由交互与社会演化。你可透过「上帝视角」动态注入变量，精准推演未来走向——**让未来在数字沙盘中预演，助决策在百战模拟后胜出**。
-
-> 你只需：上传种子材料（数据分析报告或者有趣的小说故事），并用自然语言描述预测需求</br>
-> MiroFish 将返回：一份详尽的预测报告，以及一个可深度交互的高保真数字世界
-
-### 我们的愿景
-
-MiroFish 致力于打造映射现实的群体智能镜像，通过捕捉个体互动引发的群体涌现，突破传统预测的局限：
-
-- **于宏观**：我们是决策者的预演实验室，让政策与公关在零风险中试错
-- **于微观**：我们是个人用户的创意沙盘，无论是推演小说结局还是探索脑洞，皆可有趣、好玩、触手可及
-
-从严肃预测到趣味仿真，我们让每一个如果都能看见结果，让预测万物成为可能。
-
-## 🌐 在线体验
-
-欢迎访问在线 Demo 演示环境，体验我们为你准备的一次关于热点舆情事件的推演预测：[mirofish-live-demo](https://666ghj.github.io/mirofish-demo/)
-
-## 📸 系统截图
-
-<div align="center">
-<table>
-<tr>
-<td><img src="./static/image/Screenshot/运行截图1.png" alt="截图1" width="100%"/></td>
-<td><img src="./static/image/Screenshot/运行截图2.png" alt="截图2" width="100%"/></td>
-</tr>
-<tr>
-<td><img src="./static/image/Screenshot/运行截图3.png" alt="截图3" width="100%"/></td>
-<td><img src="./static/image/Screenshot/运行截图4.png" alt="截图4" width="100%"/></td>
-</tr>
-<tr>
-<td><img src="./static/image/Screenshot/运行截图5.png" alt="截图5" width="100%"/></td>
-<td><img src="./static/image/Screenshot/运行截图6.png" alt="截图6" width="100%"/></td>
-</tr>
-</table>
-</div>
-
-## 🎬 演示视频
-
-### 1. 武汉大学舆情推演预测 + MiroFish项目讲解
-
-<div align="center">
-<a href="https://www.bilibili.com/video/BV1VYBsBHEMY/" target="_blank"><img src="./static/image/武大模拟演示封面.png" alt="MiroFish Demo Video" width="75%"/></a>
-
-点击图片查看使用微舆BettaFish生成的《武大舆情报告》进行预测的完整演示视频
-</div>
-
-### 2. 《红楼梦》失传结局推演预测
-
-<div align="center">
-<a href="https://www.bilibili.com/video/BV1cPk3BBExq" target="_blank"><img src="./static/image/红楼梦模拟推演封面.jpg" alt="MiroFish Demo Video" width="75%"/></a>
-
-点击图片查看基于《红楼梦》前80回数十万字，MiroFish深度预测失传结局
-</div>
-
-> **金融方向推演预测**、**时政要闻推演预测**等示例陆续更新中...
-
-## 🔄 工作流程
-
-1. **图谱构建**：现实种子提取 & 个体与群体记忆注入 & GraphRAG构建
-2. **环境搭建**：实体关系抽取 & 人设生成 & 环境配置Agent注入仿真参数
-3. **开始模拟**：双平台并行模拟 & 自动解析预测需求 & 动态更新时序记忆
-4. **报告生成**：ReportAgent拥有丰富的工具集与模拟后环境进行深度交互
-5. **深度互动**：与模拟世界中的任意一位进行对话 & 与ReportAgent进行对话
-
-## 🚀 快速开始
-
-### 一、源码部署（推荐）
-
-#### 前置要求
-
-| 工具 | 版本要求 | 说明 | 安装检查 |
-|------|---------|------|---------|
-| **Node.js** | 18+ | 前端运行环境，包含 npm | `node -v` |
-| **Python** | ≥3.11, ≤3.12 | 后端运行环境 | `python --version` |
-| **uv** | 最新版 | Python 包管理器 | `uv --version` |
-
-#### 1. 配置环境变量
+## Installation
 
 ```bash
-# 复制示例配置文件
-cp .env.example .env
+pip install -e .
 
-# 编辑 .env 文件，填入必要的 API 密钥
+# Optional dependencies
+pip install -e ".[zep]"      # Zep knowledge graph
+pip install -e ".[search]"   # Tavily web search
+pip install -e ".[otel]"     # OpenTelemetry tracing
+pip install -e ".[all]"      # Everything
 ```
 
-**必需的环境变量：**
+## Quick Start
 
-```env
-# LLM API配置（支持 OpenAI SDK 格式的任意 LLM API）
-# 推荐使用阿里百炼平台qwen-plus模型：https://bailian.console.aliyun.com/
-# 注意消耗较大，可先进行小于40轮的模拟尝试
-LLM_API_KEY=your_api_key
-LLM_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
-LLM_MODEL_NAME=qwen-plus
+### Demo Mode (no API keys needed)
 
-# Zep Cloud 配置
-# 每月免费额度即可支撑简单使用：https://app.getzep.com/
-ZEP_API_KEY=your_zep_api_key
-```
-
-#### 2. 安装依赖
+Generate a report from bundled sample data:
 
 ```bash
-# 一键安装所有依赖（根目录 + 前端 + 后端）
-npm run setup:all
+python -m cc_layer.cli.pipeline_run \
+  --session-dir cc_layer/fixtures/samples/session_01 \
+  --phase report
 ```
 
-或者分步安装：
+### Full Pipeline
+
+Check pipeline status and follow guided steps:
 
 ```bash
-# 安装 Node 依赖（根目录 + 前端）
-npm run setup
-
-# 安装 Python 依赖（后端，自动创建虚拟环境）
-npm run setup:backend
+python -m cc_layer.cli.pipeline_run \
+  --session-dir cc_layer/state/my_session \
+  --phase status
 ```
 
-#### 3. 启动服务
+The orchestrator guide at `cc_layer/prompts/orchestrator.md` provides step-by-step instructions for running the complete pipeline with Claude Code.
+
+## Architecture
+
+```
+cc_layer/
+  app/
+    models/          # Pydantic domain models (CareerState, BaseIdentity, etc.)
+    services/        # Business logic (event engine, blocker engine, etc.)
+    utils/           # Shared utilities (logging, retry, validation)
+  cli/               # CLI tools (sim_init, sim_tick, path_score, report_html, etc.)
+  schemas/           # Data contracts (canonical models, normalizer, validator)
+  prompts/           # SubAgent prompt templates
+  fixtures/          # Sample session data for testing
+  tests/             # Test suite
+```
+
+### Pipeline Phases
+
+| Phase | Tool | Description |
+|-------|------|-------------|
+| 0 | `sim_init` | Initialize candidate profile and career state |
+| 1a | SubAgent | Design 5 career paths (PathDesignerAgent) |
+| 1b | SubAgent x5 | Expand each path into 10-year scenarios (PathExpanderAgent) |
+| 2 | `path_score` | Score and rank paths |
+| 3 | `generate_swarm_agents` | Create SNS agent profiles |
+| 4 | SubAgent | Run 40-round swarm discussion |
+| 5-6 | `fact_check` | Extract and verify claims |
+| 7 | SubAgent | Analyze macro trends |
+| 8 | `pipeline_run --phase report` | Generate HTML report |
+
+## CLI Reference
+
+All CLIs are self-documenting:
 
 ```bash
-# 同时启动前后端（在项目根目录执行）
-npm run dev
+python -m cc_layer.cli.sim_init --help
+python -m cc_layer.cli.path_score --help
+python -m cc_layer.cli.report_html --help
+python -m cc_layer.cli.pipeline_run --help
 ```
 
-**服务地址：**
-- 前端：`http://localhost:3000`
-- 后端 API：`http://localhost:5001`
-
-**单独启动：**
+## Testing
 
 ```bash
-npm run backend   # 仅启动后端
-npm run frontend  # 仅启动前端
+python -m pytest cc_layer/tests/ -v
 ```
 
-#### 4. Security Configuration (Production)
+## License
 
-```env
-# API authentication (recommended for production)
-MIROFISH_API_KEY=your_strong_random_key
-
-# Restrict CORS origins
-CORS_ORIGINS=https://yourdomain.com
-
-# Ensure debug is off
-FLASK_DEBUG=False
-
-# Set a strong secret key
-SECRET_KEY=your_strong_secret_key
-```
-
-### 二、Docker 部署
-
-```bash
-# 1. 配置环境变量（同源码部署）
-cp .env.example .env
-
-# 2. 拉取镜像并启动
-docker compose up -d
-```
-
-默认会读取根目录下的 `.env`，并映射端口 `3000（前端）/5001（后端）`
-
-> 在 `docker-compose.yml` 中已通过注释提供加速镜像地址，可按需替换
-
-## 📬 更多交流
-
-<div align="center">
-<img src="./static/image/QQ群.png" alt="QQ交流群" width="60%"/>
-</div>
-
-&nbsp;
-
-MiroFish团队长期招募全职/实习，如果你对多Agent应用感兴趣，欢迎投递简历至：**mirofish@shanda.com**
-
-## 📄 致谢
-
-**MiroFish 得到了盛大集团的战略支持和孵化！**
-
-MiroFish 的仿真引擎由 **[OASIS](https://github.com/camel-ai/oasis)** 驱动，我们衷心感谢 CAMEL-AI 团队的开源贡献！
-
-## 📈 项目统计
-
-<a href="https://www.star-history.com/#666ghj/MiroFish&type=date&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=666ghj/MiroFish&type=date&theme=dark&legend=top-left" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=666ghj/MiroFish&type=date&legend=top-left" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=666ghj/MiroFish&type=date&legend=top-left" />
- </picture>
-</a>
+MIT

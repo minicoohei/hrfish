@@ -129,17 +129,165 @@ class LifeEventEngine:
                 },
             ))
 
-        # Child birth: married, < 2 children, 25-40, 4% per round
+        # Child birth: < 2 children, 25-42, probability varies by marital status
         children = state.get_children()
+        if (len(children) < 2
+                and 25 <= state.current_age <= 42):
+            # Married: 4% per round, unmarried: 1.5% per round
+            birth_prob = 0.04 if state.marital_status == "married" else 0.015
+            if self._rng.random() < birth_prob:
+                events.append(LifeEvent(
+                    event_type=LifeEventType.CHILD_BIRTH,
+                    round_number=state.current_round,
+                    description=f"第{len(children) + 1}子が誕生した",
+                    state_changes={},
+                ))
+
+        # Divorce: married, 2% per round (higher if stress > 0.7)
         if (state.marital_status == "married"
-                and len(children) < 2
-                and 25 <= state.current_age <= 40
-                and self._rng.random() < 0.04):
+                and self._rng.random() < (0.04 if state.stress_level > 0.7 else 0.02)):
             events.append(LifeEvent(
-                event_type=LifeEventType.CHILD_BIRTH,
+                event_type=LifeEventType.DIVORCE,
                 round_number=state.current_round,
-                description=f"第{len(children) + 1}子が誕生した",
-                state_changes={},
+                description="離婚した",
+                state_changes={
+                    "marital_status": "divorced",
+                    "monthly_expenses": max(10, state.monthly_expenses - 3),
+                    "cash_buffer": int(state.cash_buffer * 0.6),
+                },
             ))
 
+        # Health issue: 2% per round, higher if stress > 0.8
+        if self._rng.random() < (0.05 if state.stress_level > 0.8 else 0.02):
+            events.append(LifeEvent(
+                event_type=LifeEventType.HEALTH_ISSUE,
+                round_number=state.current_round,
+                description="健康上の問題（バーンアウト・体調不良）が発生した",
+                state_changes={
+                    "stress_level": min(1.0, state.stress_level + 0.3),
+                    "work_life_balance": max(0.0, state.work_life_balance - 0.2),
+                },
+            ))
+
+        # Side business: employed, 30-45, low stress, 2% per round
+        if (state.employer
+                and 30 <= state.current_age <= 45
+                and state.stress_level < 0.5
+                and self._rng.random() < 0.02):
+            events.append(LifeEvent(
+                event_type=LifeEventType.SIDE_BUSINESS,
+                round_number=state.current_round,
+                description="副業を開始した",
+                state_changes={
+                    "cash_buffer": state.cash_buffer + 30,
+                    "stress_level": min(1.0, state.stress_level + 0.1),
+                },
+            ))
+
+        # Reskilling: 3% per round, more likely at career transition ages
+        reskill_prob = 0.04 if 28 <= state.current_age <= 40 else 0.02
+        if self._rng.random() < reskill_prob:
+            events.append(LifeEvent(
+                event_type=LifeEventType.RESKILLING,
+                round_number=state.current_round,
+                description="リスキリング・学び直しを開始した（オンライン講座・大学院等）",
+                state_changes={
+                    "monthly_expenses": state.monthly_expenses + 3,
+                    "job_satisfaction": min(1.0, state.job_satisfaction + 0.1),
+                },
+            ))
+
+        # Housing purchase: employed, 28-42, not already mortgaged, 2% per round
+        if (state.employer
+                and state.mortgage_remaining == 0
+                and 28 <= state.current_age <= 42
+                and state.salary_annual >= 400
+                and self._rng.random() < 0.02):
+            mortgage_amount = int(state.salary_annual * 5)
+            events.append(LifeEvent(
+                event_type=LifeEventType.HOUSING_PURCHASE,
+                round_number=state.current_round,
+                description=f"住宅を購入した（ローン{mortgage_amount}万円）",
+                state_changes={
+                    "mortgage_remaining": mortgage_amount,
+                    "monthly_expenses": state.monthly_expenses + 5,
+                    "job_satisfaction": min(1.0, state.job_satisfaction + 0.1),
+                },
+            ))
+
+        # Parental leave: child born within last 4 rounds, 30% chance
+        has_infant = any(c.age == 0 for c in children)
+        if has_infant and self._rng.random() < 0.30:
+            events.append(LifeEvent(
+                event_type=LifeEventType.PARENTAL_LEAVE,
+                round_number=state.current_round,
+                description="育児休業を取得した",
+                state_changes={
+                    "work_life_balance": min(1.0, state.work_life_balance + 0.3),
+                    "stress_level": max(0.0, state.stress_level - 0.1),
+                },
+            ))
+
+        # Rural migration: 1.5% per round, higher if WLB is low and stress is high
+        rural_prob = 0.03 if (state.stress_level > 0.6 and state.work_life_balance < 0.4) else 0.015
+        if (state.employer
+                and not state.is_action_blocked("overseas_assignment")
+                and self._rng.random() < rural_prob):
+            events.append(LifeEvent(
+                event_type=LifeEventType.RURAL_MIGRATION,
+                round_number=state.current_round,
+                description="地方移住を決断した（リモートワーク活用）",
+                state_changes={
+                    "monthly_expenses": max(10, state.monthly_expenses - 8),
+                    "work_life_balance": min(1.0, state.work_life_balance + 0.3),
+                    "stress_level": max(0.0, state.stress_level - 0.2),
+                    "salary_annual": int(state.salary_annual * 0.85),
+                },
+            ))
+
+        # Overseas migration: 1% per round, more likely if young and no blockers
+        overseas_prob = 0.02 if state.current_age <= 35 else 0.008
+        if (not state.is_action_blocked("overseas_assignment")
+                and not state.is_action_blocked("startup")
+                and self._rng.random() < overseas_prob):
+            events.append(LifeEvent(
+                event_type=LifeEventType.OVERSEAS_MIGRATION,
+                round_number=state.current_round,
+                description="海外移住を決断した",
+                state_changes={
+                    "salary_annual": int(state.salary_annual * 1.3),
+                    "stress_level": min(1.0, state.stress_level + 0.2),
+                    "monthly_expenses": state.monthly_expenses + 10,
+                },
+            ))
+
+        # C-1 fix: Filter mutually exclusive events in the same round
+        events = self._filter_conflicting_events(events)
+
         return events
+
+    @staticmethod
+    def _filter_conflicting_events(events: List[LifeEvent]) -> List[LifeEvent]:
+        """Remove conflicting event pairs from a single round.
+
+        Rules:
+        - MARRIAGE and DIVORCE cannot co-occur (keep whichever came first)
+        - MARRIAGE and CHILD_BIRTH in same round is fine (natural)
+        - RURAL_MIGRATION and OVERSEAS_MIGRATION cannot co-occur
+        """
+        types = {e.event_type for e in events}
+
+        conflicts = [
+            (LifeEventType.MARRIAGE, LifeEventType.DIVORCE),
+            (LifeEventType.RURAL_MIGRATION, LifeEventType.OVERSEAS_MIGRATION),
+        ]
+
+        remove_types: set = set()
+        for a, b in conflicts:
+            if a in types and b in types:
+                # Keep the first (a), remove the second (b)
+                remove_types.add(b)
+
+        if not remove_types:
+            return events
+        return [e for e in events if e.event_type not in remove_types]

@@ -1,0 +1,368 @@
+<mxfile host="app.diagrams.net" modified="2026-03-15T15:00:00.000Z" agent="MiroFish" version="24.0.0">
+  <diagram id="mirofish-pipeline" name="MiroFish Pipeline">
+    <mxGraphModel dx="1800" dy="1200" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2400" pageHeight="1600" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- ===== Phase Headers ===== -->
+        <mxCell id="ph_input" value="Phase -2&#xa;入力収集" style="shape=mxgraph.basic.banner;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;fontStyle=1;verticalAlign=middle;spacingLeft=20;spacingRight=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="30" width="200" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="ph_preprocess" value="Phase -1&#xa;前処理 &amp; グラフ構築" style="shape=mxgraph.basic.banner;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;fontStyle=1;verticalAlign=middle;spacingLeft=20;spacingRight=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="180" width="200" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="ph_init" value="Phase 0&#xa;初期化" style="shape=mxgraph.basic.banner;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=13;fontStyle=1;verticalAlign=middle;spacingLeft=20;spacingRight=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="440" width="200" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="ph_sim" value="Phase 1&#xa;マルチパスシミュレーション" style="shape=mxgraph.basic.banner;whiteSpace=wrap;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=13;fontStyle=1;verticalAlign=middle;spacingLeft=20;spacingRight=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="590" width="200" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="ph_swarm" value="Phase 1.5&#xa;Swarm-in-the-Loop (Optional)" style="shape=mxgraph.basic.banner;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;fontStyle=1;verticalAlign=middle;spacingLeft=20;spacingRight=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="850" width="200" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="ph_creative" value="Phase 2&#xa;クリエイティブ後処理" style="shape=mxgraph.basic.banner;whiteSpace=wrap;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=13;fontStyle=1;verticalAlign=middle;spacingLeft=20;spacingRight=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1060" width="200" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="ph_report" value="Phase 3&#xa;ファクトチェック &amp; レポート" style="shape=mxgraph.basic.banner;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;fontStyle=1;verticalAlign=middle;spacingLeft=20;spacingRight=10;" vertex="1" parent="1">
+          <mxGeometry x="40" y="1280" width="200" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Legend ===== -->
+        <mxCell id="legend_bg" value="" style="rounded=1;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=#666666;strokeWidth=1;" vertex="1" parent="1">
+          <mxGeometry x="1900" y="30" width="460" height="180" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend_title" value="凡例" style="text;fontSize=14;fontStyle=1;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="1920" y="40" width="100" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg_cli" value="Python CLI&#xa;（決定論的）" style="rounded=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1920" y="75" width="120" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg_opus" value="SubAgent&#xa;Opus" style="rounded=1;whiteSpace=wrap;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="2060" y="75" width="120" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg_sonnet" value="SubAgent&#xa;Sonnet" style="rounded=1;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="2200" y="75" width="120" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg_haiku" value="SubAgent&#xa;Haiku" style="rounded=1;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1920" y="130" width="120" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg_data" value="データファイル&#xa;（JSON/HTML）" style="shape=document;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="2060" y="125" width="120" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg_ext" value="外部API&#xa;（Zep/Tavily）" style="shape=hexagon;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;perimeter=hexagonPerimeter2;" vertex="1" parent="1">
+          <mxGeometry x="2200" y="125" width="120" height="50" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Phase -2: 入力収集 ===== -->
+        <mxCell id="input_user" value="AskUserQuestion&#xa;・履歴書ファイルパス&#xa;・シミュレーション要件&#xa;・基本情報（年齢/年収/家族/ローン）" style="shape=process;whiteSpace=wrap;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;align=left;spacingLeft=10;" vertex="1" parent="1">
+          <mxGeometry x="300" y="20" width="300" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="input_resume" value="resume.pdf&#xa;resume.txt" style="shape=document;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="660" y="25" width="120" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_input_resume" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="input_user" target="input_resume" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Phase -1: 前処理 ===== -->
+        <mxCell id="text_proc" value="text_process.py&#xa;テキスト抽出・チャンク分割" style="rounded=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="300" y="170" width="180" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="extracted_text" value="extracted_text.txt" style="shape=document;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="530" y="175" width="130" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_tp" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="text_proc" target="extracted_text" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_resume_tp" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="input_resume" target="text_proc" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="ontology_gen" value="ontology_generate.py&#xa;オントロジー定義生成" style="rounded=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="300" y="250" width="180" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="ontology_json" value="ontology.json" style="shape=document;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="530" y="255" width="130" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_ont" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="ontology_gen" target="ontology_json" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_et_ont" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="extracted_text" target="ontology_gen" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="graph_build" value="graph_build.py&#xa;Zepグラフ構築" style="rounded=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="720" y="250" width="180" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="zep_cloud" value="Zep Cloud&#xa;Knowledge Graph" style="shape=hexagon;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;perimeter=hexagonPerimeter2;" vertex="1" parent="1">
+          <mxGeometry x="960" y="200" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_gb_zep" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="graph_build" target="zep_cloud" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_oj_gb" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="ontology_json" target="graph_build" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="profile_gen" value="profile_generate.py&#xa;プロフィール生成" style="rounded=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="960" y="310" width="180" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="profiles_json" value="profiles.json" style="shape=document;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="315" width="120" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_pgen" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="profile_gen" target="profiles_json" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_zep_pg" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="zep_cloud" target="profile_gen" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Knowledge pipeline (parallel) -->
+        <mxCell id="ext_search" value="external_search.py&#xa;Tavily外部データ取得" style="rounded=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="300" y="340" width="180" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="tavily" value="Tavily API" style="shape=hexagon;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;perimeter=hexagonPerimeter2;" vertex="1" parent="1">
+          <mxGeometry x="300" y="410" width="120" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_tav" style="edgeStyle=orthogonalEdgeStyle;dashed=1;" edge="1" source="ext_search" target="tavily" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="knowledge_curate" value="knowledge_curate.py&#xa;ナレッジキュレーション" style="rounded=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="530" y="340" width="180" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="knowledge_dir" value="knowledge/&#xa;構造化ナレッジ" style="shape=document;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="760" y="340" width="130" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_kc" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="knowledge_curate" target="knowledge_dir" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Phase 0: 初期化 ===== -->
+        <mxCell id="sim_config" value="sim_config_generate.py&#xa;SimulationParameters生成" style="rounded=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="300" y="440" width="200" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="sim_init" value="sim_init.py&#xa;初期状態生成" style="rounded=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="560" y="440" width="180" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="agent_state" value="agent_state.json&#xa;(identity + CareerState)" style="shape=document;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="800" y="435" width="160" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_sc_si" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="sim_config" target="sim_init" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_si_as" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="sim_init" target="agent_state" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Phase 1: マルチパスシミュレーション ===== -->
+        <mxCell id="path_designer" value="PathDesignerAgent&#xa;(Sonnet × 1)&#xa;5パス設計" style="rounded=1;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="580" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="path_designs" value="path_designs.json" style="shape=document;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="540" y="585" width="130" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_pd" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="path_designer" target="path_designs" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_as_pd" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="agent_state" target="path_designer" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="path_expander" value="PathExpanderAgent&#xa;(Sonnet × 5 並列)&#xa;10年×4期×3シナリオ展開" style="rounded=1;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="680" width="200" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="path_expanded" value="path_expanded_*.json&#xa;(× 5パス)" style="shape=document;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="560" y="685" width="150" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_pe" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="path_expander" target="path_expanded" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_pds_pe" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="path_designs" target="path_expander" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="path_score" value="path_score.py&#xa;スコアリング &amp; ランキング" style="rounded=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="770" y="690" width="180" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="multipath_result" value="multipath_result.json&#xa;(5パス × 3シナリオ&#xa;確率付きランキング)" style="shape=document;whiteSpace=wrap;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1010" y="680" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_ps" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="path_score" target="multipath_result" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_pex_ps" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="path_expanded" target="path_score" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Phase 1.5: Swarm ===== -->
+        <mxCell id="swarm_agents_gen" value="generate_swarm_agents.py&#xa;30人動的生成" style="rounded=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="300" y="840" width="180" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="swarm_agents" value="swarm_agents.json" style="shape=document;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="540" y="845" width="130" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_sag" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="swarm_agents_gen" target="swarm_agents" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Swarm Loop -->
+        <mxCell id="swarm_loop_bg" value="" style="rounded=1;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=2;dashed=1;opacity=30;" vertex="1" parent="1">
+          <mxGeometry x="290" y="910" width="900" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="swarm_loop_label" value="× 40 ラウンド" style="text;fontSize=12;fontStyle=3;fontColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="915" width="120" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="sim_tick" value="Phase A&#xa;sim_tick.py&#xa;(Python × 5パス)" style="rounded=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="310" y="935" width="150" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="swarm_round" value="Phase B&#xa;SwarmRoundAgent&#xa;(Sonnet × 6 workers)" style="rounded=1;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="500" y="935" width="170" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="influence_ext" value="Phase C&#xa;InfluenceExtractor&#xa;(Opus × 1)" style="rounded=1;whiteSpace=wrap;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="710" y="935" width="150" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="inject_ev" value="Phase D&#xa;inject_event.py&#xa;(Python)" style="rounded=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="900" y="935" width="140" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_st_sr" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="sim_tick" target="swarm_round" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_sr_ie" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="swarm_round" target="influence_ext" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_ie_ij" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="influence_ext" target="inject_ev" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <!-- Loop back arrow -->
+        <mxCell id="e_loop_back" value="" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;entryX=0;entryY=0.5;curved=1;dashed=1;strokeColor=#b85450;" edge="1" source="inject_ev" target="sim_tick" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1080" y="963"/>
+              <mxPoint x="1080" y="1040"/>
+              <mxPoint x="280" y="1040"/>
+              <mxPoint x="280" y="963"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <mxCell id="swarm_actions" value="swarm/&#xa;all_actions_round_*.jsonl&#xa;(× 40ラウンド)" style="shape=document;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="925" width="180" height="55" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Phase 2: クリエイティブ後処理 ===== -->
+        <mxCell id="persona_agent" value="PersonaAgent&#xa;(Opus × 1)&#xa;ペルソナ深掘り" style="rounded=1;whiteSpace=wrap;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="300" y="1070" width="170" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="narrative_agent" value="NarrativeAgent&#xa;(Sonnet × 5 並列)&#xa;ストーリー生成" style="rounded=1;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="1070" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="sns_agent" value="SNSAgent&#xa;(Haiku × N)&#xa;投稿生成" style="rounded=1;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="750" y="1070" width="150" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="narratives" value="narrative_*.md&#xa;(× 5パス)" style="shape=document;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="560" y="1160" width="130" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_na_n" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="narrative_agent" target="narratives" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <!-- Zep read arrows for Phase 2 -->
+        <mxCell id="e_zep_pa" value="Zep RAG" style="edgeStyle=orthogonalEdgeStyle;dashed=1;strokeColor=#b85450;fontColor=#b85450;fontSize=9;" edge="1" source="zep_cloud" target="persona_agent" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1140" y="230"/>
+              <mxPoint x="1140" y="530"/>
+              <mxPoint x="385" y="530"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ===== Phase 3: ファクトチェック & レポート ===== -->
+        <mxCell id="fc_extract" value="fact_check.py extract&#xa;確率主張抽出" style="rounded=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="300" y="1280" width="180" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="fc_claims" value="fact_check_claims.json&#xa;(40件の確率主張)" style="shape=document;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="530" y="1275" width="160" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_fce" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="fc_extract" target="fc_claims" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_mr_fc" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="multipath_result" target="fc_extract" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="fc_agent" value="FactCheckerAgent&#xa;(Sonnet × 1)&#xa;Web検索で検証" style="rounded=1;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="740" y="1270" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_fcl_fca" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="fc_claims" target="fc_agent" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="web_search" value="Web検索&#xa;(政府統計/業界レポート)" style="shape=hexagon;whiteSpace=wrap;fillColor=#f8cecc;strokeColor=#b85450;fontSize=10;perimeter=hexagonPerimeter2;" vertex="1" parent="1">
+          <mxGeometry x="760" y="1360" width="160" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_fca_ws" style="edgeStyle=orthogonalEdgeStyle;dashed=1;" edge="1" source="fc_agent" target="web_search" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="fc_merge" value="fact_check.py merge&#xa;検証結果統合" style="rounded=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="980" y="1280" width="180" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="fc_result" value="fact_check_result.json&#xa;verified/adjusted/&#xa;unverified/disputed" style="shape=document;whiteSpace=wrap;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=10;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1210" y="1270" width="170" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_fca_fcm" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="fc_agent" target="fc_merge" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_fcm_fcr" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="fc_merge" target="fc_result" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="report_agent" value="ReportAgent&#xa;(Opus × 1)&#xa;最終レポート生成" style="rounded=1;whiteSpace=wrap;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="980" y="1380" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="report_md" value="report.md" style="shape=document;whiteSpace=wrap;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="1210" y="1385" width="100" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_ra_rm" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="report_agent" target="report_md" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_fcr_ra" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="fc_result" target="report_agent" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_nar_ra" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="narratives" target="report_agent" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="report_html_cli" value="report_html.py&#xa;HTMLレポート生成" style="rounded=1;whiteSpace=wrap;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="1410" y="1330" width="180" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="report_html_file" value="report.html&#xa;（最終成果物）" style="shape=document;whiteSpace=wrap;fillColor=#e6ffcc;strokeColor=#36b37e;fontSize=12;fontStyle=1;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1650" y="1320" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_rh_cli" style="edgeStyle=orthogonalEdgeStyle;strokeWidth=2;strokeColor=#36b37e;" edge="1" source="report_html_cli" target="report_html_file" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_fcr_rh" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="fc_result" target="report_html_cli" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_sa_rh" style="edgeStyle=orthogonalEdgeStyle;dashed=1;" edge="1" source="swarm_actions" target="report_html_cli" parent="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_mr_rh" style="edgeStyle=orthogonalEdgeStyle;" edge="1" source="multipath_result" target="report_html_cli" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1500" y="710"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- report.html contents annotation -->
+        <mxCell id="report_contents" value="レポート内容:&#xa;01 プロフィール（自己認知 vs 神の視点）&#xa;02 根源的スキル（エージェント引用）&#xa;03 神の視点 + シミュレーション結果テーブル&#xa;    + ファクトチェック（ソース付き検証）&#xa;04 年収推移チャート&#xa;05 各パス詳細（Best/Likely/Base + パス別コメント）&#xa;06 リスキリング提案&#xa;07 パラレルワールドの自分&#xa;08 外部エージェントの声" style="text;whiteSpace=wrap;fontSize=10;align=left;verticalAlign=top;fillColor=#e6ffcc;strokeColor=#36b37e;rounded=1;spacingLeft=8;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="1630" y="1400" width="320" height="180" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

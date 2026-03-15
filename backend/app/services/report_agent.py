@@ -587,10 +587,23 @@ PLAN_SYSTEM_PROMPT = """\
 
 【推奨章節構成】
 以下を参考に、2-5章で構成してください：
+- キャリアパス シミュレーション結果（複数の将来シナリオの比較分析）
+- 各ステークホルダーからの評価予測（各パスに対するリアクション）
 - キャリアの可能性と適合ポジション
-- 各ステークホルダーからの評価予測
-- リスキリング・スキル開発の方向性
+- リスキリング・スキル開発の方向性（必須 — 下記ガイドライン参照）
 - リスクと注意点
+
+【リスキリング方向性セクションのガイドライン】
+このセクションは必ず含めてください。以下を網羅的に分析すること：
+1. **現在のスキルギャップ分析**: シミュレーション結果から見えた、求職者の現スキルと各キャリアパスで求められるスキルの差分
+2. **短期（1-2年）のリスキリング提案**: すぐ着手すべきスキル・資格（例: クラウド認定、データ分析、マネジメント研修等）
+3. **中長期（3-5年）のスキル投資戦略**: キャリアの方向性に応じた専門性の深化・拡張の提案
+4. **リスキリング手段の具体例**: オンライン講座（Coursera, Udemy等）、大学院・MBA、社内異動、副業・プロボノ、メンター探し等
+5. **各キャリアパスとの対応**: 推奨パスごとに「このパスを選ぶなら○○のスキルが鍵」という形で対応づけること
+6. **ROI観点**: リスキリング投資（時間・費用）と期待リターン（年収アップ、キャリアオプション拡大）の見通し
+
+【重要】キャリアパス シミュレーション結果が提供されている場合、必ずレポートに含めてください。
+各パスの年収推移、ライフイベント、リスク/リターンを比較し、ステークホルダーの視点から各パスを評価してください。
 
 【章節数量制限】
 - 最少2章、最多5章
@@ -624,12 +637,16 @@ PLAN_USER_PROMPT_TEMPLATE = """\
 【シミュレーションで得られた評価・コメントのサンプル】
 {related_facts_json}
 
+{career_paths_section}
+
 「神の視点」でこのキャリアシミュレーションを分析してください：
 1. 各ステークホルダーは求職者をどのように評価したか？
 2. どのようなキャリアの可能性と適合ポジションが示されたか？
-3. リスキリング・スキル開発の方向性として何が示唆されるか？
+3. リスキリング・スキル開発の方向性として何が示唆されるか？（スキルギャップ分析、短期/中長期の具体的なリスキリング提案、ROI観点を含む）
+4. 各キャリアパスにおけるライフイベントの影響とリスク要因は何か？
 
 分析結果に基づき、最適なレポート章節構成を設計してください。
+キャリアパスシミュレーション結果がある場合、必ず「キャリアパス比較分析」章を含めてください。
 
 【再確認】レポート章節数：最少2章、最多5章。内容は精緻で核心的な分析結果に焦点を当てること。"""
 
@@ -655,7 +672,7 @@ SECTION_SYSTEM_PROMPT_TEMPLATE = """\
 あなたのタスクは：
 - 各ステークホルダーが求職者をどう評価したかを明らかにする
 - キャリアの可能性と適合ポジションを提示する
-- リスキリング・スキル開発の方向性を発見する
+- リスキリング・スキル開発の方向性を具体的に提示する（スキルギャップ分析→短期/中長期の提案→具体的手段→ROI見通し）
 - リスクと注意点を指摘する
 
 ═══════════════════════════════════════════════════════════════
@@ -674,14 +691,21 @@ SECTION_SYSTEM_PROMPT_TEMPLATE = """\
      > "転職エージェントの評価：原文内容..."
    - これらの引用がシミュレーション予測の核心的証拠
 
-3. 【言語の一貫性 - 引用内容はレポート言語に翻訳すること】
+3. 【キャリアパス シミュレーション結果を活用すること】
+   - キャリアパスデータが提供されている場合、review_career_paths ツールで各パスに対する
+     エージェント群の反応・評価を取得すること
+   - web_career_research ツールで求人市場データやキャリア論を取得し、パスの実現可能性を裏付けること
+   - ライフイベント（結婚、出産、介護、健康問題、住宅購入、地方移住、海外移住等）の
+     キャリアへの影響を具体的に記述すること
+
+4. 【言語の一貫性 - 引用内容はレポート言語に翻訳すること】
    - ツールが返す内容には英語や英日混在の表現が含まれる可能性がある
    - レポートは全て日本語で作成すること
    - ツールが返した英語や英日混在の内容を引用する場合、自然な日本語に翻訳してからレポートに記載すること
    - 翻訳時は原意を保ち、表現が自然で通じやすいことを確認
    - このルールは本文と引用ブロック（> 形式）の両方に適用
 
-4. [Faithfully present prediction results]
+5. [Faithfully present prediction results]
    - Report content must reflect simulation results representing future predictions
    - Do not add information that does not exist in the simulation
    - If information is insufficient in some area, state it honestly
@@ -904,26 +928,32 @@ class ReportAgent:
     MAX_TOOL_CALLS_PER_CHAT = 2
     
     def __init__(
-        self, 
+        self,
         graph_id: str,
         simulation_id: str,
         simulation_requirement: str,
         llm_client: Optional[LLMClient] = None,
-        zep_tools: Optional[ZepToolsService] = None
+        zep_tools: Optional[ZepToolsService] = None,
+        career_paths_context: str = "",
+        career_paths_data: Optional[dict] = None,
     ):
         """
         Initialize Report Agent
-        
+
         Args:
             graph_id: Graph ID
             simulation_id: Simulation ID
             simulation_requirement: Simulation requirement description
             llm_client: LLM client (optional)
             zep_tools: Zep tools service (optional)
+            career_paths_context: Formatted career path simulation results for LLM context
+            career_paths_data: Raw career path simulation data (for frontend)
         """
         self.graph_id = graph_id
         self.simulation_id = simulation_id
         self.simulation_requirement = simulation_requirement
+        self.career_paths_context = career_paths_context
+        self.career_paths_data = career_paths_data
         
         self.llm = llm_client or LLMClient(use_chat_model=True)  # レポート生成もチャットモデル（gpt-5.4）を使用
         self.chat_llm = self.llm  # インタラクティブチャットも同一モデル
@@ -980,6 +1010,29 @@ class ReportAgent:
                 "parameters": {
                     "query": "Search query for industry knowledge (e.g., 'IT業界の年収相場', 'PM職の市場トレンド')",
                     "category": "Knowledge category: 'industries', 'job_market', 'career_patterns', or 'all' (default 'all')"
+                }
+            },
+            "web_career_research": {
+                "name": "web_career_research",
+                "description": (
+                    "Web検索で最新の求人情報、キャリア論、業界トレンド、転職市場データを収集する。"
+                    "キャリアパスの実現可能性を外部データで裏付ける。"
+                ),
+                "parameters": {
+                    "query": "検索クエリ（例: 'ITエンジニア 年収 転職市場 2026', 'フリーランス 独立 成功率'）",
+                    "focus": "検索の焦点: 'job_market'(求人・年収), 'career_theory'(キャリア論), 'industry'(業界動向), 'general'(全般)"
+                }
+            },
+            "review_career_paths": {
+                "name": "review_career_paths",
+                "description": (
+                    "キャリアパス シミュレーション結果に対して、シミュレーション内のエージェント群（転職エージェント、HR担当者、"
+                    "業界の専門家、友人など）にレビューを依頼する。各エージェントがキャリアパスの実現可能性、リスク、"
+                    "ライフイベントの影響について意見を述べる。"
+                ),
+                "parameters": {
+                    "path_label": "レビュー対象のキャリアパスのラベル（例: '現職で昇進', '起業', '海外移住'）。'all' で全パス概要レビュー",
+                    "focus": "レビューの焦点（例: '実現可能性', 'リスク', 'ライフイベント影響', '市場需要'）。省略可"
                 }
             }
         }
@@ -1055,6 +1108,18 @@ class ReportAgent:
                 query = parameters.get("query", "")
                 category = parameters.get("category", "all")
                 return KnowledgeLoader.search_knowledge(query=query, category=category)
+
+            elif tool_name == "web_career_research":
+                return self._web_career_research(
+                    query=parameters.get("query", ""),
+                    focus=parameters.get("focus", "general"),
+                )
+
+            elif tool_name == "review_career_paths":
+                return self._review_career_paths(
+                    path_label=parameters.get("path_label", "all"),
+                    focus=parameters.get("focus", ""),
+                )
 
             # ========== Backward-compatible old tools (internally redirected to new tools) ==========
             
@@ -1160,6 +1225,112 @@ class ReportAgent:
             return True
         return False
     
+    def _web_career_research(self, query: str, focus: str = "general") -> str:
+        """
+        Search the web for job market data, career theories, and industry trends
+        using Tavily API via ExternalDataFetcher.
+        """
+        from .external_data_fetcher import ExternalDataFetcher
+        fetcher = ExternalDataFetcher()
+
+        if not fetcher.is_available:
+            return "Web検索APIが利用できません（TAVILY_API_KEY未設定）。プリセット知識のみ利用可能です。"
+
+        try:
+            if focus == "job_market":
+                results = fetcher.search(query, search_depth="advanced", max_results=5, include_answer=True)
+            elif focus == "career_theory":
+                results = fetcher.search(
+                    f"{query} キャリア理論 キャリアデザイン 研究",
+                    search_depth="advanced", max_results=5, include_answer=True
+                )
+            elif focus == "industry":
+                results = fetcher.search(query, topic="news", max_results=5, include_answer=True)
+            else:
+                results = fetcher.search(query, search_depth="advanced", max_results=5, include_answer=True)
+
+            if not results:
+                return f"「{query}」に関するWeb検索結果が見つかりませんでした。"
+
+            lines = [f"【Web検索結果: {query}】\n"]
+            for r in results:
+                if r["type"] == "answer":
+                    lines.append(f"■ AI要約: {r['content']}\n")
+                else:
+                    lines.append(f"・{r['title']}")
+                    if r.get("content"):
+                        lines.append(f"  {r['content'][:300]}")
+                    lines.append("")
+
+            return "\n".join(lines)
+
+        except Exception as e:
+            logger.warning(f"Web career research failed: {e}")
+            return f"Web検索に失敗しました: {e}"
+
+    def _review_career_paths(self, path_label: str = "all", focus: str = "") -> str:
+        """
+        Have OASIS agents review career path simulation results.
+        Interviews agents with career path context for their professional opinions.
+        """
+        if not self.career_paths_data or not self.career_paths_data.get("paths"):
+            return "キャリアパス シミュレーション結果がありません。"
+
+        paths = self.career_paths_data["paths"]
+
+        # Build path summary for agent context
+        if path_label.lower() == "all":
+            path_desc_lines = []
+            for i, p in enumerate(paths, 1):
+                events_text = ""
+                if p.get("key_events"):
+                    events_text = "、".join(
+                        f'{e["age"]}歳:{e["event"]}' for e in p["key_events"][:3]
+                    )
+                path_desc_lines.append(
+                    f"パス{i}「{p['path_label']}」: 最終年収{p.get('final_salary', 0)}万円, "
+                    f"満足度{p.get('final_satisfaction', 0)}, スコア{p.get('score', 0)}"
+                    + (f" [主要イベント: {events_text}]" if events_text else "")
+                )
+            path_summary = "\n".join(path_desc_lines)
+        else:
+            # Find specific path
+            target = next((p for p in paths if path_label in p.get("path_label", "")), None)
+            if not target:
+                return f"パス「{path_label}」が見つかりません。利用可能: {', '.join(p['path_label'] for p in paths)}"
+            events_text = "\n".join(
+                f"  - {e['age']}歳: {e['event']}" for e in target.get("key_events", [])
+            )
+            path_summary = (
+                f"パス「{target['path_label']}」\n"
+                f"最終役職: {target.get('final_role', '?')} @ {target.get('final_employer', '?')}\n"
+                f"最終年収: {target.get('final_salary', 0)}万円 (ピーク: {target.get('peak_salary', 0)}万円)\n"
+                f"資産: {target.get('final_cash_buffer', 0)}万円\n"
+                f"ストレス: {target.get('avg_stress', 0)} / 満足度: {target.get('final_satisfaction', 0)}\n"
+                f"ライフイベント:\n{events_text}"
+            )
+
+        focus_text = f"特に「{focus}」の観点から" if focus else ""
+        interview_topic = (
+            f"以下のキャリアパス シミュレーション結果について、{focus_text}"
+            f"あなたの専門的な立場から率直に評価・コメントしてください。\n"
+            f"実現可能性、リスク、ライフイベントの影響、市場環境を踏まえて意見を述べてください。\n\n"
+            f"【キャリアパス シミュレーション結果】\n{path_summary}"
+        )
+
+        # Use existing interview_agents tool to get agent reactions
+        try:
+            result = self.zep_tools.interview_agents(
+                simulation_id=self.simulation_id,
+                interview_requirement=interview_topic,
+                simulation_requirement=self.simulation_requirement,
+                max_agents=6
+            )
+            return f"【エージェント群によるキャリアパスレビュー】\n{result.to_text()}"
+        except Exception as e:
+            logger.warning(f"Career path review via agents failed: {e}")
+            return f"エージェントレビューに失敗しました: {e}"
+
     def _get_tools_description(self) -> str:
         """Generate tool description text"""
         desc_parts = ["Available tools:"]
@@ -1200,6 +1371,11 @@ class ReportAgent:
             progress_callback("planning", 30, "Generating report outline...")
         
         system_prompt = PLAN_SYSTEM_PROMPT
+        # Build career paths section for the prompt
+        career_paths_section = ""
+        if self.career_paths_context:
+            career_paths_section = f"【キャリアパス シミュレーション結果（並列実行・ライフイベント付き）】\n{self.career_paths_context}"
+
         user_prompt = PLAN_USER_PROMPT_TEMPLATE.format(
             simulation_requirement=self.simulation_requirement,
             total_nodes=context.get('graph_statistics', {}).get('total_nodes', 0),
@@ -1207,6 +1383,7 @@ class ReportAgent:
             entity_types=list(context.get('graph_statistics', {}).get('entity_types', {}).keys()),
             total_entities=context.get('total_entities', 0),
             related_facts_json=json.dumps(context.get('related_facts', [])[:10], ensure_ascii=False, indent=2),
+            career_paths_section=career_paths_section,
         )
 
         try:
@@ -1288,13 +1465,25 @@ class ReportAgent:
         if self.report_logger:
             self.report_logger.log_section_start(section.title, section_index)
         
+        # Build career paths addendum for section context
+        career_paths_addendum = ""
+        if self.career_paths_context:
+            career_paths_addendum = (
+                "\n\n═══════════════════════════════════════════════════════════════\n"
+                "【キャリアパス シミュレーション結果（参考データ）】\n"
+                "═══════════════════════════════════════════════════════════════\n"
+                f"{self.career_paths_context}\n"
+                "\n上記のキャリアパスデータは並列シミュレーションで得られた結果です。\n"
+                "各パスのライフイベント、年収推移、ストレス・満足度を活用して章を執筆してください。\n"
+            )
+
         system_prompt = SECTION_SYSTEM_PROMPT_TEMPLATE.format(
             report_title=outline.title,
             report_summary=outline.summary,
             simulation_requirement=self.simulation_requirement,
             section_title=section.title,
             tools_description=self._get_tools_description(),
-        )
+        ) + career_paths_addendum
 
         # Build user prompt - pass max 4000 chars per completed section
         if previous_sections:
@@ -1323,7 +1512,7 @@ class ReportAgent:
         min_tool_calls = 3  # Min tool calls required
         conflict_retries = 0  # Consecutive conflict count (tool call + Final Answer simultaneously)
         used_tools = set()  # Track used tool names
-        all_tools = {"insight_forge", "panorama_search", "quick_search", "interview_agents", "knowledge_search"}
+        all_tools = {"insight_forge", "panorama_search", "quick_search", "interview_agents", "knowledge_search", "web_career_research", "review_career_paths"}
 
         # Report context for InsightForge sub-question generation
         report_context = f"Section title: {section.title}\nSimulation requirement: {self.simulation_requirement}"

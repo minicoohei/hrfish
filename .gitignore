@@ -10,6 +10,13 @@ Thumbs.db
 .env.test
 .env.production
 
+# Credentials & Keys
+credentials.json
+client_secret.json
+token.json
+*.pem
+*.key
+
 # Python
 __pycache__/
 *.py[cod]
@@ -58,3 +65,13 @@ backend/uploads/
 
 # Docker 数据
 data/
+
+# Superpowers plugin docs
+docs/superpowers/
+
+# MiroFish session data (user-specific, not for OSS)
+cc_layer/state/*
+!cc_layer/state/.gitkeep
+
+# Cursor tools (local-only scripts)
+cursor_tools/

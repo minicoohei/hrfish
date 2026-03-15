@@ -1,0 +1,49 @@
+{
+  "identity": {
+    "name": "デモ太郎",
+    "age_at_start": 35,
+    "gender": "male",
+    "education": "東京大学 工学部",
+    "mbti": "",
+    "stable_traits": [
+      "起業家精神",
+      "プロダクト×事業のハイブリッド",
+      "0→1の立ち上げ力",
+      "データドリブン"
+    ],
+    "certifications": [],
+    "career_history_summary": "大手IT企業にてCRM・データサイエンス・PdM領域を経験後、スタートアップを創業しCEOとして事業推進。AI・Web3領域での事業開発、ITサービス事業の拡大、AI研修事業の立ち上げなど、プロダクトと事業の両面をリードするキャリア。"
+  },
+  "state": {
+    "current_round": 0,
+    "current_age": 35,
+    "role": "CEO / 創業者",
+    "employer": "AIテック株式会社",
+    "industry": "AI / テクノロジー",
+    "years_in_role": 1,
+    "salary_annual": 2500,
+    "skills": [
+      "プロダクトマネジメント",
+      "事業戦略立案",
+      "データサイエンス",
+      "エンジニアリングマネジメント",
+      "CRM / グロース",
+      "AI事業開発",
+      "Web3事業開発",
+      "起業・経営",
+      "大手企業アライアンス",
+      "受託開発マネジメント"
+    ],
+    "family": [],
+    "marital_status": "single",
+    "cash_buffer": 250,
+    "mortgage_remaining": 0,
+    "monthly_expenses": 40,
+    "stress_level": 0.3,
+    "job_satisfaction": 0.5,
+    "work_life_balance": 0.5,
+    "blockers": [],
+    "events_this_round": []
+  },
+  "seed": 42
+}

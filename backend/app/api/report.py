@@ -3,7 +3,9 @@ Report API routes
 Provides simulation report generation, retrieval, and conversation APIs
 """
 
+import json as _json
 import os
+import re
 import traceback
 import threading
 from flask import request, jsonify, send_file
@@ -12,6 +14,8 @@ from . import report_bp
 from ..config import Config
 from ..services.report_agent import ReportAgent, ReportManager, ReportStatus
 from ..services.simulation_manager import SimulationManager
+from ..services.multipath_simulator import MultiPathSimulator
+from ..models.life_simulator import BaseIdentity, CareerState
 from ..models.project import ProjectManager
 from ..models.task import TaskManager, TaskStatus
 from ..utils.logger import get_logger
@@ -120,6 +124,9 @@ def generate_report():
             }
         )
         
+        # Extract candidate profile from project for multipath sim
+        document_text = ProjectManager.get_extracted_text(state.project_id) or ""
+
         # Define background task
         def run_generate():
             try:
@@ -127,14 +134,40 @@ def generate_report():
                     task_id,
                     status=TaskStatus.PROCESSING,
                     progress=0,
+                    message="Running career path simulations..."
+                )
+
+                # Phase 0: Run multipath life simulation
+                career_paths_context = ""
+                career_paths_data = None
+                try:
+                    career_paths_data = _run_career_path_simulation(
+                        document_text, simulation_requirement
+                    )
+                    if career_paths_data:
+                        career_paths_context = _format_paths_for_llm(career_paths_data)
+                        logger.info(
+                            f"Career path simulation complete: "
+                            f"{career_paths_data.get('total_paths_simulated', 0)} paths → "
+                            f"top {career_paths_data.get('top_n', 5)}"
+                        )
+                except Exception as e:
+                    logger.warning(f"Career path simulation failed (continuing without): {e}")
+
+                task_manager.update_task(
+                    task_id,
+                    status=TaskStatus.PROCESSING,
+                    progress=5,
                     message="Initializing Report Agent..."
                 )
-                
-                # Create Report Agent
+
+                # Create Report Agent with career path context
                 agent = ReportAgent(
                     graph_id=graph_id,
                     simulation_id=simulation_id,
-                    simulation_requirement=simulation_requirement
+                    simulation_requirement=simulation_requirement,
+                    career_paths_context=career_paths_context,
+                    career_paths_data=career_paths_data,
                 )
                 
                 # Progress callback
@@ -153,7 +186,21 @@ def generate_report():
                 
                 # Save report
                 ReportManager.save_report(report)
-                
+
+                # Save career paths data alongside report for frontend
+                if career_paths_data and report.report_id:
+                    try:
+                        paths_dir = os.path.join(
+                            Config.UPLOAD_FOLDER, 'reports', report.report_id
+                        )
+                        os.makedirs(paths_dir, exist_ok=True)
+                        paths_file = os.path.join(paths_dir, 'career_paths.json')
+                        with open(paths_file, 'w', encoding='utf-8') as f:
+                            _json.dump(career_paths_data, f, ensure_ascii=False, indent=2)
+                        logger.info(f"Career paths data saved: {paths_file}")
+                    except Exception as e:
+                        logger.warning(f"Failed to save career paths data: {e}")
+
                 if report.status == ReportStatus.COMPLETED:
                     task_manager.complete_task(
                         task_id,
@@ -1013,3 +1060,125 @@ def get_graph_statistics_tool():
             "error": str(e),
             "traceback": traceback.format_exc()
         }), 500
+
+
+# ============== Career Path Simulation Helpers ==============
+
+def _run_career_path_simulation(document_text: str, simulation_requirement: str) -> dict:
+    """
+    Run expanded career path simulation from document text.
+    Extracts candidate profile, runs 10+ paths, returns top 5.
+    """
+    # Extract basic profile info from document text
+    age = 30
+    salary = 500
+    role = ""
+    employer = ""
+    industry = "IT"
+
+    # Simple extraction heuristics from resume text
+    defaults_used = []
+    age_match = re.search(r'(\d{2})歳', document_text)
+    if age_match:
+        extracted_age = int(age_match.group(1))
+        if 20 <= extracted_age <= 65:
+            age = extracted_age
+        else:
+            defaults_used.append(f"age (extracted {extracted_age} out of range)")
+    else:
+        defaults_used.append("age")
+
+    salary_match = re.search(r'年収[：:]?\s*(\d+)', document_text)
+    if salary_match:
+        extracted_salary = int(salary_match.group(1))
+        if 100 <= extracted_salary <= 5000:
+            salary = extracted_salary
+        else:
+            defaults_used.append(f"salary (extracted {extracted_salary} out of range)")
+    else:
+        defaults_used.append("salary")
+
+    # Extract from simulation requirement as fallback context
+    for text in [document_text, simulation_requirement]:
+        if not role:
+            role_match = re.search(r'(エンジニア|マネージャー|デザイナー|営業|コンサルタント|マーケター|データサイエンティスト|PM|プロダクトマネージャー)', text)
+            if role_match:
+                role = role_match.group(1)
+        if not employer:
+            emp_match = re.search(r'(株式会社[^\s、。]+|[A-Z][a-zA-Z]+(?:\s[A-Z][a-zA-Z]+)*)', text)
+            if emp_match:
+                employer = emp_match.group(1)
+    if not role:
+        defaults_used.append("role")
+    if not employer:
+        defaults_used.append("employer")
+
+    if defaults_used:
+        logger.warning(
+            f"Career path simulation using defaults for: {', '.join(defaults_used)}. "
+            f"Profile extraction from document text ({len(document_text)} chars) was incomplete."
+        )
+
+    identity = BaseIdentity(
+        name="候補者",
+        age_at_start=age,
+        gender="",
+        education="",
+        mbti="",
+        stable_traits=[],
+        certifications=[],
+        career_history_summary=document_text[:500] if document_text else "",
+    )
+
+    initial_state = CareerState(
+        current_round=0,
+        current_age=age,
+        role=role or "スタッフ",
+        employer=employer or "現職企業",
+        industry=industry,
+        years_in_role=3,
+        salary_annual=salary,
+        skills=[],
+        family=[],
+        marital_status="single",
+        cash_buffer=500,
+        mortgage_remaining=0,
+        monthly_expenses=25,
+    )
+
+    simulator = MultiPathSimulator()
+    return simulator.run_expanded_and_select(
+        identity=identity,
+        initial_state=initial_state,
+        round_count=40,  # 10 years
+        top_n=5,
+        document_text=document_text,
+        simulation_requirement=simulation_requirement,
+    )
+
+
+def _format_paths_for_llm(paths_data: dict) -> str:
+    """Format career path simulation results as context for LLM report generation."""
+    lines = []
+    lines.append("=" * 60)
+    lines.append("【キャリアパス シミュレーション結果】")
+    lines.append(f"シミュレーション期間: {paths_data.get('simulation_years', 10)}年間")
+    lines.append(f"検証パス数: {paths_data.get('total_paths_simulated', 0)}パス → 上位{paths_data.get('top_n', 5)}パスを選出")
+    lines.append("=" * 60)
+
+    for i, path in enumerate(paths_data.get("paths", []), 1):
+        lines.append(f"\n--- パス{i}: {path['path_label']} (スコア: {path.get('score', 0)}) ---")
+        lines.append(f"最終年齢: {path.get('final_age', '?')}歳")
+        lines.append(f"最終役職: {path.get('final_role', '?')} @ {path.get('final_employer', '?')}")
+        lines.append(f"最終年収: {path.get('final_salary', 0)}万円 (ピーク: {path.get('peak_salary', 0)}万円)")
+        lines.append(f"資産: {path.get('final_cash_buffer', 0)}万円")
+        lines.append(f"ストレス: {path.get('avg_stress', 0)} / 満足度: {path.get('final_satisfaction', 0)} / WLB: {path.get('final_wlb', 0)}")
+
+        events = path.get("key_events", [])
+        if events:
+            lines.append("主要ライフイベント:")
+            for evt in events:
+                lines.append(f"  - {evt.get('age', '?')}歳: {evt.get('event', '')}")
+
+    lines.append("\n" + "=" * 60)
+    return "\n".join(lines)

@@ -51,6 +51,16 @@ export const getSimulationProfilesRealtime = (simulationId, platform = 'reddit')
 }
 
 /**
+ * Get graph entities (source data for agent creation)
+ * @param {string} graphId
+ * @param {string} entityTypes - comma-separated entity types (optional)
+ */
+export const getGraphEntities = (graphId, entityTypes = '') => {
+  const params = entityTypes ? { entity_types: entityTypes, enrich: true } : { enrich: true }
+  return service.get(`/api/simulation/entities/${graphId}`, { params })
+}
+
+/**
  * Get simulation config
  * @param {string} simulationId
  */

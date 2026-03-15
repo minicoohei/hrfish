@@ -36,8 +36,12 @@ class Config:
     # JSON config - disable ASCII escaping for proper Unicode display
     JSON_AS_ASCII = False
 
-    # CORS config
-    CORS_ORIGINS = os.environ.get('CORS_ORIGINS', 'http://localhost:3000').split(',')
+    # CORS config (production should set CORS_ORIGINS explicitly)
+    # Debug mode allows multiple ports for parallel frontend dev servers (Vite HMR, Storybook, etc.)
+    _DEFAULT_CORS = 'http://localhost:3000'
+    if os.environ.get('FLASK_DEBUG', 'False').lower() == 'true':
+        _DEFAULT_CORS = 'http://localhost:3000,http://localhost:3001,http://localhost:3002,http://localhost:3003'
+    CORS_ORIGINS = os.environ.get('CORS_ORIGINS', _DEFAULT_CORS).split(',')
 
     # API authentication (None = auth disabled for development)
     API_KEY = os.environ.get('MIROFISH_API_KEY')

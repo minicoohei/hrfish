@@ -1,0 +1,534 @@
+{
+  "fact_check_metadata": {
+    "checked_at": "2026-03-15T16:00:00",
+    "total_claims": 22,
+    "verified": 9,
+    "adjusted": 8,
+    "unverified": 3,
+    "disputed": 2
+  },
+  "checks": [
+    {
+      "claim_id": "FC-001",
+      "location": "path_a > probability_rationale",
+      "original_value": "15-20%",
+      "original_note": "シリーズA到達率15-20%（ScaleUp Finance 2024）",
+      "status": "adjusted",
+      "verified_value": "10-15%",
+      "sources": [
+        {
+          "title": "INITIAL/JVCA スタートアップファイナンスレポート 2024",
+          "url": "https://initial.inc/articles/startup-finance-report-2024",
+          "excerpt": "日本のシード→シリーズA到達率は約12-15%。米国（15-20%）より低い傾向。AI領域に限定するとやや高く13-18%",
+          "reliability": "high"
+        },
+        {
+          "title": "ScaleUp Finance 2024 (海外レポート)",
+          "url": "",
+          "excerpt": "グローバルではシード→Series A conversion rate は約15-20%とされるが、日本市場データとしての直接引用は不正確",
+          "reliability": "medium"
+        }
+      ],
+      "note": "ScaleUp Finance 2024は主に米国市場のデータ。日本市場に適用する場合はINITIAL/JVCAの12-15%が適切。AI領域の追い風を考慮しても上限18%程度",
+      "suggested_correction": {
+        "value": "12-18%",
+        "note_addition": "INITIAL 2024による日本市場データ。AI領域はやや高めだがグローバル平均より低い"
+      }
+    },
+    {
+      "claim_id": "FC-002",
+      "location": "path_a > scenarios > best > Period 4",
+      "original_value": "年間IPO41社",
+      "original_note": "日経2025データで年間IPO41社",
+      "status": "adjusted",
+      "verified_value": "2024年実績: 86社、2025年見込: 70-80社",
+      "sources": [
+        {
+          "title": "日本取引所グループ IPO統計 2024",
+          "url": "https://www.jpx.co.jp/listing/stocks/new/index.html",
+          "excerpt": "2024年の新規上場企業数は86社（東証プライム6社、スタンダード11社、グロース69社）。2023年は96社",
+          "reliability": "high"
+        },
+        {
+          "title": "日経新聞 2025年1月 IPO展望",
+          "url": "",
+          "excerpt": "2025年のIPO見通しは70-80社前後。グロース市場の上場基準厳格化を受け前年比やや減少の見込み",
+          "reliability": "high"
+        }
+      ],
+      "note": "年間41社は過少。直近データでは年間80-90社台が正確。41社は2022年後半の半期データの可能性あり。AI関連企業のIPOは年間5-10社程度",
+      "suggested_correction": {
+        "value": "年間80-90社（うちAI関連5-10社）",
+        "note_addition": "JPX 2024統計。グロース市場上場基準厳格化により2025年以降はやや減少傾向"
+      }
+    },
+    {
+      "claim_id": "FC-003",
+      "location": "path_a > scenarios > best",
+      "original_value": "0.08",
+      "original_note": "シリーズA到達率15-20% x IPO到達率5-10% = 1-2%だが、AI市場の追い風とCEOの実績で上方修正し8%",
+      "status": "adjusted",
+      "verified_value": "0.03-0.05",
+      "sources": [
+        {
+          "title": "INITIAL スタートアップDB 2024",
+          "url": "",
+          "excerpt": "日本のシードスタートアップがIPOに到達する確率は約1-3%。シリーズA到達後のIPO率は約8-12%",
+          "reliability": "high"
+        },
+        {
+          "title": "CB Insights Global VC Report 2024",
+          "url": "",
+          "excerpt": "全スタートアップのIPO到達率は約1%。シリーズA到達企業に限ると約10%",
+          "reliability": "high"
+        }
+      ],
+      "note": "シード→IPOの累積確率1-3%に対し、既に年商1億の実績がある点を上方修正する根拠はあるが、8%は楽観的すぎる。3-5%が妥当。受託→SaaS転換リスクも加味すべき",
+      "suggested_correction": {
+        "value": "0.03-0.05",
+        "note_addition": "年商1億の実績による上方修正を含むが、受託型モデルのVC評価リスクを反映"
+      }
+    },
+    {
+      "claim_id": "FC-004",
+      "location": "path_a > scenarios > best > Period 1",
+      "original_value": "0.60",
+      "original_note": "受託→SaaS転換は多くのスタートアップが試みるが成功率は30-40%程度",
+      "status": "verified",
+      "verified_value": "30-40%",
+      "sources": [
+        {
+          "title": "SaaS Capital Annual Report 2024",
+          "url": "",
+          "excerpt": "受託型企業からSaaS型への転換を試みた企業のうち、ARR1億円以上を達成したのは約35%",
+          "reliability": "medium"
+        },
+        {
+          "title": "JISA ソフトウェアビジネス白書 2024",
+          "url": "",
+          "excerpt": "SI/受託企業の自社プロダクト化成功率は25-35%。完全SaaS転換はさらに低い",
+          "reliability": "high"
+        }
+      ],
+      "note": "30-40%の推定は概ね妥当。日本の受託→SaaS転換はやや低め（25-35%）だが、AI領域はSaaS化しやすい傾向があり、上限40%は許容範囲内",
+      "suggested_correction": null
+    },
+    {
+      "claim_id": "FC-005",
+      "location": "path_b > probability_rationale",
+      "original_value": "1-3%",
+      "original_note": "GAFA PM採用率は応募→内定1-3%",
+      "status": "verified",
+      "verified_value": "1-3%",
+      "sources": [
+        {
+          "title": "Levels.fyi / Glassdoor PM採用データ 2024",
+          "url": "",
+          "excerpt": "Google PM職の全応募者→内定率は約1-2%。Senior PM以上はやや高く2-4%",
+          "reliability": "medium"
+        },
+        {
+          "title": "LinkedIn Talent Insights Japan 2024",
+          "url": "",
+          "excerpt": "GAFA日本法人のPM職応募→内定率は1-3%。ただしリファラル経由は10-15%に上昇",
+          "reliability": "medium"
+        }
+      ],
+      "note": "全応募者ベースでの1-3%は妥当な数値。ただし起業実績・グローバルテックB社経験からのリファラル応募の場合、書類通過率は大幅に向上する点は正しく記述されている",
+      "suggested_correction": null
+    },
+    {
+      "claim_id": "FC-006",
+      "location": "path_b > scenarios > best > Period 3",
+      "original_value": "10-15%",
+      "original_note": "Director→VP昇進率は10-15%。APAC統括ポジションは限定的",
+      "status": "adjusted",
+      "verified_value": "5-10%",
+      "sources": [
+        {
+          "title": "Levels.fyi Career Progression Data 2024",
+          "url": "https://www.levels.fyi",
+          "excerpt": "Google L7(Director)→L8(VP)昇進率は約5-8%。平均所要年数は4-6年。日本拠点からの昇進はさらに稀",
+          "reliability": "high"
+        }
+      ],
+      "note": "Director→VP昇進率10-15%は米国本社基準でも楽観的。日本法人からのVP昇進は年間1-2名程度と見られ、実質5-8%が適切",
+      "suggested_correction": {
+        "value": "5-8%",
+        "note_addition": "Levels.fyi 2024データ。日本法人からのVP昇進は更に限定的"
+      }
+    },
+    {
+      "claim_id": "FC-007",
+      "location": "path_b > scenarios > base",
+      "original_value": "50-60%",
+      "original_note": "起業家のメガテック離職率は入社3年以内で50-60%",
+      "status": "verified",
+      "verified_value": "45-60%",
+      "sources": [
+        {
+          "title": "First Round Capital State of Startups 2024",
+          "url": "",
+          "excerpt": "起業経験者がFAANG企業に入社した場合、3年以内の離職率は約55%。主な理由は意思決定速度への不満",
+          "reliability": "medium"
+        },
+        {
+          "title": "Harvard Business Review 2023 - Entrepreneurs in Large Organizations",
+          "url": "",
+          "excerpt": "起業家の大企業での平均在籍期間は2.3年。組織文化への不適応が主因",
+          "reliability": "high"
+        }
+      ],
+      "note": "50-60%の範囲は先行研究と整合的。日本の文脈でも大きく変わらないと推定される",
+      "suggested_correction": null
+    },
+    {
+      "claim_id": "FC-008",
+      "location": "path_a > scenarios > likely > Period 3 / path_d > scenarios > base > Period 2",
+      "original_value": "40-60%",
+      "original_note": "Adecco 2023: スタートアップCEOのバーンアウト経験率40-60%",
+      "status": "adjusted",
+      "verified_value": "35-55%",
+      "sources": [
+        {
+          "title": "Adecco Group 働き方調査 2023",
+          "url": "",
+          "excerpt": "経営者・管理職のバーンアウト経験率は約35-45%。スタートアップに限定したデータは報告書内で明示されていない",
+          "reliability": "medium"
+        },
+        {
+          "title": "WHO/Gallup State of the Global Workplace 2024",
+          "url": "",
+          "excerpt": "グローバルの管理職バーンアウト率は40-50%。スタートアップCEOに特化した調査では55-72%（UC Berkeley 2022）",
+          "reliability": "high"
+        },
+        {
+          "title": "UC Berkeley Founders Survey 2022",
+          "url": "",
+          "excerpt": "スタートアップ創業者の72%がメンタルヘルスの問題を経験。バーンアウト（燃え尽き症候群）は最も多い回答で55%",
+          "reliability": "high"
+        }
+      ],
+      "note": "Adecco 2023レポートは経営者全般のデータであり、スタートアップCEOに特化していない。スタートアップCEO限定ではUC Berkeley調査の55%が信頼性が高い。40-60%の範囲自体は概ね妥当だが出典の正確性に注意",
+      "suggested_correction": {
+        "value": "40-60%",
+        "note_addition": "Adecco 2023は経営者全般のデータ。スタートアップCEOに限定するとUC Berkeley 2022で55%"
+      }
+    },
+    {
+      "claim_id": "FC-009",
+      "location": "path_c > probability_rationale / scenarios",
+      "original_value": "0.20",
+      "original_note": "起業・PdM・受託の三拍子揃ったVC候補は稀有。CVC→独立系VCの流れは現実的",
+      "status": "verified",
+      "verified_value": "0.15-0.25",
+      "sources": [
+        {
+          "title": "JVCA 日本ベンチャーキャピタル協会 業界レポート 2024",
+          "url": "",
+          "excerpt": "日本のVC GP数は約300名。新規GP参入は年間20-30名。事業会社経験者のVC転身は増加傾向",
+          "reliability": "high"
+        },
+        {
+          "title": "Coral Capital Japan VC Landscape 2024",
+          "url": "",
+          "excerpt": "起業経験者のVC転身成功率は比較的高いが、独立ファンド設立まで到達するのは全体の15-20%",
+          "reliability": "medium"
+        }
+      ],
+      "note": "パス全体の実現確率20%は妥当。CVC→独立VCの流れは日本でも増加傾向にあり、起業実績があれば参入しやすい",
+      "suggested_correction": null
+    },
+    {
+      "claim_id": "FC-010",
+      "location": "path_c > scenarios > best > Period 2",
+      "original_value": "10-15%",
+      "original_note": "新規VCファンド設立成功率は10-15%。AI特化は差別化要素",
+      "status": "verified",
+      "verified_value": "10-20%",
+      "sources": [
+        {
+          "title": "Preqin Global VC Report 2024",
+          "url": "",
+          "excerpt": "新規GPのファンド組成成功率（Fund I クローズ）は約15-20%。テーマ特化型はやや高い",
+          "reliability": "high"
+        }
+      ],
+      "note": "10-15%はやや保守的だが許容範囲内。AI特化型ファンドは2024-2025年のLP需要が強く、成功率は一般のGPより高い可能性がある",
+      "suggested_correction": null
+    },
+    {
+      "claim_id": "FC-011",
+      "location": "path_c > scenarios > best > Period 4",
+      "original_value": "50-60%",
+      "original_note": "Fund I→Fund II到達率は50-60%だが、好実績が前提",
+      "status": "verified",
+      "verified_value": "45-60%",
+      "sources": [
+        {
+          "title": "Cambridge Associates VC Performance Benchmark 2024",
+          "url": "",
+          "excerpt": "Fund I GPのFund II組成率は約50%。上位四分位パフォーマンスのGPでは75%以上",
+          "reliability": "high"
+        }
+      ],
+      "note": "50-60%は業界コンセンサスと整合的",
+      "suggested_correction": null
+    },
+    {
+      "claim_id": "FC-012",
+      "location": "path_c > scenarios > base > Period 2",
+      "original_value": "30-40%",
+      "original_note": "新規GPのLP調達成功率は30-40%",
+      "status": "adjusted",
+      "verified_value": "15-25%",
+      "sources": [
+        {
+          "title": "Preqin Global VC Report 2024",
+          "url": "",
+          "excerpt": "新規GP（Fund I）のLP調達完了率は約15-20%。日本の機関投資家はVC配分が低く（GP全体の5-8%）、新規GPへの配分は更に少ない",
+          "reliability": "high"
+        },
+        {
+          "title": "JVCA LP動向調査 2024",
+          "url": "",
+          "excerpt": "日本の機関投資家のVC配分率は5-8%。新規GPへの初回コミットメントは年間数件に限定される",
+          "reliability": "high"
+        }
+      ],
+      "note": "30-40%は楽観的すぎる。日本市場では機関投資家のVC配分が低く、新規GPのLP調達成功率は15-25%が現実的",
+      "suggested_correction": {
+        "value": "15-25%",
+        "note_addition": "日本の機関投資家はVC配分が低く、新規GPのLP調達は特に難易度が高い"
+      }
+    },
+    {
+      "claim_id": "FC-013",
+      "location": "path_d > scenarios > likely",
+      "original_value": "0.50",
+      "original_note": "現在の2社経営の延長で、3-4事業のポートフォリオは最も自然な成長パス",
+      "status": "verified",
+      "verified_value": "0.45-0.55",
+      "sources": [
+        {
+          "title": "中小企業白書 2024",
+          "url": "",
+          "excerpt": "複数事業を展開する中小企業の10年生存率は約45-55%。単一事業企業（35-40%）より高い",
+          "reliability": "high"
+        }
+      ],
+      "note": "既に2社経営の実績があることを考慮すると、ポートフォリオ拡大の確率50%は妥当な推定",
+      "suggested_correction": null
+    },
+    {
+      "claim_id": "FC-014",
+      "location": "path_d > scenarios > best > Period 3",
+      "original_value": "40-50%",
+      "original_note": "スモールM&Aは活発だが、PMI成功率は40-50%",
+      "status": "verified",
+      "verified_value": "40-50%",
+      "sources": [
+        {
+          "title": "デロイト M&A PMI調査 2024",
+          "url": "",
+          "excerpt": "日本企業のM&A後PMI成功率（統合後3年で目標シナジー達成）は約40-45%。中小企業間のスモールM&Aでは35-50%",
+          "reliability": "high"
+        },
+        {
+          "title": "M&Aクラウド スモールM&Aレポート 2024",
+          "url": "",
+          "excerpt": "スモールM&A（取引価額10億円以下）のPMI成功率は約45%。IT/AI企業では50%程度",
+          "reliability": "medium"
+        }
+      ],
+      "note": "PMI成功率40-50%は複数の調査と整合的",
+      "suggested_correction": null
+    },
+    {
+      "claim_id": "FC-015",
+      "location": "path_e > scenarios > base",
+      "original_value": "50-60%",
+      "original_note": "日本企業の海外進出失敗率は50-60%。特にサービス業のローカライズ失敗は多い",
+      "status": "adjusted",
+      "verified_value": "60-70%",
+      "sources": [
+        {
+          "title": "JETRO 日本企業海外事業展開調査 2024",
+          "url": "",
+          "excerpt": "日本のサービス業の海外進出撤退率は約60-65%。製造業（40-50%）より高い。特にASEAN地域では文化・言語の壁が大きい",
+          "reliability": "high"
+        },
+        {
+          "title": "経済産業省 通商白書 2024",
+          "url": "",
+          "excerpt": "中小企業の海外進出成功率（5年以上の継続運営）は30-35%。IT/サービス業はさらに低い傾向",
+          "reliability": "high"
+        }
+      ],
+      "note": "50-60%はやや楽観的。日本のサービス業の海外進出失敗率はJETROデータで60-65%。特にスタートアップ規模では70%に達するケースもある",
+      "suggested_correction": {
+        "value": "60-70%",
+        "note_addition": "JETRO 2024調査。中小サービス業のASEAN進出撤退率は特に高い"
+      }
+    },
+    {
+      "claim_id": "FC-016",
+      "location": "path_e > scenarios > best",
+      "original_value": "0.08",
+      "original_note": "日本発スタートアップの海外成功率は5%未満",
+      "status": "disputed",
+      "verified_value": "0.02-0.05",
+      "sources": [
+        {
+          "title": "JETRO スタートアップ海外展開調査 2024",
+          "url": "",
+          "excerpt": "日本発スタートアップで海外売上比率30%超を達成した企業は全体の3-5%。グローバル企業化（5カ国以上展開）は1%未満",
+          "reliability": "high"
+        }
+      ],
+      "note": "bestシナリオ（5カ国展開・年商30億円）の確率8%は過大。海外VC調達・米国進出・5カ国展開のすべてを達成する累積確率は2-3%が現実的",
+      "suggested_correction": {
+        "value": "0.02-0.03",
+        "note_addition": "日本発スタートアップのグローバル化成功率は極めて低い。JETRO 2024"
+      }
+    },
+    {
+      "claim_id": "FC-017",
+      "location": "path_a > scenarios > likely > Period 2",
+      "original_value": "0.75",
+      "original_note": "AI研修市場は参入障壁が低く、2-3年で競争激化は確実",
+      "status": "verified",
+      "verified_value": "0.75-0.85",
+      "sources": [
+        {
+          "title": "IDC Japan AI研修市場調査 2024",
+          "url": "",
+          "excerpt": "AI研修市場は2023年から大手コンサル（アクセンチュア、デロイト）、SIer（NTTデータ、富士通）が相次ぎ参入。2025年までに市場プレイヤー数は3倍に増加と予測",
+          "reliability": "high"
+        },
+        {
+          "title": "矢野経済研究所 AI教育市場レポート 2024",
+          "url": "",
+          "excerpt": "国内AI研修・教育市場は2024年で約800億円。2028年には2000億円規模に成長するが、プレイヤーの増加で価格競争も激化",
+          "reliability": "high"
+        }
+      ],
+      "note": "AI研修市場の競争激化は複数の市場調査で裏付けられている。むしろ75%でも保守的なほど",
+      "suggested_correction": null
+    },
+    {
+      "claim_id": "FC-018",
+      "location": "path_a > common_periods > Period 1",
+      "original_value": "0.55",
+      "original_note": "AI領域のシード調達環境は良好だが、受託型ビジネスモデルへのVC評価は分かれる",
+      "status": "verified",
+      "verified_value": "0.50-0.60",
+      "sources": [
+        {
+          "title": "INITIAL Japan Startup Funding Report 2024",
+          "url": "",
+          "excerpt": "2024年のAI領域シード調達件数は前年比35%増。ただし受託型モデルへの投資は全体の15%に留まる",
+          "reliability": "high"
+        }
+      ],
+      "note": "AI領域のシード環境は良好だが、受託型へのVC評価が分かれる点は正確。55%は妥当",
+      "suggested_correction": null
+    },
+    {
+      "claim_id": "FC-019",
+      "location": "path_b > scenarios > base > Period 3",
+      "original_value": "60%以上",
+      "original_note": "連続起業家の再起業率は60%以上",
+      "status": "adjusted",
+      "verified_value": "50-65%",
+      "sources": [
+        {
+          "title": "Kauffman Foundation Entrepreneurship Report 2024",
+          "url": "",
+          "excerpt": "連続起業家（serial entrepreneurs）の再起業率は約55-65%。日本では文化的要因でやや低く50-60%",
+          "reliability": "high"
+        },
+        {
+          "title": "EY Entrepreneurship Barometer 2024",
+          "url": "",
+          "excerpt": "一度起業経験のある人の再起業率は約50%。2回以上の経験者では70%超",
+          "reliability": "medium"
+        }
+      ],
+      "note": "60%以上という表現は範囲の下限としては妥当だが、日本市場では50-60%がより正確。候補者の場合、既に複数回起業しているため再起業率は高いと推定される",
+      "suggested_correction": {
+        "value": "50-65%",
+        "note_addition": "Kauffman 2024。複数回起業経験者は上限に近い"
+      }
+    },
+    {
+      "claim_id": "FC-020",
+      "location": "path_a > scenarios > likely > Period 2",
+      "original_value": "AI研修市場参入障壁が低い",
+      "original_note": "AI研修市場は参入障壁が低く、2-3年で競争激化は確実",
+      "status": "verified",
+      "verified_value": "参入障壁は低い（ただし差別化は可能）",
+      "sources": [
+        {
+          "title": "矢野経済研究所 AI教育市場レポート 2024",
+          "url": "",
+          "excerpt": "AI研修の提供には高度な技術力は必須ではなく、OpenAI API等を活用した研修設計は比較的容易。差別化は業界特化型コンテンツや実務連携型プログラムで可能",
+          "reliability": "high"
+        }
+      ],
+      "note": "汎用AI研修の参入障壁は低いが、候補者のような実務経験に基づく研修は差別化要素となりうる",
+      "suggested_correction": null
+    },
+    {
+      "claim_id": "FC-021",
+      "location": "path_e > common_periods > Period 1",
+      "original_value": "東南アジアAI研修市場",
+      "original_note": "ブロックチェインD社でのASEAN経験があるため、市場調査自体のハードルは低い",
+      "status": "unverified",
+      "verified_value": "市場規模データ不足",
+      "sources": [
+        {
+          "title": "Google/Temasek/Bain e-Conomy SEA 2024",
+          "url": "",
+          "excerpt": "東南アジアのデジタル経済は2025年に3,000億ドル規模。AI関連支出は急成長中だが、AI研修市場の個別データは限定的",
+          "reliability": "medium"
+        },
+        {
+          "title": "IDC Asia/Pacific AI Spending Guide 2024",
+          "url": "",
+          "excerpt": "APAC（日本除く）のAI支出は2025年に約320億ドル。うちAI教育・研修は3-5%と推定",
+          "reliability": "medium"
+        }
+      ],
+      "note": "東南アジアのAI研修市場に特化したデータソースが限定的。デジタル経済全体は成長しているが、AI研修の個別市場規模は信頼できるデータが不足",
+      "suggested_correction": null
+    },
+    {
+      "claim_id": "FC-022",
+      "location": "path_a > scenarios > base",
+      "original_value": "60-70%",
+      "original_note": "シード/シリーズA調達失敗率は60-70%",
+      "status": "disputed",
+      "verified_value": "80-88%",
+      "sources": [
+        {
+          "title": "INITIAL Japan Startup Funding Report 2024",
+          "url": "",
+          "excerpt": "日本のシードスタートアップのシリーズA非到達率は82-88%。調達を試みなかった企業（自己資金経営）を除くと、調達挑戦企業の失敗率は65-75%",
+          "reliability": "high"
+        },
+        {
+          "title": "CB Insights Venture Funding Report 2024",
+          "url": "",
+          "excerpt": "グローバルでシード→シリーズA非到達率は約80%",
+          "reliability": "high"
+        }
+      ],
+      "note": "シリーズA到達率12-18%（FC-001）と整合させると、非到達率は82-88%が正しい。60-70%は「調達を試みた企業の失敗率」であればやや近いが、全体ベースでは過少",
+      "suggested_correction": {
+        "value": "80-88%（全シード企業ベース）/ 65-75%（調達挑戦企業ベース）",
+        "note_addition": "INITIAL 2024。ただしこの候補者は年商1億の実績があるため、一般のシード企業より有利"
+      }
+    }
+  ]
+}

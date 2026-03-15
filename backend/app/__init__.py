@@ -41,24 +41,30 @@ def create_app(config_class=Config):
         logger.info("=" * 50)
     
     # Enable CORS
-    CORS(app, resources={r"/api/*": {"origins": app.config.get('CORS_ORIGINS', ['http://localhost:3000'])}})
+    cors_origins = app.config.get('CORS_ORIGINS', ['http://localhost:3000'])
+    CORS(app, resources={r"/api/*": {"origins": cors_origins, "supports_credentials": True}})
 
     # Rate limiting
     try:
         from flask_limiter import Limiter
         from flask_limiter.util import get_remote_address
+        rate_hour = os.environ.get('RATE_LIMIT_HOUR', '200 per hour')
+        rate_minute = os.environ.get('RATE_LIMIT_MINUTE', '50 per minute')
         limiter = Limiter(
             get_remote_address,
             app=app,
-            default_limits=["200 per hour", "50 per minute"],
+            default_limits=[rate_hour, rate_minute],
             storage_uri="memory://",
         )
         app.limiter = limiter
         if should_log_startup:
-            logger.info("Rate limiting enabled")
+            logger.info(f"Rate limiting enabled ({rate_hour}, {rate_minute})")
     except ImportError:
         if should_log_startup:
             logger.warning("flask-limiter not installed, rate limiting disabled")
+    except Exception as e:
+        if should_log_startup:
+            logger.warning(f"Rate limiting config error (check RATE_LIMIT_* env vars): {e}")
     
     # Register simulation process cleanup (ensure termination on server shutdown)
     from .services.simulation_runner import SimulationRunner
@@ -98,12 +104,11 @@ def create_app(config_class=Config):
         return response
     
     # Register blueprints
-    from .api import graph_bp, simulation_bp, report_bp, knowledge_bp, life_sim_bp
+    from .api import graph_bp, simulation_bp, report_bp, knowledge_bp
     app.register_blueprint(graph_bp, url_prefix='/api/graph')
     app.register_blueprint(simulation_bp, url_prefix='/api/simulation')
     app.register_blueprint(report_bp, url_prefix='/api/report')
     app.register_blueprint(knowledge_bp, url_prefix='/api/knowledge')
-    app.register_blueprint(life_sim_bp, url_prefix='/api/life-sim')
     
     # Health check
     @app.route('/health')

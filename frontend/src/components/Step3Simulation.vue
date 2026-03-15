@@ -143,6 +143,7 @@
                 <div class="agent-info">
                   <div class="avatar-placeholder">{{ (action.agent_name || 'A')[0] }}</div>
                   <span class="agent-name">{{ action.agent_name }}</span>
+                  <span v-if="agentProfileMap[action.agent_name]" class="agent-profession">{{ agentProfileMap[action.agent_name] }}</span>
                 </div>
                 
                 <div class="header-meta">
@@ -288,11 +289,12 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
-import { 
-  startSimulation, 
+import {
+  startSimulation,
   stopSimulation,
-  getRunStatus, 
-  getRunStatusDetail
+  getRunStatus,
+  getRunStatusDetail,
+  getSimulationProfiles
 } from '../api/simulation'
 import { generateReport } from '../api/report'
 
@@ -322,6 +324,7 @@ const runStatus = ref({})
 const allActions = ref([]) // All actions (incremental accumulation)
 const actionIds = ref(new Set()) // Action ID set for dedup
 const scrollContainer = ref(null)
+const agentProfileMap = ref({}) // agent_name → profession lookup
 
 // Computed
 // Display actions chronologically (newest at bottom)
@@ -376,6 +379,26 @@ const resetAllState = () => {
   stopPolling()  // Stop any existing polling
 }
 
+// Fetch agent profiles to build name → profession map
+const fetchAgentProfiles = async () => {
+  if (!props.simulationId) return
+  try {
+    const res = await getSimulationProfiles(props.simulationId, 'reddit')
+    if (res.success && res.data?.profiles) {
+      const map = {}
+      for (const p of res.data.profiles) {
+        const name = p.name || p.user_name
+        if (name && p.profession) {
+          map[name] = p.profession
+        }
+      }
+      agentProfileMap.value = map
+    }
+  } catch {
+    // profiles not yet available - will retry during polling
+  }
+}
+
 // Start simulation
 const doStartSimulation = async () => {
   if (!props.simulationId) {
@@ -417,7 +440,8 @@ const doStartSimulation = async () => {
       
       phase.value = 1
       runStatus.value = res.data
-      
+
+      fetchAgentProfiles() // Load profiles for profession display
       startStatusPolling()
       startDetailPolling()
     } else {
@@ -582,6 +606,11 @@ const fetchRunStatusDetail = async () => {
       
       // Don't auto-scroll, let users browse timeline freely
       // New actions appended at bottom
+
+      // Retry profile fetch if map is still empty
+      if (Object.keys(agentProfileMap.value).length === 0) {
+        fetchAgentProfiles()
+      }
     }
   } catch (err) {
     console.warn('Failed to get detail status:', err)
@@ -1077,6 +1106,16 @@ onUnmounted(() => {
   font-size: 13px;
   font-weight: 600;
   color: #000;
+}
+
+.agent-profession {
+  font-size: 11px;
+  color: #888;
+  font-weight: 400;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .header-meta {

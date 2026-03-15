@@ -86,6 +86,14 @@ class AgentStateStore:
             state.job_satisfaction = 0.1
             _handled_keys.update({"employer", "role", "salary_annual"})
 
+        elif event.event_type == LifeEventType.MARRIAGE:
+            state.marital_status = "married"
+            state.monthly_expenses += 5
+            state.job_satisfaction = min(1.0, state.job_satisfaction + 0.1)
+            state.stress_level = max(0.0, state.stress_level - 0.1)
+            state.family.append(FamilyMember(relation="spouse", age=state.current_age))
+            _handled_keys.update({"marital_status", "monthly_expenses"})
+
         elif event.event_type == LifeEventType.CHILD_BIRTH:
             state.monthly_expenses += 8
             state.work_life_balance = max(0.0, state.work_life_balance - 0.2)
@@ -121,6 +129,51 @@ class AgentStateStore:
         elif event.event_type == LifeEventType.MARKET_CRASH:
             state.cash_buffer = int(state.cash_buffer * 0.7)
             _handled_keys.add("cash_buffer")
+
+        elif event.event_type == LifeEventType.DIVORCE:
+            state.marital_status = "divorced"
+            state.stress_level = min(1.0, state.stress_level + 0.3)
+            state.job_satisfaction = max(0.1, state.job_satisfaction - 0.15)
+            state.cash_buffer = int(state.cash_buffer * 0.6)
+            # I-2 fix: remove spouse from family list
+            state.family = [f for f in state.family if f.relation != "spouse"]
+            _handled_keys.update({"marital_status", "cash_buffer"})
+
+        elif event.event_type == LifeEventType.HEALTH_ISSUE:
+            state.stress_level = min(1.0, state.stress_level + 0.3)
+            state.work_life_balance = max(0.0, state.work_life_balance - 0.2)
+
+        elif event.event_type == LifeEventType.HOUSING_PURCHASE:
+            sc = event.state_changes
+            if "mortgage_remaining" in sc:
+                state.mortgage_remaining = sc["mortgage_remaining"]
+            if "monthly_expenses" in sc:
+                state.monthly_expenses = sc["monthly_expenses"]
+            _handled_keys.update({"mortgage_remaining", "monthly_expenses"})
+
+        elif event.event_type == LifeEventType.OVERSEAS_MIGRATION:
+            state.stress_level = min(1.0, state.stress_level + 0.2)
+            state.job_satisfaction = min(1.0, state.job_satisfaction + 0.15)
+
+        elif event.event_type == LifeEventType.RURAL_MIGRATION:
+            state.work_life_balance = min(1.0, state.work_life_balance + 0.3)
+            state.stress_level = max(0.0, state.stress_level - 0.2)
+
+        # C-2 fix: explicit handlers for PARENTAL_LEAVE, SIDE_BUSINESS, RESKILLING
+        elif event.event_type == LifeEventType.PARENTAL_LEAVE:
+            state.work_life_balance = min(1.0, state.work_life_balance + 0.3)
+            state.stress_level = max(0.0, state.stress_level - 0.1)
+            _handled_keys.update({"work_life_balance", "stress_level"})
+
+        elif event.event_type == LifeEventType.SIDE_BUSINESS:
+            state.cash_buffer += 30
+            state.stress_level = min(1.0, state.stress_level + 0.1)
+            _handled_keys.update({"cash_buffer", "stress_level"})
+
+        elif event.event_type == LifeEventType.RESKILLING:
+            state.monthly_expenses += 3
+            state.job_satisfaction = min(1.0, state.job_satisfaction + 0.1)
+            _handled_keys.update({"monthly_expenses", "job_satisfaction"})
 
         # Apply remaining state_changes (excluding type-specific handled keys)
         for key, value in event.state_changes.items():

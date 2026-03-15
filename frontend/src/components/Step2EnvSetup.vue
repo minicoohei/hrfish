@@ -41,16 +41,118 @@
         </div>
       </div>
 
-      <!-- Step 02: Generate Agent Profiles -->
+      <!-- Step 02: Source Data Extraction -->
       <div class="step-card" :class="{ 'active': phase === 1, 'completed': phase > 1 }">
         <div class="card-header">
           <div class="step-info">
             <span class="step-num">02</span>
-            <span class="step-title">Generate Agent Profiles</span>
+            <span class="step-title">Source Data Extraction</span>
           </div>
           <div class="step-status">
             <span v-if="phase > 1" class="badge success">Completed</span>
-            <span v-else-if="phase === 1" class="badge processing">{{ prepareProgress }}%</span>
+            <span v-else-if="phase === 1 && sourceData.loading" class="badge processing">Loading</span>
+            <span v-else-if="phase === 1" class="badge success">Ready</span>
+            <span v-else class="badge pending">Waiting</span>
+          </div>
+        </div>
+
+        <div class="card-content">
+          <p class="api-note">GET /api/simulation/entities/&lt;graph_id&gt;</p>
+          <p class="description">
+            エージェント生成のベースとなる情報ソースを抽出・表示します
+          </p>
+
+          <div v-if="sourceData.loaded" class="source-data-panel">
+            <!-- Uploaded Documents -->
+            <div class="source-section">
+              <div class="source-header">
+                <span class="source-icon">📄</span>
+                <span class="source-title">アップロード済みドキュメント</span>
+                <span class="source-count">{{ sourceData.documents.length }}件</span>
+              </div>
+              <div v-if="sourceData.documents.length > 0" class="source-items">
+                <div v-for="doc in sourceData.documents" :key="doc.filename" class="source-item doc-item">
+                  <span class="item-name">{{ doc.filename }}</span>
+                  <span class="item-meta">{{ formatFileSize(doc.size) }}</span>
+                </div>
+              </div>
+              <div v-else class="source-empty">ドキュメントなし</div>
+            </div>
+
+            <!-- Simulation Requirement -->
+            <div v-if="sourceData.requirement" class="source-section">
+              <div class="source-header">
+                <span class="source-icon">🎯</span>
+                <span class="source-title">シミュレーション要件</span>
+              </div>
+              <div class="source-requirement">{{ sourceData.requirement }}</div>
+            </div>
+
+            <!-- Knowledge Graph Entities -->
+            <div class="source-section">
+              <div class="source-header">
+                <span class="source-icon">🔗</span>
+                <span class="source-title">知識グラフ エンティティ</span>
+                <span class="source-count">{{ sourceData.totalEntities }}件 (全{{ sourceData.rawNodeCount }}ノードから抽出)</span>
+              </div>
+
+              <!-- Entity Type Breakdown -->
+              <div v-if="sourceData.entityTypeCounts.length > 0" class="entity-type-grid">
+                <div v-for="et in sourceData.entityTypeCounts" :key="et.type" class="entity-type-chip">
+                  <span class="et-label">{{ et.type }}</span>
+                  <span class="et-count">{{ et.count }}</span>
+                </div>
+              </div>
+
+              <!-- Entity List (collapsed) -->
+              <div v-if="sourceData.entities.length > 0" class="entity-list">
+                <div
+                  v-for="entity in sourceData.showAllEntities ? sourceData.entities : sourceData.entities.slice(0, 8)"
+                  :key="entity.uuid"
+                  class="entity-row"
+                >
+                  <span class="entity-name">{{ entity.name }}</span>
+                  <span class="entity-type-badge">{{ entity.labels.filter(l => l !== 'Entity').join(', ') }}</span>
+                  <span v-if="entity.summary" class="entity-summary">{{ entity.summary.slice(0, 80) }}{{ entity.summary.length > 80 ? '...' : '' }}</span>
+                  <span class="entity-edges" v-if="entity.related_edges?.length">{{ entity.related_edges.length }} relations</span>
+                </div>
+                <button
+                  v-if="sourceData.entities.length > 8"
+                  class="show-more-btn"
+                  @click="sourceData.showAllEntities = !sourceData.showAllEntities"
+                >
+                  {{ sourceData.showAllEntities ? '折りたたむ' : `他 ${sourceData.entities.length - 8} 件を表示` }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Knowledge Base -->
+            <div v-if="sourceData.knowledgeFiles.length > 0" class="source-section">
+              <div class="source-header">
+                <span class="source-icon">📚</span>
+                <span class="source-title">外部知識ベース</span>
+                <span class="source-count">{{ sourceData.knowledgeFiles.length }}件</span>
+              </div>
+              <div class="source-items">
+                <div v-for="kf in sourceData.knowledgeFiles" :key="kf" class="source-item">
+                  <span class="item-name">{{ kf }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 03: Generate Agent Profiles -->
+      <div class="step-card" :class="{ 'active': phase === 2, 'completed': phase > 2 }">
+        <div class="card-header">
+          <div class="step-info">
+            <span class="step-num">03</span>
+            <span class="step-title">Generate Agent Profiles</span>
+          </div>
+          <div class="step-status">
+            <span v-if="phase > 2" class="badge success">Completed</span>
+            <span v-else-if="phase === 2" class="badge processing">{{ prepareProgress }}%</span>
             <span v-else class="badge pending">Waiting</span>
           </div>
         </div>
@@ -113,16 +215,16 @@
         </div>
       </div>
 
-      <!-- Step 03: Generate Dual-Platform Config -->
-      <div class="step-card" :class="{ 'active': phase === 2, 'completed': phase > 2 }">
+      <!-- Step 04: Generate Dual-Platform Config -->
+      <div class="step-card" :class="{ 'active': phase === 3, 'completed': phase > 3 }">
         <div class="card-header">
           <div class="step-info">
-            <span class="step-num">03</span>
+            <span class="step-num">04</span>
             <span class="step-title">Generate Dual-Platform Config</span>
           </div>
           <div class="step-status">
-            <span v-if="phase > 2" class="badge success">Completed</span>
-            <span v-else-if="phase === 2" class="badge processing">Generating</span>
+            <span v-if="phase > 3" class="badge success">Completed</span>
+            <span v-else-if="phase === 3" class="badge processing">Generating</span>
             <span v-else class="badge pending">Waiting</span>
           </div>
         </div>
@@ -346,16 +448,16 @@
         </div>
       </div>
 
-      <!-- Step 04: Initial Activation Choreography -->
-      <div class="step-card" :class="{ 'active': phase === 3, 'completed': phase > 3 }">
+      <!-- Step 05: Initial Activation Choreography -->
+      <div class="step-card" :class="{ 'active': phase === 4, 'completed': phase > 4 }">
         <div class="card-header">
           <div class="step-info">
-            <span class="step-num">04</span>
+            <span class="step-num">05</span>
             <span class="step-title">Initial Activation</span>
           </div>
           <div class="step-status">
-            <span v-if="phase > 3" class="badge success">Completed</span>
-            <span v-else-if="phase === 3" class="badge processing">Choreographing</span>
+            <span v-if="phase > 4" class="badge success">Completed</span>
+            <span v-else-if="phase === 4" class="badge processing">Choreographing</span>
             <span v-else class="badge pending">Waiting</span>
           </div>
         </div>
@@ -418,15 +520,15 @@
         </div>
       </div>
 
-      <!-- Step 05: Preparation Complete -->
-      <div class="step-card" :class="{ 'active': phase === 4 }">
+      <!-- Step 06: Preparation Complete -->
+      <div class="step-card" :class="{ 'active': phase === 5 }">
         <div class="card-header">
           <div class="step-info">
-            <span class="step-num">05</span>
+            <span class="step-num">06</span>
             <span class="step-title">Preparation Complete</span>
           </div>
           <div class="step-status">
-            <span v-if="phase >= 4" class="badge processing">In Progress</span>
+            <span v-if="phase >= 5" class="badge processing">In Progress</span>
             <span v-else class="badge pending">Waiting</span>
           </div>
         </div>
@@ -633,12 +735,13 @@
 
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
-import { 
-  prepareSimulation, 
-  getPrepareStatus, 
+import {
+  prepareSimulation,
+  getPrepareStatus,
   getSimulationProfilesRealtime,
   getSimulationConfig,
-  getSimulationConfigRealtime 
+  getSimulationConfigRealtime,
+  getGraphEntities
 } from '../api/simulation'
 
 const props = defineProps({
@@ -651,8 +754,22 @@ const props = defineProps({
 const emit = defineEmits(['go-back', 'next-step', 'add-log', 'update-status'])
 
 // State
-const phase = ref(0) // 0: Initializing, 1: Generating profiles, 2: Generating config, 3: Complete
+const phase = ref(0) // 0: Init, 1: Source extraction, 2: Generating profiles, 3: Generating config, 4: Activation, 5: Complete
 const taskId = ref(null)
+
+// Source data extraction state
+const sourceData = ref({
+  loading: false,
+  loaded: false,
+  documents: [],
+  requirement: '',
+  totalEntities: 0,
+  rawNodeCount: 0,
+  entityTypeCounts: [],
+  entities: [],
+  knowledgeFiles: [],
+  showAllEntities: false,
+})
 const prepareProgress = ref(0)
 const currentStage = ref('')
 const progressMessage = ref('')
@@ -675,16 +792,16 @@ const customMaxRounds = ref(40)   // Default recommended 40 rounds
 // Watch stage to update phase
 watch(currentStage, (newStage) => {
   if (newStage === 'generating_profiles') {
-    phase.value = 1
-  } else if (newStage === 'generating_config') {
     phase.value = 2
+  } else if (newStage === 'generating_config') {
+    phase.value = 3
     // Entering config generation phase
     if (!configTimer) {
       addLog('Starting dual-platform config generation...')
       startConfigPolling()
     }
   } else if (newStage === 'copying_scripts') {
-    phase.value = 2 // Still in config phase
+    phase.value = 3 // Still in config phase
   }
 })
 
@@ -765,6 +882,80 @@ const selectProfile = (profile) => {
   selectedProfile.value = profile
 }
 
+// File size formatter
+const formatFileSize = (bytes) => {
+  if (!bytes) return '0 B'
+  const units = ['B', 'KB', 'MB', 'GB']
+  let i = 0
+  let size = bytes
+  while (size >= 1024 && i < units.length - 1) {
+    size /= 1024
+    i++
+  }
+  return `${size.toFixed(i > 0 ? 1 : 0)} ${units[i]}`
+}
+
+// Fetch source data (entities, documents, knowledge base)
+const fetchSourceData = async () => {
+  sourceData.value.loading = true
+  addLog('Extracting source data...')
+
+  // 1. Documents and requirement from projectData
+  if (props.projectData) {
+    sourceData.value.documents = props.projectData.files || []
+    sourceData.value.requirement = props.projectData.simulation_requirement || ''
+    if (sourceData.value.documents.length > 0) {
+      addLog(`  ├─ Documents: ${sourceData.value.documents.map(d => d.filename).join(', ')}`)
+    }
+    if (sourceData.value.requirement) {
+      addLog(`  ├─ Requirement: ${sourceData.value.requirement.slice(0, 60)}...`)
+    }
+  }
+
+  // 2. Graph entities
+  const graphId = props.projectData?.graph_id
+  if (graphId) {
+    try {
+      const res = await getGraphEntities(graphId)
+      if (res.success && res.data) {
+        const data = res.data
+        sourceData.value.totalEntities = data.filtered_count || 0
+        sourceData.value.rawNodeCount = data.total_count || 0
+        sourceData.value.entities = data.entities || []
+
+        // Count per entity type
+        const typeCounts = {}
+        for (const entity of sourceData.value.entities) {
+          for (const label of (entity.labels || [])) {
+            if (label !== 'Entity' && label !== 'Node') {
+              typeCounts[label] = (typeCounts[label] || 0) + 1
+            }
+          }
+        }
+        sourceData.value.entityTypeCounts = Object.entries(typeCounts)
+          .map(([type, count]) => ({ type, count }))
+          .sort((a, b) => b.count - a.count)
+
+        addLog(`  ├─ Graph entities: ${sourceData.value.totalEntities} extracted from ${sourceData.value.rawNodeCount} nodes`)
+        if (sourceData.value.entityTypeCounts.length > 0) {
+          addLog(`  └─ Types: ${sourceData.value.entityTypeCounts.map(e => `${e.type}(${e.count})`).join(', ')}`)
+        }
+      }
+    } catch (err) {
+      addLog(`  └─ Entity extraction failed: ${err.message}`)
+    }
+  }
+
+  // 3. Knowledge base files (check from preset_knowledge via projectData)
+  // Knowledge files are generated by the curation step and stored server-side
+  // We indicate their presence from entity types/context
+  sourceData.value.knowledgeFiles = [] // Will be populated if knowledge curation was run
+
+  sourceData.value.loading = false
+  sourceData.value.loaded = true
+  addLog('✓ Source data extraction complete')
+}
+
 // Auto-start simulation preparation
 const startPrepareSimulation = async () => {
   if (!props.simulationId) {
@@ -772,13 +963,19 @@ const startPrepareSimulation = async () => {
     emit('update-status', 'error')
     return
   }
-  
-  // Mark step 1 complete, start step 2
+
+  // Mark step 1 complete, start source extraction (step 2)
   phase.value = 1
   addLog(`Simulation instance created: ${props.simulationId}`)
+
+  // Fetch and display source data first
+  await fetchSourceData()
+
+  // Move to step 3: Generate Agent Profiles
+  phase.value = 2
   addLog('Preparing simulation environment...')
   emit('update-status', 'processing')
-  
+
   try {
     const res = await prepareSimulation({
       simulation_id: props.simulationId,
@@ -1007,7 +1204,7 @@ const fetchConfigRealtime = async () => {
         }
         
         stopConfigPolling()
-        phase.value = 4
+        phase.value = 5
         addLog('✓ Environment setup complete, ready to simulate')
         emit('update-status', 'completed')
       }
@@ -1018,7 +1215,7 @@ const fetchConfigRealtime = async () => {
 }
 
 const loadPreparedData = async () => {
-  phase.value = 2
+  phase.value = 3
   addLog('Loading existing configuration data...')
 
   // Fetch profiles one last time
@@ -1041,7 +1238,7 @@ const loadPreparedData = async () => {
         }
         
         addLog('✓ Environment setup complete, ready to simulate')
-        phase.value = 4
+        phase.value = 5
         emit('update-status', 'completed')
       } else {
         // Config not yet generated, start polling
@@ -2598,5 +2795,179 @@ onUnmounted(() => {
 .modal-leave-to .profile-modal {
   transform: scale(0.95) translateY(10px);
   opacity: 0;
+}
+
+/* --- Source Data Extraction --- */
+.source-data-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.source-section {
+  background: #FAFAFA;
+  border-radius: 6px;
+  padding: 12px 14px;
+  border: 1px solid #F0F0F0;
+}
+
+.source-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.source-icon {
+  font-size: 14px;
+}
+
+.source-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+}
+
+.source-count {
+  font-size: 11px;
+  color: #888;
+  margin-left: auto;
+}
+
+.source-items {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.source-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+  background: #FFF;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.item-name {
+  color: #333;
+  font-weight: 500;
+}
+
+.item-meta {
+  color: #999;
+  font-size: 11px;
+}
+
+.source-empty {
+  font-size: 11px;
+  color: #BBB;
+  padding: 4px 8px;
+}
+
+.source-requirement {
+  font-size: 12px;
+  color: #555;
+  line-height: 1.5;
+  padding: 6px 8px;
+  background: #FFF;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  max-height: 80px;
+  overflow-y: auto;
+}
+
+.entity-type-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.entity-type-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  background: #FFF;
+  border: 1px solid #E0E0E0;
+  border-radius: 12px;
+  font-size: 11px;
+}
+
+.et-label {
+  color: #555;
+  font-weight: 500;
+}
+
+.et-count {
+  color: #FF5722;
+  font-weight: 700;
+  font-size: 11px;
+}
+
+.entity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.entity-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 8px;
+  background: #FFF;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.entity-name {
+  font-weight: 600;
+  color: #222;
+  min-width: 80px;
+}
+
+.entity-type-badge {
+  font-size: 10px;
+  color: #FF5722;
+  background: #FFF3E0;
+  padding: 1px 6px;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+
+.entity-summary {
+  flex: 1;
+  color: #888;
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.entity-edges {
+  font-size: 10px;
+  color: #999;
+  white-space: nowrap;
+}
+
+.show-more-btn {
+  background: none;
+  border: 1px dashed #DDD;
+  border-radius: 4px;
+  padding: 4px 12px;
+  font-size: 11px;
+  color: #888;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: all 0.2s;
+}
+
+.show-more-btn:hover {
+  border-color: #FF5722;
+  color: #FF5722;
 }
 </style>

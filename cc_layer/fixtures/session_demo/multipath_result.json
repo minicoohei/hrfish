@@ -1,0 +1,2120 @@
+{
+  "identity": {
+    "name": "デモ太郎",
+    "age_at_start": 35,
+    "gender": "male",
+    "education": "東京大学 工学部",
+    "mbti": "",
+    "stable_traits": [
+      "起業家精神",
+      "プロダクト×事業のハイブリッド",
+      "0→1の立ち上げ力",
+      "データドリブン"
+    ],
+    "certifications": [],
+    "career_history_summary": "スマートフォンゲームアプリ開発→メガベンチャーA社(CRM/データサイエンス/新卒HR/中途PdM戦略GM)→グローバルテックB社(PdM)→Web3スタートアップC社創業(CEO)→ブロックチェインD社(Head of Japan)→ITサービス事業(年商3億)→エンターテイメントE社(CPO)→AIテック株式会社創業(AI研修/AI BPO、社員2名で初年度年商1億)"
+  },
+  "simulation_years": 10.0,
+  "total_rounds": 40,
+  "paths": [
+    {
+      "path_id": "path_a",
+      "label": "AIテック株式会社 スケールアップ（IPO/M&A狙い）",
+      "direction": "",
+      "risk": "VC調達失敗→自己資金での堅実経営or事業売却: 年収2000万（確率37%）",
+      "upside": "シリーズB成功→IPO/大型M&A: 年収12000万（確率8%）",
+      "score": 0.72,
+      "overall_probability": 0.35,
+      "probability_rationale": "初年度年商1億の実績があり、AI市場は拡大基調。ただしシリーズA到達率15-20%、IPO率1-3%を考慮すると、10億規模到達はlikelyだがIPOは低確率。受託→SaaS転換の成功率も加味。",
+      "common_periods": [
+        {
+          "period_id": null,
+          "period_name": "Period 1 (37-39歳)",
+          "narrative": "",
+          "snapshot": {
+            "annual_income": 0.0,
+            "satisfaction": 0.5,
+            "stress": 0.5,
+            "work_life_balance": 0.5
+          },
+          "events": [
+            {
+              "type": "事業拡大",
+              "description": "AI研修事業の法人営業体制構築、大手企業5-10社との年間契約獲得。社員2名→8名へ拡大",
+              "probability": 0.7,
+              "probability_note": "初年度1億の実績・メガベンチャーA社人脈があるため法人営業拡大は比較的確度高い"
+            },
+            {
+              "type": "資金調達",
+              "description": "シードラウンドで5000万-1億円の調達を実施。AI BPO事業のプロダクト化に投資",
+              "probability": 0.55,
+              "probability_note": "AI領域のシード調達環境は良好だが、受託型ビジネスモデルへのVC評価は分かれる"
+            },
+            {
+              "type": "プロダクト開発",
+              "description": "AI研修プラットフォームのSaaS化に着手。受託型からプラットフォーム型へのピボット開始",
+              "probability": 0.6,
+              "probability_note": "受託→SaaS転換は多くのスタートアップが試みるが成功率は30-40%程度"
+            }
+          ]
+        }
+      ],
+      "branch_point": "39-40歳時点でシリーズAの成否が分岐点。調達成功→急成長フェーズ、失敗→自己資金での堅実成長or事業売却",
+      "scenarios": [
+        {
+          "scenario_id": "best",
+          "label": "シリーズB成功→IPO/大型M&A",
+          "probability": 0.08,
+          "probability_note": "シリーズA到達率15-20%×IPO到達率5-10%=1-2%だが、AI市場の追い風とCEOの実績で上方修正し8%",
+          "periods": [
+            {
+              "period_id": null,
+              "period_name": "Period 2 (40-42歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "資金調達",
+                  "description": "シリーズA 5億円調達成功。AI BPO SaaSのPMF達成、ARR3億円突破",
+                  "probability": 0.18,
+                  "probability_note": "ScaleUp Finance 2024によるシリーズA到達率15-20%"
+                },
+                {
+                  "type": "組織拡大",
+                  "description": "社員50名体制へ。CTO・CFO採用。エンタープライズ営業チーム構築",
+                  "probability": 0.15,
+                  "probability_note": "急成長フェーズでの組織構築成功率"
+                }
+              ]
+            },
+            {
+              "period_id": null,
+              "period_name": "Period 3 (43-45歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "資金調達",
+                  "description": "シリーズB 20億円調達。ARR15億円、社員150名体制",
+                  "probability": 0.1,
+                  "probability_note": "シリーズA→B到達率は約50%だが、AI BPO市場の競争激化を考慮"
+                }
+              ]
+            },
+            {
+              "period_id": null,
+              "period_name": "Period 4 (46-47歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "EXIT",
+                  "description": "東証グロース市場IPO or 大手コンサル/SIerによる100億円規模M&A",
+                  "probability": 0.08,
+                  "probability_note": "日経2025データで年間IPO41社、AI企業のバリュエーション高騰中"
+                }
+              ]
+            }
+          ],
+          "final_state": {
+            "annual_income": 12000.0,
+            "satisfaction": 0.92,
+            "stress": 0.5,
+            "work_life_balance": 0.5
+          }
+        },
+        {
+          "scenario_id": "likely",
+          "label": "シリーズA成功→年商10億の中堅AI企業",
+          "probability": 0.55,
+          "probability_note": "AI市場成長とCEOの営業力を考慮すると、VCなしでも年商5-10億は到達可能。最も蓋然性の高いシナリオ",
+          "periods": [
+            {
+              "period_id": null,
+              "period_name": "Period 2 (40-42歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "事業成長",
+                  "description": "年商3-5億円到達。社員15-20名。AI研修+AI BPOの二本柱確立",
+                  "probability": 0.6,
+                  "probability_note": "既存顧客からのアップセルとリファラルで堅実成長"
+                },
+                {
+                  "type": "競争激化",
+                  "description": "大手コンサル・SIerがAI研修市場に参入。価格競争発生",
+                  "probability": 0.75,
+                  "probability_note": "AI研修市場は参入障壁が低く、2-3年で競争激化は確実"
+                }
+              ]
+            },
+            {
+              "period_id": null,
+              "period_name": "Period 3 (43-45歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "事業安定",
+                  "description": "年商8-10億円で安定。特定業界（金融・製造）に特化したAI BPOで差別化",
+                  "probability": 0.5,
+                  "probability_note": "ニッチ特化戦略の成功率は中程度"
+                },
+                {
+                  "type": "バーンアウトリスク",
+                  "description": "経営の多忙さからストレス増大。健康管理の必要性",
+                  "probability": 0.45,
+                  "probability_note": "Adecco 2023: スタートアップCEOのバーンアウト経験率40-60%"
+                }
+              ]
+            },
+            {
+              "period_id": null,
+              "period_name": "Period 4 (46-47歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "経営安定",
+                  "description": "年商10億円、営業利益率15-20%。COO採用で業務委譲進む",
+                  "probability": 0.45,
+                  "probability_note": "10年で年商10億はAI市場なら現実的だが経営リスクも残る"
+                }
+              ]
+            }
+          ],
+          "final_state": {
+            "annual_income": 4500.0,
+            "satisfaction": 0.78,
+            "stress": 0.5,
+            "work_life_balance": 0.5
+          }
+        },
+        {
+          "scenario_id": "base",
+          "label": "VC調達失敗→自己資金での堅実経営or事業売却",
+          "probability": 0.37,
+          "probability_note": "シード/シリーズA調達失敗率は60-70%。受託型ビジネスでの自己資金経営は持続可能だが成長は限定的",
+          "periods": [
+            {
+              "period_id": null,
+              "period_name": "Period 2 (40-42歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "成長鈍化",
+                  "description": "年商2-3億で成長停滞。採用難、競合との差別化困難",
+                  "probability": 0.4,
+                  "probability_note": "小規模AI企業の成長天井は年商3-5億が多い"
+                },
+                {
+                  "type": "キャッシュフロー圧迫",
+                  "description": "大手案件の入金サイクルとコスト増のミスマッチ",
+                  "probability": 0.35,
+                  "probability_note": "BPO事業は先行投資が必要で、小規模ではCF管理が課題"
+                }
+              ]
+            },
+            {
+              "period_id": null,
+              "period_name": "Period 3 (43-45歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "ピボット/売却",
+                  "description": "事業の一部をSIerやコンサルに売却。残った事業でリスタートor別事業立ち上げ",
+                  "probability": 0.3,
+                  "probability_note": "スモールM&A市場は活発化しているが、AI BPO事業の買い手は限定的"
+                }
+              ]
+            },
+            {
+              "period_id": null,
+              "period_name": "Period 4 (46-47歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "再起業/転職",
+                  "description": "売却資金をもとに新事業or大手企業のAI部門へ転身",
+                  "probability": 0.35,
+                  "probability_note": "連続起業家の再起業率は高い（60%以上）"
+                }
+              ]
+            }
+          ],
+          "final_state": {
+            "annual_income": 2000.0,
+            "satisfaction": 0.55,
+            "stress": 0.5,
+            "work_life_balance": 0.5
+          }
+        }
+      ],
+      "final_salary": 4500.0,
+      "final_satisfaction": 0.78,
+      "final_age": 47,
+      "final_role": "代表取締役CEO",
+      "final_employer": "AIテック株式会社株式会社",
+      "final_cash_buffer": 8500.0,
+      "peak_salary": 5000.0,
+      "path_label": "AIテック株式会社 スケールアップ（IPO/M&A狙い）",
+      "final_stress": 0.72,
+      "final_wlb": 0.35,
+      "min_cash": 300,
+      "avg_stress": 0.68,
+      "total_events": 18,
+      "rounds_with_blockers": 8,
+      "total_rounds": 40,
+      "snapshots": [
+        {
+          "round": 0,
+          "age": 37,
+          "salary": 2500,
+          "satisfaction": 0.7,
+          "stress": 0.55,
+          "wlb": 0.4,
+          "cash_buffer": 755,
+          "role": "CEO",
+          "employer": "AIテック株式会社"
+        },
+        {
+          "round": 4,
+          "age": 38,
+          "salary": 2800,
+          "satisfaction": 0.72,
+          "stress": 0.6,
+          "wlb": 0.38,
+          "cash_buffer": 1200,
+          "role": "CEO",
+          "employer": "AIテック株式会社"
+        },
+        {
+          "round": 8,
+          "age": 39,
+          "salary": 3200,
+          "satisfaction": 0.75,
+          "stress": 0.65,
+          "wlb": 0.35,
+          "cash_buffer": 1800,
+          "role": "CEO",
+          "employer": "AIテック株式会社"
+        },
+        {
+          "round": 12,
+          "age": 40,
+          "salary": 3500,
+          "satisfaction": 0.73,
+          "stress": 0.68,
+          "wlb": 0.33,
+          "cash_buffer": 2500,
+          "role": "CEO",
+          "employer": "AIテック株式会社"
+        },
+        {
+          "round": 16,
+          "age": 41,
+          "salary": 3800,
+          "satisfaction": 0.75,
+          "stress": 0.7,
+          "wlb": 0.32,
+          "cash_buffer": 3500,
+          "role": "CEO",
+          "employer": "AIテック株式会社"
+        },
+        {
+          "round": 20,
+          "age": 42,
+          "salary": 4000,
+          "satisfaction": 0.76,
+          "stress": 0.72,
+          "wlb": 0.3,
+          "cash_buffer": 4500,
+          "role": "CEO",
+          "employer": "AIテック株式会社"
+        },
+        {
+          "round": 24,
+          "age": 43,
+          "salary": 4200,
+          "satisfaction": 0.77,
+          "stress": 0.7,
+          "wlb": 0.33,
+          "cash_buffer": 5500,
+          "role": "CEO",
+          "employer": "AIテック株式会社"
+        },
+        {
+          "round": 28,
+          "age": 44,
+          "salary": 4300,
+          "satisfaction": 0.78,
+          "stress": 0.68,
+          "wlb": 0.35,
+          "cash_buffer": 6500,
+          "role": "CEO",
+          "employer": "AIテック株式会社"
+        },
+        {
+          "round": 32,
+          "age": 45,
+          "salary": 4400,
+          "satisfaction": 0.78,
+          "stress": 0.7,
+          "wlb": 0.35,
+          "cash_buffer": 7500,
+          "role": "CEO",
+          "employer": "AIテック株式会社"
+        },
+        {
+          "round": 36,
+          "age": 46,
+          "salary": 4500,
+          "satisfaction": 0.78,
+          "stress": 0.72,
+          "wlb": 0.35,
+          "cash_buffer": 8000,
+          "role": "CEO",
+          "employer": "AIテック株式会社"
+        },
+        {
+          "round": 40,
+          "age": 47,
+          "salary": 4500,
+          "satisfaction": 0.78,
+          "stress": 0.72,
+          "wlb": 0.35,
+          "cash_buffer": 8500,
+          "role": "CEO",
+          "employer": "AIテック株式会社"
+        }
+      ],
+      "reskilling": [
+        "CFOスキル/ファイナンス",
+        "組織マネジメント(50名以上)",
+        "エンタープライズセールス",
+        "IPO準備/IR"
+      ]
+    },
+    {
+      "path_id": "path_b",
+      "label": "メガテック参入（Google/Microsoft AI部門）",
+      "direction": "",
+      "risk": "組織文化ミスマッチ→2-3年で退職・再起業: 年収3500万（確率35%）",
+      "upside": "VP of AI Product昇進→グローバルリーダーシップ: 年収10000万（確率15%）",
+      "score": 0.7,
+      "overall_probability": 0.15,
+      "probability_rationale": "GAFA PM採用率は応募→内定1-3%だが、起業実績・グローバルテックB社経験・AI領域の専門性で書類通過率は高い。ただしCEO経験者が大企業文化に適応できる確率は低め。",
+      "common_periods": [
+        {
+          "period_id": null,
+          "period_name": "Period 1 (37-39歳)",
+          "narrative": "",
+          "snapshot": {
+            "annual_income": 0.0,
+            "satisfaction": 0.5,
+            "stress": 0.5,
+            "work_life_balance": 0.5
+          },
+          "events": [
+            {
+              "type": "事業整理",
+              "description": "AIテック株式会社の経営を共同経営者に移譲。Web3スタートアップC社も取締役に委譲し、転職準備",
+              "probability": 0.5,
+              "probability_note": "CEO退任と事業移譲には6-12ヶ月必要。共同経営者の確保が課題"
+            },
+            {
+              "type": "転職活動",
+              "description": "Google/Microsoft/AmazonのAI Product部門にPdM/Director級で応募。グローバルテックB社時代の人脈を活用",
+              "probability": 0.4,
+              "probability_note": "GAFA PM採用率1-3%だが、起業実績で書類通過→内定率は10-20%に上昇"
+            },
+            {
+              "type": "入社・適応",
+              "description": "Google Japan AI部門にSenior Product Managerとして入社。大企業の意思決定プロセスへの適応開始",
+              "probability": 0.35,
+              "probability_note": "起業家→大企業の転身成功率は30-40%。カルチャーフィットが最大の課題"
+            }
+          ]
+        }
+      ],
+      "branch_point": "39-40歳時点での入社可否と、入社後1-2年での組織適応が分岐点。適応成功→VP昇進ルート、失敗→退職して再起業",
+      "scenarios": [
+        {
+          "scenario_id": "best",
+          "label": "VP of AI Product昇進→グローバルリーダーシップ",
+          "probability": 0.15,
+          "probability_note": "メガテックでのVP昇進率は5-10%。日本法人からグローバルVPは更に難易度高",
+          "periods": [
+            {
+              "period_id": null,
+              "period_name": "Period 2 (40-42歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "昇進",
+                  "description": "Director of AI Productに昇進。日本市場向けAIプロダクト戦略をリード",
+                  "probability": 0.2,
+                  "probability_note": "メガテックでの2-3年でのDirector昇進は起業経験者なら可能性あり"
+                }
+              ]
+            },
+            {
+              "period_id": null,
+              "period_name": "Period 3 (43-45歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "昇進",
+                  "description": "VP of AI Productに昇進。APAC地域のAIプロダクト統括。RSU/ストックが大幅増",
+                  "probability": 0.1,
+                  "probability_note": "Director→VP昇進率は10-15%。APAC統括ポジションは限定的"
+                }
+              ]
+            },
+            {
+              "period_id": null,
+              "period_name": "Period 4 (46-47歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "経営参画",
+                  "description": "グローバルAI戦略の意思決定に参画。年収RSU含め1億円超",
+                  "probability": 0.08,
+                  "probability_note": "日本人でGAFAのグローバルVP級は極めて稀"
+                }
+              ]
+            }
+          ],
+          "final_state": {
+            "annual_income": 10000.0,
+            "satisfaction": 0.9,
+            "stress": 0.5,
+            "work_life_balance": 0.5
+          }
+        },
+        {
+          "scenario_id": "likely",
+          "label": "Senior Director安定→社内起業的ポジション",
+          "probability": 0.5,
+          "probability_note": "メガテック入社後、Director級で安定するのが最も現実的。起業家気質が社内新規事業で活かされるケース",
+          "periods": [
+            {
+              "period_id": null,
+              "period_name": "Period 2 (40-42歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "適応・成長",
+                  "description": "大企業のプロセスに適応しつつ、AI新規プロダクトの立ち上げをリード。社内評価上昇",
+                  "probability": 0.45,
+                  "probability_note": "起業家のメガテック適応率は40-50%程度"
+                },
+                {
+                  "type": "昇進",
+                  "description": "Director of Product（AI）に昇進。年収RSU含め5000万円",
+                  "probability": 0.35,
+                  "probability_note": "パフォーマンス次第だが3年でDirectorは現実的"
+                }
+              ]
+            },
+            {
+              "period_id": null,
+              "period_name": "Period 3 (43-45歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "安定",
+                  "description": "Senior Director級で安定。社内起業プログラムでAI BPO関連の新規事業を推進",
+                  "probability": 0.4,
+                  "probability_note": "メガテックの社内起業プログラム成功率は10-20%だが、提案自体は可能"
+                }
+              ]
+            },
+            {
+              "period_id": null,
+              "period_name": "Period 4 (46-47歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "キャリア安定",
+                  "description": "年収6000万円（RSU含む）で安定。WLBは起業時代より大幅改善",
+                  "probability": 0.45,
+                  "probability_note": "メガテック在籍7-8年でのSenior Director安定は一般的"
+                }
+              ]
+            }
+          ],
+          "final_state": {
+            "annual_income": 6000.0,
+            "satisfaction": 0.72,
+            "stress": 0.5,
+            "work_life_balance": 0.5
+          }
+        },
+        {
+          "scenario_id": "base",
+          "label": "組織文化ミスマッチ→2-3年で退職・再起業",
+          "probability": 0.35,
+          "probability_note": "起業家のメガテック離職率は入社3年以内で50-60%。組織の意思決定速度への不満が主因",
+          "periods": [
+            {
+              "period_id": null,
+              "period_name": "Period 2 (40-42歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "組織ミスマッチ",
+                  "description": "大企業の意思決定プロセスにフラストレーション。パフォーマンスレビューで期待値とのギャップ",
+                  "probability": 0.55,
+                  "probability_note": "CEO→大企業PMの文化ギャップは非常に大きい"
+                },
+                {
+                  "type": "退職",
+                  "description": "入社2-3年で退職。メガテックブランドと人脈を獲得して再起業",
+                  "probability": 0.45,
+                  "probability_note": "起業家のメガテック平均在籍期間は2-3年"
+                }
+              ]
+            },
+            {
+              "period_id": null,
+              "period_name": "Period 3 (43-45歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "再起業",
+                  "description": "メガテックの知見を活かした新AI事業立ち上げ。前回より大きな規模感で開始",
+                  "probability": 0.5,
+                  "probability_note": "連続起業家の再起業率は60%以上"
+                }
+              ]
+            },
+            {
+              "period_id": null,
+              "period_name": "Period 4 (46-47歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "事業成長",
+                  "description": "新事業が年商3-5億円規模に成長。メガテック人脈で大型案件獲得",
+                  "probability": 0.4,
+                  "probability_note": "2回目の起業は成功率が高い（初回の1.5-2倍）"
+                }
+              ]
+            }
+          ],
+          "final_state": {
+            "annual_income": 3500.0,
+            "satisfaction": 0.6,
+            "stress": 0.5,
+            "work_life_balance": 0.5
+          }
+        }
+      ],
+      "final_salary": 6000.0,
+      "final_satisfaction": 0.72,
+      "final_age": 47,
+      "final_role": "Senior Director",
+      "final_employer": "Google Japan",
+      "final_cash_buffer": 18000.0,
+      "peak_salary": 6500.0,
+      "path_label": "メガテック参入（Google/Microsoft AI部門）",
+      "final_stress": 0.55,
+      "final_wlb": 0.6,
+      "min_cash": 755,
+      "avg_stress": 0.52,
+      "total_events": 14,
+      "rounds_with_blockers": 5,
+      "total_rounds": 40,
+      "snapshots": [
+        {
+          "round": 0,
+          "age": 37,
+          "salary": 2500,
+          "satisfaction": 0.7,
+          "stress": 0.55,
+          "wlb": 0.4,
+          "cash_buffer": 755,
+          "role": "CEO",
+          "employer": "AIテック株式会社"
+        },
+        {
+          "round": 4,
+          "age": 38,
+          "salary": 1500,
+          "satisfaction": 0.55,
+          "stress": 0.5,
+          "wlb": 0.5,
+          "cash_buffer": 900,
+          "role": "事業移譲準備中",
+          "employer": "AIテック株式会社"
+        },
+        {
+          "round": 8,
+          "age": 39,
+          "salary": 3500,
+          "satisfaction": 0.65,
+          "stress": 0.55,
+          "wlb": 0.55,
+          "cash_buffer": 1500,
+          "role": "Senior PM",
+          "employer": "Google Japan"
+        },
+        {
+          "round": 12,
+          "age": 40,
+          "salary": 4000,
+          "satisfaction": 0.68,
+          "stress": 0.5,
+          "wlb": 0.58,
+          "cash_buffer": 3000,
+          "role": "Senior PM",
+          "employer": "Google Japan"
+        },
+        {
+          "round": 16,
+          "age": 41,
+          "salary": 4500,
+          "satisfaction": 0.7,
+          "stress": 0.48,
+          "wlb": 0.6,
+          "cash_buffer": 5000,
+          "role": "Director of Product",
+          "employer": "Google Japan"
+        },
+        {
+          "round": 20,
+          "age": 42,
+          "salary": 5000,
+          "satisfaction": 0.72,
+          "stress": 0.5,
+          "wlb": 0.58,
+          "cash_buffer": 7500,
+          "role": "Director of Product",
+          "employer": "Google Japan"
+        },
+        {
+          "round": 24,
+          "age": 43,
+          "salary": 5500,
+          "satisfaction": 0.73,
+          "stress": 0.52,
+          "wlb": 0.6,
+          "cash_buffer": 10000,
+          "role": "Senior Director",
+          "employer": "Google Japan"
+        },
+        {
+          "round": 28,
+          "age": 44,
+          "salary": 5800,
+          "satisfaction": 0.72,
+          "stress": 0.53,
+          "wlb": 0.6,
+          "cash_buffer": 12500,
+          "role": "Senior Director",
+          "employer": "Google Japan"
+        },
+        {
+          "round": 32,
+          "age": 45,
+          "salary": 6000,
+          "satisfaction": 0.72,
+          "stress": 0.55,
+          "wlb": 0.6,
+          "cash_buffer": 15000,
+          "role": "Senior Director",
+          "employer": "Google Japan"
+        },
+        {
+          "round": 36,
+          "age": 46,
+          "salary": 6000,
+          "satisfaction": 0.72,
+          "stress": 0.55,
+          "wlb": 0.6,
+          "cash_buffer": 16500,
+          "role": "Senior Director",
+          "employer": "Google Japan"
+        },
+        {
+          "round": 40,
+          "age": 47,
+          "salary": 6000,
+          "satisfaction": 0.72,
+          "stress": 0.55,
+          "wlb": 0.6,
+          "cash_buffer": 18000,
+          "role": "Senior Director",
+          "employer": "Google Japan"
+        }
+      ],
+      "reskilling": [
+        "英語ビジネス（TOEIC900+/英語面接対策）",
+        "大企業のプロダクトマネジメントフレームワーク",
+        "クロスファンクショナルリーダーシップ",
+        "OKR/目標管理"
+      ]
+    },
+    {
+      "path_id": "path_c",
+      "label": "VC/CVC転身（投資家サイド）",
+      "direction": "",
+      "risk": "LP集め難航→エンジェル投資家+アドバイザー: 年収2500万（確率38%）",
+      "upside": "ファンド成功→著名VC GP: 年収8000万（確率12%）",
+      "score": 0.68,
+      "overall_probability": 0.2,
+      "probability_rationale": "起業・PdM・受託の三拍子揃ったVC候補は稀有。CVC→独立系VCの流れは現実的。ただしLP集めと運用実績構築に5年以上必要。",
+      "common_periods": [
+        {
+          "period_id": null,
+          "period_name": "Period 1 (37-39歳)",
+          "narrative": "",
+          "snapshot": {
+            "annual_income": 0.0,
+            "satisfaction": 0.5,
+            "stress": 0.5,
+            "work_life_balance": 0.5
+          },
+          "events": [
+            {
+              "type": "キャリア転換",
+              "description": "AIテック株式会社経営を継続しつつ、エンジェル投資を5-10件実施。VC業界との人脈構築",
+              "probability": 0.65,
+              "probability_note": "年収2500万でエンジェル投資は可能。起業家コミュニティでのディールフロー確保"
+            },
+            {
+              "type": "CVC参画",
+              "description": "大手企業のCVC部門にEIR（Entrepreneur in Residence）or ベンチャーパートナーとして参画",
+              "probability": 0.45,
+              "probability_note": "EIRポジションは増加傾向だが、ポジション数自体が少ない"
+            }
+          ]
+        }
+      ],
+      "branch_point": "40-41歳時点で独立ファンド設立の可否。LP（機関投資家）からの信頼獲得が鍵。CVC在籍実績と個人投資のトラックレコードが判断材料",
+      "scenarios": [
+        {
+          "scenario_id": "best",
+          "label": "ファンド成功→著名VC GP",
+          "probability": 0.12,
+          "probability_note": "独立系VC設立→Fund I成功→Fund II組成の確率。日本のVC市場は拡大中だが新規GP参入は狭き門",
+          "periods": [
+            {
+              "period_id": null,
+              "period_name": "Period 2 (40-42歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "ファンド設立",
+                  "description": "20-30億円規模のAI特化ファンド設立。元メガベンチャーA社・GAFA人脈でLP獲得",
+                  "probability": 0.15,
+                  "probability_note": "新規VCファンド設立成功率は10-15%。AI特化は差別化要素"
+                }
+              ]
+            },
+            {
+              "period_id": null,
+              "period_name": "Period 3 (43-45歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "投資成功",
+                  "description": "投資先3-5社がシリーズA-B到達。ファンドIRR上位25%入り",
+                  "probability": 0.2,
+                  "probability_note": "VC投資の上位25%パフォーマンス達成率"
+                }
+              ]
+            },
+            {
+              "period_id": null,
+              "period_name": "Period 4 (46-47歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "ファンドII組成",
+                  "description": "Fund Iの実績をもとに50-80億円のFund II組成。業界での認知度確立",
+                  "probability": 0.15,
+                  "probability_note": "Fund I→Fund II到達率は50-60%だが、好実績が前提"
+                }
+              ]
+            }
+          ],
+          "final_state": {
+            "annual_income": 8000.0,
+            "satisfaction": 0.9,
+            "stress": 0.5,
+            "work_life_balance": 0.5
+          }
+        },
+        {
+          "scenario_id": "likely",
+          "label": "CVC→小規模独立ファンド運営",
+          "probability": 0.5,
+          "probability_note": "CVC経験を経て小規模ファンド（5-10億円）設立が最も現実的。AI/Web3領域の目利き力が武器",
+          "periods": [
+            {
+              "period_id": null,
+              "period_name": "Period 2 (40-42歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "CVC実績構築",
+                  "description": "大手CVC（NTTドコモ・ソニー系）でAI投資案件を5-8件リード。投資判断の実績蓄積",
+                  "probability": 0.5,
+                  "probability_note": "CVC在籍2-3年での投資実績構築は一般的なタイムライン"
+                }
+              ]
+            },
+            {
+              "period_id": null,
+              "period_name": "Period 3 (43-45歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "独立",
+                  "description": "5-10億円規模のマイクロVCファンド設立。AI×産業DXに特化",
+                  "probability": 0.35,
+                  "probability_note": "マイクロVC設立は比較的ハードル低いが、LP確保が課題"
+                },
+                {
+                  "type": "投資活動",
+                  "description": "年間5-8件の投資実行。起業家メンタリングも並行",
+                  "probability": 0.4,
+                  "probability_note": "マイクロVCの投資ペースとして標準的"
+                }
+              ]
+            },
+            {
+              "period_id": null,
+              "period_name": "Period 4 (46-47歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "ファンド運営安定",
+                  "description": "投資先のうち2-3社がExitし始め、ファンドリターンが見え始める。年収4000万円（管理報酬+キャリー）",
+                  "probability": 0.35,
+                  "probability_note": "ファンド設立5年でのExit開始は標準的タイムライン"
+                }
+              ]
+            }
+          ],
+          "final_state": {
+            "annual_income": 4000.0,
+            "satisfaction": 0.75,
+            "stress": 0.5,
+            "work_life_balance": 0.5
+          }
+        },
+        {
+          "scenario_id": "base",
+          "label": "LP集め難航→エンジェル投資家+アドバイザー",
+          "probability": 0.38,
+          "probability_note": "機関投資家からのLP調達は非常に困難。個人資産でのエンジェル投資に留まる確率が高い",
+          "periods": [
+            {
+              "period_id": null,
+              "period_name": "Period 2 (40-42歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "LP調達難航",
+                  "description": "ファンド設立を目指すもLP（機関投資家）の信頼獲得に苦戦。運用実績不足が壁",
+                  "probability": 0.5,
+                  "probability_note": "新規GPのLP調達成功率は30-40%"
+                }
+              ]
+            },
+            {
+              "period_id": null,
+              "period_name": "Period 3 (43-45歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "方向転換",
+                  "description": "個人資産でのエンジェル投資（年3-5件）+ スタートアップアドバイザーとして活動",
+                  "probability": 0.45,
+                  "probability_note": "VC挫折→エンジェル投資家への転身は一般的なパターン"
+                }
+              ]
+            },
+            {
+              "period_id": null,
+              "period_name": "Period 4 (46-47歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "複合キャリア",
+                  "description": "エンジェル投資+顧問業+AIテック株式会社経営の三足のわらじ。年収2500万円",
+                  "probability": 0.4,
+                  "probability_note": "複合キャリアは安定するが、VC GPとしての目標未達"
+                }
+              ]
+            }
+          ],
+          "final_state": {
+            "annual_income": 2500.0,
+            "satisfaction": 0.6,
+            "stress": 0.5,
+            "work_life_balance": 0.5
+          }
+        }
+      ],
+      "final_salary": 4000.0,
+      "final_satisfaction": 0.75,
+      "final_age": 47,
+      "final_role": "General Partner",
+      "final_employer": "K Ventures（自身のファンド）",
+      "final_cash_buffer": 12000.0,
+      "peak_salary": 8000.0,
+      "path_label": "VC/CVC転身（投資家サイド）",
+      "final_stress": 0.5,
+      "final_wlb": 0.55,
+      "min_cash": 500,
+      "avg_stress": 0.48,
+      "total_events": 12,
+      "rounds_with_blockers": 4,
+      "total_rounds": 40,
+      "snapshots": [
+        {
+          "round": 0,
+          "age": 37,
+          "salary": 2500,
+          "satisfaction": 0.7,
+          "stress": 0.55,
+          "wlb": 0.4,
+          "cash_buffer": 755,
+          "role": "CEO",
+          "employer": "AIテック株式会社"
+        },
+        {
+          "round": 4,
+          "age": 38,
+          "salary": 2500,
+          "satisfaction": 0.68,
+          "stress": 0.5,
+          "wlb": 0.45,
+          "cash_buffer": 1100,
+          "role": "CEO / エンジェル投資家",
+          "employer": "AIテック株式会社"
+        },
+        {
+          "round": 8,
+          "age": 39,
+          "salary": 2800,
+          "satisfaction": 0.7,
+          "stress": 0.48,
+          "wlb": 0.5,
+          "cash_buffer": 1500,
+          "role": "EIR / ベンチャーパートナー",
+          "employer": "大手CVC"
+        },
+        {
+          "round": 12,
+          "age": 40,
+          "salary": 3000,
+          "satisfaction": 0.72,
+          "stress": 0.45,
+          "wlb": 0.55,
+          "cash_buffer": 2500,
+          "role": "Principal",
+          "employer": "大手CVC"
+        },
+        {
+          "round": 16,
+          "age": 41,
+          "salary": 3200,
+          "satisfaction": 0.73,
+          "stress": 0.45,
+          "wlb": 0.55,
+          "cash_buffer": 3500,
+          "role": "Principal",
+          "employer": "大手CVC"
+        },
+        {
+          "round": 20,
+          "age": 42,
+          "salary": 3000,
+          "satisfaction": 0.7,
+          "stress": 0.48,
+          "wlb": 0.53,
+          "cash_buffer": 3000,
+          "role": "GP（ファンド設立準備）",
+          "employer": "K Ventures（準備中）"
+        },
+        {
+          "round": 24,
+          "age": 43,
+          "salary": 3500,
+          "satisfaction": 0.73,
+          "stress": 0.5,
+          "wlb": 0.53,
+          "cash_buffer": 5000,
+          "role": "General Partner",
+          "employer": "K Ventures"
+        },
+        {
+          "round": 28,
+          "age": 44,
+          "salary": 3800,
+          "satisfaction": 0.74,
+          "stress": 0.5,
+          "wlb": 0.55,
+          "cash_buffer": 7000,
+          "role": "General Partner",
+          "employer": "K Ventures"
+        },
+        {
+          "round": 32,
+          "age": 45,
+          "salary": 3800,
+          "satisfaction": 0.75,
+          "stress": 0.5,
+          "wlb": 0.55,
+          "cash_buffer": 9000,
+          "role": "General Partner",
+          "employer": "K Ventures"
+        },
+        {
+          "round": 36,
+          "age": 46,
+          "salary": 4000,
+          "satisfaction": 0.75,
+          "stress": 0.5,
+          "wlb": 0.55,
+          "cash_buffer": 10500,
+          "role": "General Partner",
+          "employer": "K Ventures"
+        },
+        {
+          "round": 40,
+          "age": 47,
+          "salary": 4000,
+          "satisfaction": 0.75,
+          "stress": 0.5,
+          "wlb": 0.55,
+          "cash_buffer": 12000,
+          "role": "General Partner",
+          "employer": "K Ventures"
+        }
+      ],
+      "reskilling": [
+        "VC投資理論・バリュエーション",
+        "LP向けIR・ファンドレイジング",
+        "デューデリジェンス実務",
+        "ポートフォリオ管理"
+      ]
+    },
+    {
+      "path_id": "path_d",
+      "label": "複数事業ポートフォリオ経営",
+      "direction": "",
+      "risk": "リソース分散→選択と集中を余儀なくされる: 年収2500万（確率40%）",
+      "upside": "ポートフォリオ年商15億超→ホールディングスIPO: 年収10000万（確率10%）",
+      "score": 0.74,
+      "overall_probability": 0.4,
+      "probability_rationale": "既にAIテック株式会社 + Web3スタートアップC社の2社経営実績あり。ポートフォリオ経営は現在の延長線上で最も自然な選択肢。ただしリソース分散リスクは常に存在。",
+      "common_periods": [
+        {
+          "period_id": null,
+          "period_name": "Period 1 (37-39歳)",
+          "narrative": "",
+          "snapshot": {
+            "annual_income": 0.0,
+            "satisfaction": 0.5,
+            "stress": 0.5,
+            "work_life_balance": 0.5
+          },
+          "events": [
+            {
+              "type": "事業拡大",
+              "description": "AIテック株式会社年商1億→3億に成長。Web3スタートアップC社事業も安定運営継続",
+              "probability": 0.65,
+              "probability_note": "AI市場の追い風と既存顧客基盤で年商3倍は達成可能性高い"
+            },
+            {
+              "type": "新規事業",
+              "description": "3つ目の事業として、AI×HR（採用支援AI）or AI×Education事業を構想・立ち上げ",
+              "probability": 0.55,
+              "probability_note": "メガベンチャーA社/グローバルテックB社経験を活かしたHR×AI事業は強みが活きる領域"
+            },
+            {
+              "type": "組織構築",
+              "description": "各事業に事業責任者を配置。自身はグループ全体の戦略・資金配分に集中",
+              "probability": 0.5,
+              "probability_note": "優秀な事業責任者の採用確保が最大の課題"
+            }
+          ]
+        }
+      ],
+      "branch_point": "40-41歳時点でのポートフォリオ全体の収益性。各事業が自走できる体制構築の成否が分岐。成功→ホールディングス化、失敗→選択と集中を迫られる",
+      "scenarios": [
+        {
+          "scenario_id": "best",
+          "label": "ポートフォリオ年商15億超→ホールディングスIPO",
+          "probability": 0.1,
+          "probability_note": "複数事業のポートフォリオで年商15億超は可能だが、IPOにはガバナンス整備が必要。連結経営の複雑さも障壁",
+          "periods": [
+            {
+              "period_id": null,
+              "period_name": "Period 2 (40-42歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "ホールディングス化",
+                  "description": "K Holdings設立。AIテック株式会社 + Web3スタートアップC社 + 新規事業を傘下に。グループ年商8億円",
+                  "probability": 0.2,
+                  "probability_note": "ホールディングス化自体は可能だが、全事業の好調維持が前提"
+                }
+              ]
+            },
+            {
+              "period_id": null,
+              "period_name": "Period 3 (43-45歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "事業拡大",
+                  "description": "M&Aで2-3社を傘下に追加。グループ年商15億円、社員100名体制",
+                  "probability": 0.12,
+                  "probability_note": "スモールM&Aは活発だが、PMI成功率は40-50%"
+                }
+              ]
+            },
+            {
+              "period_id": null,
+              "period_name": "Period 4 (46-47歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "EXIT検討",
+                  "description": "グループIPOor戦略的M&A。代表の報酬+キャピタルゲインで大幅な資産形成",
+                  "probability": 0.08,
+                  "probability_note": "ホールディングスIPOはハードル高いが、M&Aは現実的選択肢"
+                }
+              ]
+            }
+          ],
+          "final_state": {
+            "annual_income": 10000.0,
+            "satisfaction": 0.92,
+            "stress": 0.5,
+            "work_life_balance": 0.5
+          }
+        },
+        {
+          "scenario_id": "likely",
+          "label": "3-4事業で年商10億のスモールコングロマリット",
+          "probability": 0.5,
+          "probability_note": "現在の2社経営の延長で、3-4事業のポートフォリオは最も自然な成長パス。年商10億は堅実な目標",
+          "periods": [
+            {
+              "period_id": null,
+              "period_name": "Period 2 (40-42歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "事業安定",
+                  "description": "AIテック株式会社年商5億、Web3スタートアップC社年商1億、新規事業年商1億。計7億円",
+                  "probability": 0.45,
+                  "probability_note": "各事業が事業責任者のもと自走できれば達成可能"
+                },
+                {
+                  "type": "マネジメント課題",
+                  "description": "各事業間のシナジー創出と、経営リソース配分の最適化に苦心",
+                  "probability": 0.6,
+                  "probability_note": "複数事業経営の典型的な課題。ほぼ確実に直面する"
+                }
+              ]
+            },
+            {
+              "period_id": null,
+              "period_name": "Period 3 (43-45歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "ポートフォリオ最適化",
+                  "description": "不採算事業の売却・撤退、成長事業への集中投資。年商10億円到達",
+                  "probability": 0.4,
+                  "probability_note": "ポートフォリオの入れ替えは経営判断の質次第"
+                }
+              ]
+            },
+            {
+              "period_id": null,
+              "period_name": "Period 4 (46-47歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "経営安定",
+                  "description": "グループ年商10億円、営業利益率12-15%。自身は戦略とM&Aに集中",
+                  "probability": 0.4,
+                  "probability_note": "10年で年商10億はAI市場なら現実的な目標"
+                }
+              ]
+            }
+          ],
+          "final_state": {
+            "annual_income": 5000.0,
+            "satisfaction": 0.8,
+            "stress": 0.5,
+            "work_life_balance": 0.5
+          }
+        },
+        {
+          "scenario_id": "base",
+          "label": "リソース分散→選択と集中を余儀なくされる",
+          "probability": 0.4,
+          "probability_note": "複数事業の並行経営は創業者のリソースを分散させるリスクが高い。どの事業も中途半端になる確率は40%程度",
+          "periods": [
+            {
+              "period_id": null,
+              "period_name": "Period 2 (40-42歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "リソース分散",
+                  "description": "各事業に注力しきれず、全体的に成長鈍化。特にWeb3スタートアップC社事業の市場縮小が足かせに",
+                  "probability": 0.45,
+                  "probability_note": "Web3市場の不確実性とAI事業への注力トレードオフ"
+                },
+                {
+                  "type": "バーンアウト",
+                  "description": "複数事業の経営負荷でバーンアウト。健康面の問題も",
+                  "probability": 0.4,
+                  "probability_note": "Adecco 2023: 経営者のバーンアウト率40-60%。複数事業だと更に高い"
+                }
+              ]
+            },
+            {
+              "period_id": null,
+              "period_name": "Period 3 (43-45歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "事業整理",
+                  "description": "Web3スタートアップC社と新規事業を売却・清算。AIテック株式会社一本に集中",
+                  "probability": 0.35,
+                  "probability_note": "選択と集中は合理的判断だが、サンクコストの問題も"
+                }
+              ]
+            },
+            {
+              "period_id": null,
+              "period_name": "Period 4 (46-47歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "リスタート",
+                  "description": "AIテック株式会社単独で年商3-5億円。集中投下で再成長軌道に乗せる",
+                  "probability": 0.4,
+                  "probability_note": "集中後のリカバリーは比較的確度高い"
+                }
+              ]
+            }
+          ],
+          "final_state": {
+            "annual_income": 2500.0,
+            "satisfaction": 0.58,
+            "stress": 0.5,
+            "work_life_balance": 0.5
+          }
+        }
+      ],
+      "final_salary": 5000.0,
+      "final_satisfaction": 0.8,
+      "final_age": 47,
+      "final_role": "ホールディングス代表",
+      "final_employer": "K Holdings（仮称）",
+      "final_cash_buffer": 10000.0,
+      "peak_salary": 6000.0,
+      "path_label": "複数事業ポートフォリオ経営",
+      "final_stress": 0.65,
+      "final_wlb": 0.38,
+      "min_cash": 500,
+      "avg_stress": 0.62,
+      "total_events": 20,
+      "rounds_with_blockers": 7,
+      "total_rounds": 40,
+      "snapshots": [
+        {
+          "round": 0,
+          "age": 37,
+          "salary": 2500,
+          "satisfaction": 0.7,
+          "stress": 0.55,
+          "wlb": 0.4,
+          "cash_buffer": 755,
+          "role": "CEO（2社経営）",
+          "employer": "AIテック株式会社 / Web3スタートアップC社"
+        },
+        {
+          "round": 4,
+          "age": 38,
+          "salary": 3000,
+          "satisfaction": 0.73,
+          "stress": 0.58,
+          "wlb": 0.38,
+          "cash_buffer": 1200,
+          "role": "CEO（2社経営）",
+          "employer": "AIテック株式会社 / Web3スタートアップC社"
+        },
+        {
+          "round": 8,
+          "age": 39,
+          "salary": 3500,
+          "satisfaction": 0.75,
+          "stress": 0.62,
+          "wlb": 0.35,
+          "cash_buffer": 2000,
+          "role": "CEO（3社経営）",
+          "employer": "K Holdings（構想中）"
+        },
+        {
+          "round": 12,
+          "age": 40,
+          "salary": 3800,
+          "satisfaction": 0.77,
+          "stress": 0.65,
+          "wlb": 0.33,
+          "cash_buffer": 3000,
+          "role": "代表取締役",
+          "employer": "K Holdings"
+        },
+        {
+          "round": 16,
+          "age": 41,
+          "salary": 4000,
+          "satisfaction": 0.78,
+          "stress": 0.65,
+          "wlb": 0.35,
+          "cash_buffer": 4000,
+          "role": "代表取締役",
+          "employer": "K Holdings"
+        },
+        {
+          "round": 20,
+          "age": 42,
+          "salary": 4200,
+          "satisfaction": 0.78,
+          "stress": 0.68,
+          "wlb": 0.35,
+          "cash_buffer": 5000,
+          "role": "代表取締役",
+          "employer": "K Holdings"
+        },
+        {
+          "round": 24,
+          "age": 43,
+          "salary": 4500,
+          "satisfaction": 0.79,
+          "stress": 0.65,
+          "wlb": 0.37,
+          "cash_buffer": 6200,
+          "role": "代表取締役",
+          "employer": "K Holdings"
+        },
+        {
+          "round": 28,
+          "age": 44,
+          "salary": 4800,
+          "satisfaction": 0.8,
+          "stress": 0.63,
+          "wlb": 0.38,
+          "cash_buffer": 7500,
+          "role": "代表取締役",
+          "employer": "K Holdings"
+        },
+        {
+          "round": 32,
+          "age": 45,
+          "salary": 5000,
+          "satisfaction": 0.8,
+          "stress": 0.63,
+          "wlb": 0.38,
+          "cash_buffer": 8500,
+          "role": "代表取締役",
+          "employer": "K Holdings"
+        },
+        {
+          "round": 36,
+          "age": 46,
+          "salary": 5000,
+          "satisfaction": 0.8,
+          "stress": 0.65,
+          "wlb": 0.38,
+          "cash_buffer": 9200,
+          "role": "代表取締役",
+          "employer": "K Holdings"
+        },
+        {
+          "round": 40,
+          "age": 47,
+          "salary": 5000,
+          "satisfaction": 0.8,
+          "stress": 0.65,
+          "wlb": 0.38,
+          "cash_buffer": 10000,
+          "role": "ホールディングス代表",
+          "employer": "K Holdings"
+        }
+      ],
+      "reskilling": [
+        "M&A実務・PMI",
+        "ホールディングス経営・ガバナンス",
+        "CFO機能（連結財務）",
+        "組織開発・採用ブランディング"
+      ]
+    },
+    {
+      "path_id": "path_e",
+      "label": "グローバル展開（東南アジア/米国）",
+      "direction": "",
+      "risk": "ローカライズ失敗→海外撤退・国内回帰: 年収2800万（確率47%）",
+      "upside": "グローバルAI企業へ成長→海外VC調達: 年収12000万（確率8%）",
+      "score": 0.65,
+      "overall_probability": 0.18,
+      "probability_rationale": "AI BPO/研修の海外展開はニーズがあるが、ローカライズと現地パートナー確保が課題。Web3スタートアップC社での海外経験（ブロックチェインD社=タイ発）はプラスだが、BPO事業の海外展開は受託型より難易度が高い。",
+      "common_periods": [
+        {
+          "period_id": null,
+          "period_name": "Period 1 (37-39歳)",
+          "narrative": "",
+          "snapshot": {
+            "annual_income": 0.0,
+            "satisfaction": 0.5,
+            "stress": 0.5,
+            "work_life_balance": 0.5
+          },
+          "events": [
+            {
+              "type": "市場調査",
+              "description": "東南アジア（シンガポール/タイ/ベトナム）のAI研修市場調査。現地パートナー候補との接触",
+              "probability": 0.7,
+              "probability_note": "ブロックチェインD社でのASEAN経験があるため、市場調査自体のハードルは低い"
+            },
+            {
+              "type": "国内基盤強化",
+              "description": "AIテック株式会社国内年商3億円を達成。海外展開の資金とノウハウの基盤確立",
+              "probability": 0.6,
+              "probability_note": "海外展開には国内事業の安定が前提条件"
+            },
+            {
+              "type": "海外拠点設立",
+              "description": "シンガポールに拠点設立。現地法人登記、現地マネージャー1名採用",
+              "probability": 0.45,
+              "probability_note": "シンガポール法人設立は容易だが、現地採用と事業立ち上げは別問題"
+            }
+          ]
+        }
+      ],
+      "branch_point": "40-41歳時点での海外拠点の収益化。現地顧客獲得の成否が分岐点。成功→多拠点展開、失敗→撤退して国内回帰",
+      "scenarios": [
+        {
+          "scenario_id": "best",
+          "label": "グローバルAI企業へ成長→海外VC調達",
+          "probability": 0.08,
+          "probability_note": "日本発スタートアップの海外成功率は5%未満。ただしAI BPOは言語障壁が比較的低い領域",
+          "periods": [
+            {
+              "period_id": null,
+              "period_name": "Period 2 (40-42歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "海外成長",
+                  "description": "シンガポール拠点が年商2億円到達。タイ・ベトナムにも展開開始",
+                  "probability": 0.12,
+                  "probability_note": "ASEAN市場でのAI研修需要は成長中だが、日本企業の成功事例は少ない"
+                },
+                {
+                  "type": "海外VC調達",
+                  "description": "シンガポールのVCから10億円規模の調達。グローバル展開を加速",
+                  "probability": 0.08,
+                  "probability_note": "海外VCからの日本企業への投資は増加傾向だが、まだ少数"
+                }
+              ]
+            },
+            {
+              "period_id": null,
+              "period_name": "Period 3 (43-45歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "米国進出",
+                  "description": "米国（SF/NYC）に拠点開設。Fortune 500企業へのAI BPO提供開始",
+                  "probability": 0.05,
+                  "probability_note": "米国市場参入は最難関。競合（Accenture等）との差別化が鍵"
+                }
+              ]
+            },
+            {
+              "period_id": null,
+              "period_name": "Period 4 (46-47歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "グローバル企業化",
+                  "description": "5カ国展開、グループ年商30億円。グローバルAI BPO企業としてのポジション確立",
+                  "probability": 0.05,
+                  "probability_note": "10年でグローバル5カ国展開は非常に野心的"
+                }
+              ]
+            }
+          ],
+          "final_state": {
+            "annual_income": 12000.0,
+            "satisfaction": 0.95,
+            "stress": 0.5,
+            "work_life_balance": 0.5
+          }
+        },
+        {
+          "scenario_id": "likely",
+          "label": "ASEAN2-3拠点で年商8億の国際AI企業",
+          "probability": 0.45,
+          "probability_note": "シンガポール+タイの2拠点で堅実に成長するのが最も現実的。日系企業のASEAN拠点向けAI研修が主力",
+          "periods": [
+            {
+              "period_id": null,
+              "period_name": "Period 2 (40-42歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "ASEAN展開",
+                  "description": "シンガポール拠点年商1億円。日系企業ASEAN拠点向けAI研修が主力サービス",
+                  "probability": 0.4,
+                  "probability_note": "日系企業向けは言語障壁が低く、既存顧客のASEAN拠点がターゲット"
+                },
+                {
+                  "type": "ローカライズ課題",
+                  "description": "現地企業向けサービスのローカライズに苦戦。英語/現地語対応の人材確保",
+                  "probability": 0.65,
+                  "probability_note": "ローカライズは海外展開で最も頻出する課題"
+                }
+              ]
+            },
+            {
+              "period_id": null,
+              "period_name": "Period 3 (43-45歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "2拠点体制確立",
+                  "description": "シンガポール+タイの2拠点で安定運営。海外売上比率30%",
+                  "probability": 0.35,
+                  "probability_note": "ブロックチェインD社でのタイ経験が活きる"
+                },
+                {
+                  "type": "国内事業強化",
+                  "description": "国内AIテック株式会社年商5億円。海外展開のノウハウが国内にも還元",
+                  "probability": 0.45,
+                  "probability_note": "海外展開企業の国内事業も相乗効果で成長する傾向"
+                }
+              ]
+            },
+            {
+              "period_id": null,
+              "period_name": "Period 4 (46-47歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "国際企業化",
+                  "description": "グループ年商8億円（国内5億+海外3億）。多文化チーム20名。WLBは低いが満足度高い",
+                  "probability": 0.35,
+                  "probability_note": "10年での海外売上3億は堅実な目標"
+                }
+              ]
+            }
+          ],
+          "final_state": {
+            "annual_income": 5500.0,
+            "satisfaction": 0.82,
+            "stress": 0.5,
+            "work_life_balance": 0.5
+          }
+        },
+        {
+          "scenario_id": "base",
+          "label": "ローカライズ失敗→海外撤退・国内回帰",
+          "probability": 0.47,
+          "probability_note": "日本企業の海外進出失敗率は50-60%。特にサービス業のローカライズ失敗は多い",
+          "periods": [
+            {
+              "period_id": null,
+              "period_name": "Period 2 (40-42歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "海外事業苦戦",
+                  "description": "シンガポール拠点の顧客獲得が計画を大幅に下回る。現地人材の離職も発生",
+                  "probability": 0.5,
+                  "probability_note": "海外拠点の初年度計画達成率は30-40%が一般的"
+                },
+                {
+                  "type": "資金流出",
+                  "description": "海外拠点の固定費（オフィス・人件費）が国内事業のキャッシュフローを圧迫",
+                  "probability": 0.55,
+                  "probability_note": "海外拠点は黒字化まで2-3年かかるのが一般的"
+                }
+              ]
+            },
+            {
+              "period_id": null,
+              "period_name": "Period 3 (43-45歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "撤退判断",
+                  "description": "海外拠点を閉鎖。損失2000-3000万円。国内事業に経営資源を集中",
+                  "probability": 0.45,
+                  "probability_note": "撤退判断は早いほどダメージが少ないが、心理的ハードルが高い"
+                }
+              ]
+            },
+            {
+              "period_id": null,
+              "period_name": "Period 4 (46-47歳)",
+              "narrative": "",
+              "snapshot": {
+                "annual_income": 0.0,
+                "satisfaction": 0.5,
+                "stress": 0.5,
+                "work_life_balance": 0.5
+              },
+              "events": [
+                {
+                  "type": "国内回帰",
+                  "description": "AIテック株式会社国内事業で年商3-4億円。海外での学びを国内サービスに反映",
+                  "probability": 0.45,
+                  "probability_note": "海外撤退後の国内回帰は比較的スムーズに行える"
+                }
+              ]
+            }
+          ],
+          "final_state": {
+            "annual_income": 2800.0,
+            "satisfaction": 0.55,
+            "stress": 0.5,
+            "work_life_balance": 0.5
+          }
+        }
+      ],
+      "final_salary": 5500.0,
+      "final_satisfaction": 0.82,
+      "final_age": 47,
+      "final_role": "CEO / Global Head",
+      "final_employer": "AIテック株式会社 Global",
+      "final_cash_buffer": 9000.0,
+      "peak_salary": 7000.0,
+      "path_label": "グローバル展開（東南アジア/米国）",
+      "final_stress": 0.7,
+      "final_wlb": 0.3,
+      "min_cash": 200,
+      "avg_stress": 0.65,
+      "total_events": 22,
+      "rounds_with_blockers": 10,
+      "total_rounds": 40,
+      "snapshots": [
+        {
+          "round": 0,
+          "age": 37,
+          "salary": 2500,
+          "satisfaction": 0.7,
+          "stress": 0.55,
+          "wlb": 0.4,
+          "cash_buffer": 755,
+          "role": "CEO",
+          "employer": "AIテック株式会社"
+        },
+        {
+          "round": 4,
+          "age": 38,
+          "salary": 2500,
+          "satisfaction": 0.72,
+          "stress": 0.58,
+          "wlb": 0.38,
+          "cash_buffer": 1000,
+          "role": "CEO",
+          "employer": "AIテック株式会社"
+        },
+        {
+          "round": 8,
+          "age": 39,
+          "salary": 2800,
+          "satisfaction": 0.73,
+          "stress": 0.62,
+          "wlb": 0.35,
+          "cash_buffer": 1200,
+          "role": "CEO / SG拠点準備",
+          "employer": "AIテック株式会社"
+        },
+        {
+          "round": 12,
+          "age": 40,
+          "salary": 3000,
+          "satisfaction": 0.75,
+          "stress": 0.65,
+          "wlb": 0.32,
+          "cash_buffer": 1500,
+          "role": "CEO",
+          "employer": "AIテック株式会社 Global"
+        },
+        {
+          "round": 16,
+          "age": 41,
+          "salary": 3500,
+          "satisfaction": 0.77,
+          "stress": 0.68,
+          "wlb": 0.3,
+          "cash_buffer": 2500,
+          "role": "CEO",
+          "employer": "AIテック株式会社 Global"
+        },
+        {
+          "round": 20,
+          "age": 42,
+          "salary": 4000,
+          "satisfaction": 0.78,
+          "stress": 0.7,
+          "wlb": 0.28,
+          "cash_buffer": 3500,
+          "role": "CEO",
+          "employer": "AIテック株式会社 Global"
+        },
+        {
+          "round": 24,
+          "age": 43,
+          "salary": 4500,
+          "satisfaction": 0.8,
+          "stress": 0.7,
+          "wlb": 0.3,
+          "cash_buffer": 5000,
+          "role": "CEO",
+          "employer": "AIテック株式会社 Global"
+        },
+        {
+          "round": 28,
+          "age": 44,
+          "salary": 5000,
+          "satisfaction": 0.81,
+          "stress": 0.68,
+          "wlb": 0.3,
+          "cash_buffer": 6500,
+          "role": "CEO",
+          "employer": "AIテック株式会社 Global"
+        },
+        {
+          "round": 32,
+          "age": 45,
+          "salary": 5200,
+          "satisfaction": 0.82,
+          "stress": 0.68,
+          "wlb": 0.3,
+          "cash_buffer": 7500,
+          "role": "CEO",
+          "employer": "AIテック株式会社 Global"
+        },
+        {
+          "round": 36,
+          "age": 46,
+          "salary": 5500,
+          "satisfaction": 0.82,
+          "stress": 0.7,
+          "wlb": 0.3,
+          "cash_buffer": 8200,
+          "role": "CEO / Global Head",
+          "employer": "AIテック株式会社 Global"
+        },
+        {
+          "round": 40,
+          "age": 47,
+          "salary": 5500,
+          "satisfaction": 0.82,
+          "stress": 0.7,
+          "wlb": 0.3,
+          "cash_buffer": 9000,
+          "role": "CEO / Global Head",
+          "employer": "AIテック株式会社 Global"
+        }
+      ],
+      "reskilling": [
+        "英語ビジネス（交渉・プレゼン）",
+        "ASEAN法務・税務・労務",
+        "クロスカルチャーマネジメント",
+        "海外VCリレーション"
+      ]
+    }
+  ],
+  "ranking": {
+    "highest_salary": "path_b",
+    "most_cash": "path_b",
+    "lowest_stress": "path_c",
+    "best_wlb": "path_b"
+  },
+  "rankings": {
+    "highest_salary": "path_b",
+    "most_cash": "path_b",
+    "lowest_stress": "path_c",
+    "best_wlb": "path_b"
+  }
+}

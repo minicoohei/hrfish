@@ -245,14 +245,20 @@ class SimulationConfigGenerator:
         self.base_url = base_url or Config.LLM_BASE_URL
         # シナリオ設計・フェーズ生成は品質重視 → チャットモデル（gpt-5.4）を使用
         self.model_name = model_name or getattr(Config, 'LLM_CHAT_MODEL_NAME', None) or Config.LLM_MODEL_NAME
-        
-        if not self.api_key:
-            raise ValueError("LLM_API_KEY not configured")
-        
-        self.client = OpenAI(
-            api_key=self.api_key,
-            base_url=self.base_url
-        )
+
+        self._client = None  # 遅延初期化: SubAgent使用時はOpenAI不要
+
+    @property
+    def client(self):
+        """OpenAIクライアントの遅延初期化。LLM使用時のみインスタンス化される。"""
+        if self._client is None:
+            if not self.api_key:
+                raise ValueError("LLM_API_KEY not configured")
+            self._client = OpenAI(
+                api_key=self.api_key,
+                base_url=self.base_url
+            )
+        return self._client
     
     def generate_config(
         self,

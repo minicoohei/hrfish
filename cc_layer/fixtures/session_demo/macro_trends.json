@@ -1,0 +1,444 @@
+{
+  "trends": [
+    {
+      "trend_id": "ai_disruption",
+      "label": "AI産業の急速な構造変化",
+      "category": "technology",
+      "description": "OpenAI/Anthropic等の基盤モデル企業が研修・BPO市場に参入。AI Agentが中間業務を代替し、従来型のAI研修・AI BPO事業の価値提案が根本から変わる。LLMのコモディティ化により「AIを教える」事業の差別化が困難に。",
+      "probability": 0.85,
+      "timeframe": "2026-2030",
+      "impact_by_path": {
+        "path_a": {
+          "direction": "negative",
+          "magnitude": "high",
+          "detail": "AI研修市場がLLMの自動化・セルフサービス化で縮小。BPO事業はAgent化で競争激化。受託→SaaS転換が急務だが、OpenAI/Google等のEnterprise AIツールと競合するリスク。生き残りには業界特化型の深い専門性が必要。"
+        },
+        "path_b": {
+          "direction": "positive",
+          "magnitude": "high",
+          "detail": "メガテックはAI投資を加速しており、AI人材需要は拡大。Google/MicrosoftのAI部門は大幅増員中。AI PdM経験者の市場価値はさらに上昇。"
+        },
+        "path_c": {
+          "direction": "positive",
+          "magnitude": "medium",
+          "detail": "AI特化ファンドへのLP需要は高い。ただしAIスタートアップのバリュエーション高騰により投資判断が難しくなる。AI Agent領域への投資機会が増加。"
+        },
+        "path_d": {
+          "direction": "mixed",
+          "magnitude": "medium",
+          "detail": "AIテック株式会社事業はAgent化の影響を受けるが、新規事業でAI Agent活用の新領域に参入できる可能性。ポートフォリオの組み替えが重要。"
+        },
+        "path_e": {
+          "direction": "positive",
+          "magnitude": "medium",
+          "detail": "ASEAN地域ではAI導入が日本より遅れており、研修需要は2-3年は堅調。ただし中長期的にはグローバル企業（Accenture等）との競争が激化。"
+        }
+      },
+      "sources": [
+        {
+          "title": "IDC Japan AI市場予測 2025-2030",
+          "excerpt": "国内AI市場は2030年に2.5兆円規模（CAGR 28%）。生成AI関連は2028年までに市場の40%を占める見込み"
+        },
+        {
+          "title": "McKinsey Global AI Survey 2025",
+          "excerpt": "企業のAI Agent導入率は2025年に35%→2028年に70%超と予測。中間業務の50%がAgent化対象"
+        }
+      ]
+    },
+    {
+      "trend_id": "japan_demographics",
+      "label": "日本の人口減少・労働力不足の深刻化",
+      "category": "demographics",
+      "description": "日本の生産年齢人口は2025年の7,400万人から2035年には6,500万人に減少。特にIT/AI人材の不足は深刻化し、DX人材は2030年に79万人不足（経産省推計）。外国人材・リモートワーカーの活用が不可避に。",
+      "probability": 0.95,
+      "timeframe": "2026-2035",
+      "impact_by_path": {
+        "path_a": {
+          "direction": "positive",
+          "magnitude": "high",
+          "detail": "AI BPO・自動化への需要が人手不足を背景に拡大。ただし自社の採用も困難になるため、リモート人材・外国人材の活用が必須。"
+        },
+        "path_b": {
+          "direction": "positive",
+          "magnitude": "medium",
+          "detail": "メガテック日本法人はグローバル報酬水準を提示可能で、人材確保で優位。日本人AI人材の希少性が上がり、市場価値も上昇。"
+        },
+        "path_c": {
+          "direction": "positive",
+          "magnitude": "medium",
+          "detail": "人手不足解消のためのAIスタートアップへの投資テーマが強化。HR Tech、自動化、省人化領域の投資機会が増加。"
+        },
+        "path_d": {
+          "direction": "mixed",
+          "magnitude": "high",
+          "detail": "各事業の人材確保が課題。一方で人手不足をAIで解決する事業機会は拡大。ポートフォリオ内の事業シナジーで人材を共有可能。"
+        },
+        "path_e": {
+          "direction": "positive",
+          "magnitude": "high",
+          "detail": "ASEAN地域の若年労働力を活用可能。日本の人手不足を海外リソースで補完するビジネスモデルが成立しやすい。"
+        }
+      },
+      "sources": [
+        {
+          "title": "国立社会保障・人口問題研究所 将来推計人口（2024年推計）",
+          "excerpt": "2035年の生産年齢人口（15-64歳）は6,494万人。2020年比で約900万人減少"
+        },
+        {
+          "title": "経済産業省 DX人材需給推計 2024",
+          "excerpt": "2030年のIT人材不足は最大79万人。特にAI・データサイエンス人材は12万人以上が不足"
+        }
+      ]
+    },
+    {
+      "trend_id": "startup_vc_cycle",
+      "label": "スタートアップ/VC市場の冷え込みと回復",
+      "category": "finance",
+      "description": "2022-2024年のグローバルVC冬の時代を経て、2026-2027年に回復サイクルへ。日本市場はスタートアップ育成5か年計画（2023年閣議決定）の効果が顕在化し始める。ただしバリュエーション水準は2021年のピークには戻らない見込み。",
+      "probability": 0.70,
+      "timeframe": "2026-2029",
+      "impact_by_path": {
+        "path_a": {
+          "direction": "positive",
+          "magnitude": "high",
+          "detail": "VC市場回復によりシリーズA調達環境が改善。AI領域は特に投資対象として人気。ただしバリュエーション期待の調整は必要。"
+        },
+        "path_b": {
+          "direction": "neutral",
+          "magnitude": "low",
+          "detail": "メガテック勤務には直接影響少ない。ただしIPO市場の活況はストック報酬の価値に影響。"
+        },
+        "path_c": {
+          "direction": "positive",
+          "magnitude": "high",
+          "detail": "VC市場回復はファンドレイジング環境を改善。LP（機関投資家）のVC配分が増加する見込み。投資先のバリュエーション上昇でリターンも改善。"
+        },
+        "path_d": {
+          "direction": "positive",
+          "magnitude": "medium",
+          "detail": "ポートフォリオ企業の資金調達環境が改善。M&A市場も活性化し、買収機会が増加。"
+        },
+        "path_e": {
+          "direction": "positive",
+          "magnitude": "medium",
+          "detail": "海外VCからの調達機会が増加。シンガポール/東南アジアのVCも日本企業への投資に積極的に。"
+        }
+      },
+      "sources": [
+        {
+          "title": "INITIAL Japan Startup Finance 2024 Annual Report",
+          "excerpt": "2024年の国内スタートアップ資金調達額は約8,500億円。2021年ピーク（8,800億円）に接近。2025-2026年は1兆円超の見通し"
+        },
+        {
+          "title": "内閣官房 スタートアップ育成5か年計画 進捗報告 2025",
+          "excerpt": "官民合わせたスタートアップ投資額を2027年までに10兆円規模へ。税制優遇やストックオプション制度整備が進行中"
+        }
+      ]
+    },
+    {
+      "trend_id": "remote_global_talent",
+      "label": "リモートワーク定着とグローバル人材競争",
+      "category": "workforce",
+      "description": "コロナ後のリモートワーク定着により、人材獲得競争がグローバル化。日本企業もフルリモート/ハイブリッドが標準化し、地方・海外在住の優秀人材へのアクセスが向上。一方でグローバル報酬水準との競争も発生。",
+      "probability": 0.80,
+      "timeframe": "2026-2035",
+      "impact_by_path": {
+        "path_a": {
+          "direction": "positive",
+          "magnitude": "medium",
+          "detail": "リモート人材の活用で採用の地理的制約が解消。AI BPO事業はリモートワークとの相性が良い。ただしグローバル報酬水準に合わせるとコスト増。"
+        },
+        "path_b": {
+          "direction": "positive",
+          "magnitude": "medium",
+          "detail": "メガテックのリモートワーク環境が安定し、WLBが改善。ただしグローバル競争の中で日本法人の相対的な位置づけが変化する可能性。"
+        },
+        "path_c": {
+          "direction": "positive",
+          "magnitude": "low",
+          "detail": "投資先企業のリモート活用度が投資判断の一要素に。グローバルに分散した投資先ポートフォリオの管理がオンラインで容易に。"
+        },
+        "path_d": {
+          "direction": "positive",
+          "magnitude": "medium",
+          "detail": "ポートフォリオ各社がリモート人材を活用でき、固定費を抑えた事業拡大が可能。"
+        },
+        "path_e": {
+          "direction": "positive",
+          "magnitude": "high",
+          "detail": "海外拠点運営にリモートワークを組み合わせることで、固定費を抑えたグローバル展開が可能。現地採用+日本からのリモートマネジメント。"
+        }
+      },
+      "sources": [
+        {
+          "title": "パーソル総合研究所 テレワーク実態調査 2025",
+          "excerpt": "日本企業のリモートワーク実施率は42%（2025年1月）。IT/コンサルティング業界では75%超"
+        },
+        {
+          "title": "Deel Global Hiring Report 2025",
+          "excerpt": "クロスボーダー採用は前年比45%増。日本からの海外人材採用も3倍に増加"
+        }
+      ]
+    },
+    {
+      "trend_id": "ai_regulation",
+      "label": "AI規制・コンプライアンス強化",
+      "category": "regulation",
+      "description": "EU AI Act（2024年施行開始）を筆頭に、各国でAI規制が強化。日本も2025年にAI基本法を制定し、ハイリスクAIの規制枠組みを整備。企業のAIガバナンス・倫理対応が必須コストに。",
+      "probability": 0.90,
+      "timeframe": "2026-2030",
+      "impact_by_path": {
+        "path_a": {
+          "direction": "mixed",
+          "magnitude": "high",
+          "detail": "AI規制対応コンサルティングが新たな事業機会に。一方でBPO事業のAI利用にも規制対応コストが発生。コンプライアンス対応をサービス化できれば差別化要素。"
+        },
+        "path_b": {
+          "direction": "negative",
+          "magnitude": "medium",
+          "detail": "メガテックは規制対応の最前線に立つため、プロダクト開発速度が低下する可能性。Responsible AI推進の社内ニーズは増加。"
+        },
+        "path_c": {
+          "direction": "mixed",
+          "magnitude": "medium",
+          "detail": "投資先のAI規制リスク評価が重要に。RegTech/AI Governance分野の投資機会が増加。一方で規制リスクによる投資判断の複雑化。"
+        },
+        "path_d": {
+          "direction": "mixed",
+          "magnitude": "medium",
+          "detail": "ポートフォリオ各社のAI規制対応を統一的に管理する必要。AI GRC（ガバナンス・リスク・コンプライアンス）事業の新設機会。"
+        },
+        "path_e": {
+          "direction": "negative",
+          "magnitude": "high",
+          "detail": "各国の規制が異なるため、グローバル展開のコンプライアンスコストが大幅に増加。EU/ASEAN/日本それぞれの規制対応が必要。"
+        }
+      },
+      "sources": [
+        {
+          "title": "EU AI Act Implementation Timeline 2025",
+          "excerpt": "2025年2月より禁止AI利用の規制開始。2026年8月にハイリスクAIの全面規制適用"
+        },
+        {
+          "title": "内閣府 AI戦略会議 中間報告 2025",
+          "excerpt": "日本版AI基本法は2025年通常国会で審議。ハイリスクAI利用の事前評価義務化を検討"
+        }
+      ]
+    },
+    {
+      "trend_id": "web3_crypto_maturation",
+      "label": "Web3/暗号資産市場の成熟と制度化",
+      "category": "technology",
+      "description": "暗号資産市場はビットコインETF承認（2024年）を契機に機関投資家の参入が加速。日本でもWeb3政策が進展し、トークン税制改正（2025年）や暗号資産ETF議論が活発化。DeFi/RWAトークナイゼーションが実用段階へ。",
+      "probability": 0.65,
+      "timeframe": "2026-2032",
+      "impact_by_path": {
+        "path_a": {
+          "direction": "neutral",
+          "magnitude": "low",
+          "detail": "AI事業への直接影響は限定的だが、AI×Web3（分散型AI、データマーケットプレイス）の融合領域が事業機会に。"
+        },
+        "path_b": {
+          "direction": "neutral",
+          "magnitude": "low",
+          "detail": "メガテックのWeb3投資は限定的。Googleの場合、Cloud部門でのWeb3インフラ提供が主。直接的なキャリア影響は小さい。"
+        },
+        "path_c": {
+          "direction": "positive",
+          "magnitude": "medium",
+          "detail": "Web3スタートアップC社創業経験がWeb3投資の目利きに活きる。AI×Web3の融合領域はVC投資テーマとして注目度が高い。"
+        },
+        "path_d": {
+          "direction": "positive",
+          "magnitude": "medium",
+          "detail": "Web3スタートアップC社事業がWeb3市場の制度化で復調する可能性。AI×Web3の新規事業がポートフォリオに追加可能。"
+        },
+        "path_e": {
+          "direction": "positive",
+          "magnitude": "low",
+          "detail": "シンガポールはWeb3ハブとしての地位を確立しており、海外拠点がWeb3関連の事業機会にアクセスしやすい。"
+        }
+      },
+      "sources": [
+        {
+          "title": "CoinDesk Japan 2025年暗号資産市場展望",
+          "excerpt": "ビットコインETF承認後、機関投資家の暗号資産配分は2-5%に増加。日本でも2025年に暗号資産ETF議論が本格化"
+        },
+        {
+          "title": "自民党Web3 PT 政策提言 2025",
+          "excerpt": "法人保有暗号資産の期末時価評価課税の見直し（2025年税制改正）、暗号資産ETFの制度設計を2026年までに完了の方針"
+        }
+      ]
+    },
+    {
+      "trend_id": "energy_sustainability",
+      "label": "エネルギーコスト高騰とAIインフラの持続可能性",
+      "category": "environment",
+      "description": "AI推論/学習に必要な計算資源とエネルギーコストが急増。データセンターの電力消費は2030年に世界電力需要の8-10%に達する見込み。グリーンAI・省エネAIが差別化要素に。",
+      "probability": 0.75,
+      "timeframe": "2027-2035",
+      "impact_by_path": {
+        "path_a": {
+          "direction": "negative",
+          "magnitude": "medium",
+          "detail": "AI BPO事業のインフラコスト上昇。クラウドAPI利用コストの増加が利益率を圧迫。省エネAI・エッジAIへの技術転換が必要。"
+        },
+        "path_b": {
+          "direction": "mixed",
+          "magnitude": "medium",
+          "detail": "Google/Microsoftはグリーンエネルギー投資で対応するが、AI製品のコスト構造が変化。サステナビリティ視点のプロダクト設計が求められる。"
+        },
+        "path_c": {
+          "direction": "positive",
+          "magnitude": "low",
+          "detail": "グリーンAI/省エネテック分野への投資テーマが拡大。ESG投資のAI版として注目度が高まる。"
+        },
+        "path_d": {
+          "direction": "negative",
+          "magnitude": "medium",
+          "detail": "ポートフォリオ各社のAIインフラコストが増加。エネルギー効率の良い事業設計が必要。"
+        },
+        "path_e": {
+          "direction": "mixed",
+          "magnitude": "medium",
+          "detail": "ASEAN地域はデータセンター建設が活発だが、電力インフラの制約がある。シンガポールはデータセンター新設を一時制限中。"
+        }
+      },
+      "sources": [
+        {
+          "title": "IEA World Energy Outlook 2025",
+          "excerpt": "データセンターの電力消費は2025年の約460TWhから2030年に約800TWhに増加。AI関連が最大の増加要因"
+        },
+        {
+          "title": "Goldman Sachs AI Infrastructure Report 2025",
+          "excerpt": "AI推論コストは年率20-30%で低下しているが、利用量の増加がコスト低下を上回る。総インフラ投資額は2030年に1兆ドル超"
+        }
+      ]
+    },
+    {
+      "trend_id": "geopolitical_decoupling",
+      "label": "米中デカップリングとサプライチェーン再編",
+      "category": "geopolitics",
+      "description": "米中技術デカップリングの深化により、AI半導体・クラウドサービスの供給構造が変化。日本はフレンドショアリングの恩恵を受ける一方、地政学リスクが事業計画に影響。TSMC熊本工場稼働（2024年）が象徴的。",
+      "probability": 0.80,
+      "timeframe": "2026-2035",
+      "impact_by_path": {
+        "path_a": {
+          "direction": "mixed",
+          "magnitude": "medium",
+          "detail": "日本のAI市場は内需・経済安全保障の観点から政府支援を受けやすい。一方で海外クラウドサービスへの依存リスクも。"
+        },
+        "path_b": {
+          "direction": "mixed",
+          "magnitude": "high",
+          "detail": "メガテックの日本拠点の戦略的重要性が増す可能性。APAC HQ機能が東京に移転するシナリオも。一方で米中対立の影響でビジネス環境が不安定化。"
+        },
+        "path_c": {
+          "direction": "positive",
+          "magnitude": "medium",
+          "detail": "経済安全保障関連のAI/半導体スタートアップへの投資機会。政府系ファンドとの連携可能性も。"
+        },
+        "path_d": {
+          "direction": "mixed",
+          "magnitude": "low",
+          "detail": "ポートフォリオの地政学リスク分散が重要に。日本国内に集中するメリットとデメリットの両面。"
+        },
+        "path_e": {
+          "direction": "negative",
+          "magnitude": "high",
+          "detail": "ASEAN地域も米中対立の影響を受け、国ごとに対応が分かれる。シンガポールは中立的だが、ベトナム/タイは中国依存度が高い。"
+        }
+      },
+      "sources": [
+        {
+          "title": "経済産業省 経済安全保障推進法 運用状況報告 2025",
+          "excerpt": "AI半導体・量子技術を特定重要技術に指定。国内AI基盤整備に2027年までに1.5兆円投資"
+        },
+        {
+          "title": "CSIS Japan-US Technology Alliance Report 2025",
+          "excerpt": "日米間のAI・半導体サプライチェーン連携が深化。日本企業のフレンドショアリング恩恵は年間5-8%の成長寄与"
+        }
+      ]
+    }
+  ],
+  "salary_benchmarks": [
+    {
+      "role": "AI事業CEO（スタートアップ、年商1-10億規模）",
+      "range": "1500-5000万円",
+      "source": "転職会議/OpenWork CEO報酬データ 2024, INITIAL Startup Compensation Survey",
+      "note": "ストックオプション含まず。年商規模に比例。初期は低く抑え、年商5億超で3000万円以上が一般的"
+    },
+    {
+      "role": "AI事業CEO（スタートアップ、年商10-30億規模、IPO準備中）",
+      "range": "4000-8000万円",
+      "source": "INITIAL CEO報酬調査 2024, 有価証券報告書開示データ",
+      "note": "IPO時の開示では中央値が約4500万円。SO/PSUの潜在価値は数億円に及ぶケースも"
+    },
+    {
+      "role": "Google Japan PM / L5-L6（Senior PM）",
+      "range": "1800-3500万円",
+      "source": "Levels.fyi 2024, Glassdoor Japan",
+      "note": "Base 1200-1800万 + RSU 400-1200万 + Bonus 200-500万。L6上位で3500万円超"
+    },
+    {
+      "role": "Google Japan Director of Product / L7",
+      "range": "3500-5500万円",
+      "source": "Levels.fyi 2024, Blind",
+      "note": "Base 2000-2500万 + RSU 1000-2500万 + Bonus 500-800万。パフォーマンスにより大幅変動"
+    },
+    {
+      "role": "Google Japan Senior Director-VP / L8+",
+      "range": "5500-12000万円",
+      "source": "Levels.fyi 2024, 業界関係者ヒアリング",
+      "note": "Base 2500-3500万 + RSU 2500-7000万 + Bonus 500-1500万。L8以上は日本法人に数十名のみ"
+    },
+    {
+      "role": "VC General Partner（独立系、AUM 20-50億円）",
+      "range": "2500-5000万円",
+      "source": "JVCA報酬調査 2024, 業界ヒアリング",
+      "note": "管理報酬（AUM x 2%）ベース。キャリー（成功報酬）は別途で、好実績ファンドでは数億円の可能性"
+    },
+    {
+      "role": "VC General Partner（大手、AUM 100億円超）",
+      "range": "4000-10000万円",
+      "source": "Preqin GP Compensation Survey 2024",
+      "note": "管理報酬＋キャリー込み。Fund I運用中は管理報酬のみで3000-4000万円が一般的"
+    },
+    {
+      "role": "CVC Principal / VP（大手事業会社）",
+      "range": "1500-3000万円",
+      "source": "OpenWork/en Japan CVC職種データ 2024",
+      "note": "事業会社の給与テーブル準拠。独立系VCより低いが、福利厚生・安定性でカバー"
+    },
+    {
+      "role": "ホールディングス代表取締役（年商10-20億規模）",
+      "range": "3000-6000万円",
+      "source": "TDB 帝国データバンク 役員報酬調査 2024",
+      "note": "年商10億規模の未上場企業CEO報酬中央値は約3500万円。業績連動で上限は8000万円"
+    },
+    {
+      "role": "フリーランスAIコンサルタント / 技術顧問",
+      "range": "1200-3000万円",
+      "source": "レバテック/PE-BANK フリーランス報酬データ 2024",
+      "note": "月額100-250万円。AI/ML専門はプレミアム。顧問契約3-5社の並行運用が一般的"
+    },
+    {
+      "role": "AI BPO事業マネージャー / 事業責任者",
+      "range": "800-1500万円",
+      "source": "doda/リクナビNEXT AI関連職種報酬データ 2024",
+      "note": "事業責任者クラス。マネージャーは800-1200万円、VP級は1200-1800万円"
+    },
+    {
+      "role": "ASEAN駐在CEO / Country Manager（日系企業）",
+      "range": "2000-4000万円",
+      "source": "JAC Recruitment ASEAN Report 2024, JETRO",
+      "note": "シンガポール駐在のCM報酬。現地採用の場合は1500-3000万円。住宅手当等の福利含む"
+    },
+    {
+      "role": "エンジェル投資家 / スタートアップアドバイザー（複合）",
+      "range": "1500-3500万円",
+      "source": "業界ヒアリング、AngelList Japan データ",
+      "note": "エンジェル投資リターンは別計上。顧問報酬+講演+メンタリングの合算。投資リターンは年0-数億円と変動大"
+    }
+  ]
+}

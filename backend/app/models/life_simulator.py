@@ -53,6 +53,15 @@ class LifeEventType(str, Enum):
     ELDER_CARE_START = "elder_care_start"
     ELDER_CARE_END = "elder_care_end"
 
+    # Life transition events
+    OVERSEAS_MIGRATION = "overseas_migration"    # 海外移住
+    RURAL_MIGRATION = "rural_migration"          # 地方移住
+    HEALTH_ISSUE = "health_issue"                # 健康問題（メンタル含む）
+    SIDE_BUSINESS = "side_business"              # 副業開始
+    RESKILLING = "reskilling"                    # リスキリング・学び直し
+    HOUSING_PURCHASE = "housing_purchase"         # 住宅購入
+    PARENTAL_LEAVE = "parental_leave"            # 育休取得
+
     # Phase transition
     CAREER_PHASE_CHANGE = "career_phase_change"
 

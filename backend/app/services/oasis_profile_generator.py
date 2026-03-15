@@ -193,14 +193,8 @@ class OasisProfileGenerator:
         self.base_url = base_url or Config.LLM_BASE_URL
         # プロフィール生成はエージェント品質を決める重要処理 → チャットモデル（gpt-5.4）を使用
         self.model_name = model_name or getattr(Config, 'LLM_CHAT_MODEL_NAME', None) or Config.LLM_MODEL_NAME
-        
-        if not self.api_key:
-            raise ValueError("LLM_API_KEY not configured")
-        
-        self.client = OpenAI(
-            api_key=self.api_key,
-            base_url=self.base_url
-        )
+
+        self._client = None  # 遅延初期化: use_llm=False時にOpenAI不要
         
         # Zep client for retrieving rich context
         self.zep_api_key = zep_api_key or Config.ZEP_API_KEY
@@ -213,6 +207,18 @@ class OasisProfileGenerator:
             except Exception as e:
                 logger.warning(f"Zep client initialization failed: {e}")
     
+    @property
+    def client(self):
+        """OpenAIクライアントの遅延初期化。LLM使用時のみインスタンス化される。"""
+        if self._client is None:
+            if not self.api_key:
+                raise ValueError("LLM_API_KEY not configured")
+            self._client = OpenAI(
+                api_key=self.api_key,
+                base_url=self.base_url
+            )
+        return self._client
+
     def generate_profile_from_entity(
         self, 
         entity: EntityNode, 
@@ -702,14 +708,24 @@ class OasisProfileGenerator:
 - 業界権威・Tier1企業社員: ハイレベル人材としての水準判定
 - 類似キャリアの転職成功者: 自身の経験と照らし合わせた実践的助言
 - 転職失敗者: 失敗パターンとの類似性指摘、注意喚起
-- 元同僚・元上司: 実際の業務パフォーマンスに基づく評価
 - 雇用ジャーナリスト: 労働市場トレンドの文脈での分析
 - 社会学者: 雇用構造・社会変動の観点からの考察
 - 労働経済学者: 賃金動態・労働市場需給の定量分析
 - 人事系大学教授: 人材マネジメント理論に基づく評価
 - 業界アナリスト: 業界動向と人材需要の予測
 
-エンティティ名が「Person」や一般的な人名の場合でも、コンテキスト情報からキャリア評価に最も関連する上記の役割を1つ割り当て、そのカテゴリの行動パターンに沿った専門家として詳細なペルソナを生成してください。"""
+【カテゴリD: 私的関係者（友人・同僚・家族）】
+候補者の人間的側面を知る立場。公式な評価ではなく、日常的な付き合いから見えるリアルな人物像を提供。
+- 現職の同僚: 日常業務での協働経験、チームワーク、職場での人柄
+- 元同僚・元上司: 実際の業務パフォーマンスに基づく評価、成長の軌跡
+- 大学時代の友人: 学生時代からの変化、本来の性格、長期的な価値観
+- 趣味・コミュニティの仲間: 仕事以外の側面、ストレス発散、人間関係構築力
+- 同業種の友人: 業界情報交換、転職相談相手、キャリア比較の参照点
+- 異業種の友人: 異なる視点からのキャリア観、多角的なアドバイス
+- メンター: 長期的なキャリア指導、人生経験に基づく助言
+
+エンティティ名が「Person」や一般的な人名の場合でも、コンテキスト情報からキャリア評価に最も関連する上記の役割を1つ割り当て、そのカテゴリの行動パターンに沿った専門家として詳細なペルソナを生成してください。
+エンティティの関係性が明確でない場合は、カテゴリA〜Dをバランスよく配分し、特にカテゴリDの友人・同僚ロールも積極的に割り当ててください。"""
         return base_prompt
     
     def _build_individual_persona_prompt(
@@ -741,11 +757,12 @@ class OasisProfileGenerator:
 2. persona: キャリア観点での詳細設定（2000字の純テキスト）。以下を含むこと:
    - 基本情報（年齢、職業、教育背景、所在地）
    - 職務背景（重要な経歴、求職者との関係性、業界での立ち位置）
-   - 役割カテゴリ（A:選考する側 / B:仲介・助言する側 / C:観察・分析する側 のいずれか）
+   - 役割カテゴリ（A:選考する側 / B:仲介・助言する側 / C:観察・分析する側 / D:私的関係者 のいずれか）
    - カテゴリ別の行動パターン:
      * カテゴリA（選考側）: 面接での質問傾向、合否判断基準、重視する経験・スキル、オファー条件の考え方
      * カテゴリB（仲介側）: マッチング基準、候補者への助言スタイル、市場価値の見立て方、推薦時のポイント
      * カテゴリC（観察側）: 分析の切り口、同業者としての評価軸、研究テーマとの関連、客観的な所見の出し方
+     * カテゴリD（私的関係者）: 日常の人柄、仕事以外の側面、人間関係から見たキャリア適性、率直なアドバイス
    - 評価基準（この人物が人材を評価する際に重視するポイント）
    - 性格特徴（MBTI類型、コアとなる性格、コミュニケーションスタイル）
    - 立場・観点（キャリアに対する価値観、重視する経験・資格）
@@ -761,7 +778,7 @@ class OasisProfileGenerator:
 5. mbti: MBTIタイプ（例：INTJ、ENFP等）
 6. country: 国名（日本語、例："日本"）
 7. profession: 職業
-8. role_category: 役割カテゴリ（"gatekeeper" / "agent" / "researcher" のいずれか）
+8. role_category: 役割カテゴリ（"gatekeeper" / "agent" / "researcher" / "friend" のいずれか）
 9. interested_topics: 関心トピック配列
 
 重要:
@@ -770,9 +787,10 @@ class OasisProfileGenerator:
 - 日本語で記述（genderフィールドのみ英語でmale/female）
 - 内容はエンティティ情報と一貫性を保つこと
 - ageは有効な整数、genderは"male"または"female"であること
-- professionには具体的な役割を設定すること（例：キャリアアドバイザー、ヘッドハンター、採用担当者、人事マネージャー、現場マネージャー、事業部長、CTO、同職種エンジニア、労働経済学者、雇用ジャーナリスト等）。「Person」のような汎用ラベルは使用不可
-- role_categoryは必ず "gatekeeper"（選考する側）/ "agent"（仲介・助言する側）/ "researcher"（観察・分析する側）のいずれかを設定
+- professionには具体的な役割を設定すること（例：キャリアアドバイザー、ヘッドハンター、採用担当者、人事マネージャー、現場マネージャー、事業部長、CTO、同職種エンジニア、労働経済学者、雇用ジャーナリスト、元同僚、大学時代の友人等）。「Person」のような汎用ラベルは使用不可
+- role_categoryは必ず "gatekeeper"（選考する側）/ "agent"（仲介・助言する側）/ "researcher"（観察・分析する側）/ "friend"（私的関係者）のいずれかを設定
 - エンティティタイプがPersonやOrganizationでも、コンテキストからキャリア評価における最適な専門家ロールとカテゴリを判断して割り当てること
+- エンティティの関係性が不明確な一般的人名の場合、友人・同僚（カテゴリD）の割り当ても積極的に検討すること
 """
 
     def _build_group_persona_prompt(
@@ -836,7 +854,7 @@ class OasisProfileGenerator:
    - 他社ベンダーと比較した際の候補者の位置づけ
 
    共通:
-   - カテゴリC（観察・分析する側）としての評価スタンス
+   - カテゴリC（観察・分析する側）またはカテゴリD（私的関係者：元同僚として友人的な関係にもなり得る）としての評価スタンス
    - 【必須】会話テーマ指示: 他のエージェントとの対話で以下について積極的に議論すること:
      * 候補者のキャリアの将来性（「この経歴があれば○○方面に進める」「市場での需要変化を考えると...」）
      * 業界の未来予測（「この業界は今後○○の方向に変わる」「必要スキルが△△にシフトしつつある」）
@@ -848,7 +866,7 @@ class OasisProfileGenerator:
 5. mbti: MBTIタイプ（例：ISTJ、ENFP等）
 6. country: 国名（日本語、例："日本"）
 7. profession: この人物の現在の職業（「{entity_name}の元同僚」「{entity_name}の元上司」「{entity_name}のクライアント担当者」等）
-8. role_category: "researcher"（観察・分析する側）
+8. role_category: "researcher"（観察・分析する側）または "friend"（元同僚として私的関係が強い場合）
 9. interested_topics: 関心領域配列
 
 重要:

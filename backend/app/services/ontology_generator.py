@@ -213,7 +213,14 @@ class OntologyGenerator:
     """
 
     def __init__(self, llm_client: Optional[LLMClient] = None):
-        self.llm_client = llm_client or LLMClient()
+        self._llm_client = llm_client
+
+    @property
+    def llm_client(self):
+        """LLMClientの遅延初期化。--defaultモードではLLM不要。"""
+        if self._llm_client is None:
+            self._llm_client = LLMClient()
+        return self._llm_client
 
     def generate(
         self,

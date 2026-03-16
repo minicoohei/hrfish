@@ -59,7 +59,8 @@ def test_e2e_status(session_copy):
         capture_output=True, text=True,
     )
     assert result.returncode == 0
-    assert "OK" in result.stdout
+    combined = result.stdout + result.stderr
+    assert "OK" in combined
 
 
 def test_e2e_validate(session_copy):

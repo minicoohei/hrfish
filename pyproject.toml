@@ -17,7 +17,8 @@ dependencies = [
 zep = ["zep-cloud>=2.0"]
 search = ["tavily-python>=0.3"]
 otel = ["opentelemetry-sdk", "opentelemetry-exporter-otlp-proto-grpc"]
-all = ["mirofish[zep,search,otel]"]
+cli = ["rich>=13.0"]
+all = ["mirofish[zep,search,otel,cli]"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["cc_layer"]
